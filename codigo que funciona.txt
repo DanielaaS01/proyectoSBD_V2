@@ -1,0 +1,248 @@
+registrar_empleado.js:
+// registrar_empleado.js
+
+document.addEventListener('DOMContentLoaded', () => {
+  cargarMuseos();
+  cargarIdiomas();
+
+  const museoSelect = document.getElementById('id_museo');
+  museoSelect.addEventListener('change', () => {
+    const idMuseo = museoSelect.value;
+    if (idMuseo) {
+      cargarEstructuras(idMuseo);
+      document.getElementById('id_estructura_org').disabled = false;
+    } else {
+      limpiarSelect('id_estructura_org');
+      document.getElementById('id_estructura_org').disabled = true;
+    }
+  });
+});
+
+async function cargarMuseos() {
+  try {
+    const res = await fetch('/museos');
+    const museos = await res.json();
+    const select = document.getElementById('id_museo');
+    museos.forEach(m => {
+      const option = document.createElement('option');
+      option.value = m.id_museo;
+      option.textContent = m.nombre;
+      select.appendChild(option);
+    });
+  } catch (err) {
+    console.error('Error al cargar museos:', err);
+    alert('No se pudieron cargar los museos');
+  }
+}
+
+async function cargarEstructuras(idMuseo) {
+  try {
+    const res = await fetch(`/estructuras?id_museo=${idMuseo}`);
+    const estructuras = await res.json();
+    const select = document.getElementById('id_estructura_org');
+    limpiarSelect('id_estructura_org');
+    estructuras.forEach(e => {
+      const option = document.createElement('option');
+      option.value = e.id_estructura_org;
+      option.textContent = e.nombre;
+      select.appendChild(option);
+    });
+  } catch (err) {
+    console.error('Error al cargar estructuras:', err);
+    alert('No se pudieron cargar las unidades organizativas');
+  }
+}
+
+async function cargarIdiomas() {
+  try {
+    const res = await fetch('/idiomas');
+    const idiomas = await res.json();
+
+    const contenedor = document.getElementById('checkbox-idiomas');
+    contenedor.innerHTML = ''; // Limpiar antes de insertar
+
+    idiomas.forEach(i => {
+      const div = document.createElement('div');
+      div.className = 'checkbox-idioma';
+      div.innerHTML = `
+        <input type="checkbox" id="idioma-${i.id_idioma}" name="idiomas[]" value="${i.id_idioma}">
+        <label for="idioma-${i.id_idioma}">${i.lengua}</label>
+      `;
+      contenedor.appendChild(div);
+    });
+  } catch (err) {
+    console.error('Error al cargar idiomas:', err);
+    alert('No se pudieron cargar los idiomas');
+  }
+}
+
+function limpiarSelect(id) {
+  const select = document.getElementById(id);
+  while (select.options.length > 1) {
+    select.remove(1);
+  }
+}
+
+document.getElementById('form-empleado').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const data = {
+    doc_identidad: document.getElementById('doc_identidad').value,
+    primer_nombre: document.getElementById('primer_nombre').value,
+    segundo_nombre: document.getElementById('segundo_nombre').value,
+    primer_apellido: document.getElementById('primer_apellido').value,
+    segundo_apellido: document.getElementById('segundo_apellido').value,
+    fecha_nac: document.getElementById('fecha_nac').value,
+    nombre_titulo: document.getElementById('nombre_titulo').value,
+    anio_formacion: document.getElementById('anio_formacion').value,
+    descripcion_especialidad: document.getElementById('descripcion_especialidad').value,
+    idiomas: Array.from(document.querySelectorAll('input[name="idiomas[]"]:checked')).map(cb => parseInt(cb.value)),
+    id_museo: parseInt(document.getElementById('id_museo').value),
+    id_estructura_org: parseInt(document.getElementById('id_estructura_org').value),
+    fecha_inicio: document.getElementById('fecha_inicio').value,
+    cargo: document.getElementById('cargo').value
+  };
+
+  try {
+    const response = await fetch('/registrar-empleado-profesional', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    document.getElementById('mensaje').textContent = result.mensaje || result.error || 'Registro procesado.';
+  } catch (err) {
+    console.error('Error al registrar:', err);
+    document.getElementById('mensaje').textContent = 'Error al registrar el empleado';
+  }
+});
+
+
+server.js:
+//server.js
+
+// 1. Importar módulos
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const pool = require('./db/conexion'); // 👈 IMPORTANTE: ruta correcta
+
+// 2. Crear la aplicación Express
+const app = express();
+const PORT = 3000;
+
+// 3. Middleware para leer datos de formularios
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// 4. Servir archivos estáticos (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 5. Ruta para obtener museos
+app.get('/museos', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT id_museo, nombre FROM museos ORDER BY nombre');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error consultando museos:', err);
+    res.status(500).send('Error al obtener museos');
+  }
+});
+
+// 🟩 Ruta para obtener estructuras organizativas por museo
+app.get('/estructuras', async (req, res) => {
+  const idMuseo = req.query.id_museo;
+  if (!idMuseo) {
+    return res.status(400).send('Falta el parámetro id_museo');
+  }
+
+  try {
+    const result = await pool.query(
+      'SELECT id_estructura_org, nombre FROM estructuras_organizacionales WHERE id_museo = $1 ORDER BY nombre',
+      [idMuseo]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error consultando estructuras:', err);
+    res.status(500).send('Error al obtener estructuras');
+  }
+});
+
+// 🟩 Ruta para obtener todos los idiomas disponibles
+app.get('/idiomas', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT id_idioma, lengua
+      FROM IDIOMAS
+      ORDER BY lengua
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error consultando idiomas:', err);
+    res.status(500).send('Error al obtener idiomas');
+  }
+});
+
+// 🟩 Ruta para registrar un nuevo empleado
+app.post('/registrar-empleado-profesional', async (req, res) => {
+  const {
+    doc_identidad,
+    primer_nombre,
+    segundo_nombre,
+    primer_apellido,
+    segundo_apellido,
+    fecha_nac,
+    nombre_titulo,
+    anio_formacion,
+    descripcion_especialidad,
+    idiomas,
+    id_museo,
+    id_estructura_org,
+    fecha_inicio,
+    cargo
+  } = req.body;
+
+  if (!idiomas || !Array.isArray(idiomas) || idiomas.length === 0) {
+    return res.status(400).json({ error: 'Debe seleccionar al menos un idioma' });
+  }
+
+  try {
+    await pool.query(
+  `CALL registrar_empleado_profesional(
+    $1,$2,$3,$4,$5,$6,
+    $7,$8,$9,$10,
+    $11,$12,$13,$14
+  )`,
+  [
+    doc_identidad,              // $1
+    primer_nombre,              // $2
+    segundo_nombre,             // $3
+    primer_apellido,            // $4
+    segundo_apellido,           // $5
+    fecha_nac,                  // $6
+    id_museo,                   // $7
+    id_estructura_org,          // $8
+    fecha_inicio,               // $9
+    cargo,                      // $10
+    nombre_titulo,              // $11 
+    anio_formacion,             // $12 
+    descripcion_especialidad,   // $13
+    idiomas                     // $14 
+  ]
+);
+
+
+    res.json({ mensaje: 'Empleado registrado exitosamente' });
+  } catch (err) {
+  console.error('Error al registrar empleado:', err.message);
+  res.status(500).json({ error: err.message }); // ← muestra el mensaje real al frontend
+}
+});
+
+
+
+// 6. Iniciar el servidor
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en: http://localhost:${PORT}`);
+});

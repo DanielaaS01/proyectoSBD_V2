@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registrar Empleado Profesional</title>
+  <link rel="stylesheet" href="../css/registrar_empleado.css" />
+</head>
+<body>
+  <h1>Registro de Empleado Profesional</h1>
+
+  <form id="form-empleado">
+    <!-- DATOS PERSONALES -->
+    <fieldset>
+      <legend>Datos personales</legend>
+
+      <label for="doc_identidad">Documento de identidad:</label>
+      <input type="text" id="doc_identidad" name="doc_identidad" required>
+
+      <label for="primer_nombre">Primer nombre:</label>
+      <input type="text" id="primer_nombre" name="primer_nombre" required>
+
+      <label for="segundo_nombre">Segundo nombre:</label>
+      <input type="text" id="segundo_nombre" name="segundo_nombre">
+
+      <label for="primer_apellido">Primer apellido:</label>
+      <input type="text" id="primer_apellido" name="primer_apellido" required>
+
+      <label for="segundo_apellido">Segundo apellido:</label>
+      <input type="text" id="segundo_apellido" name="segundo_apellido" required>
+
+      <label for="fecha_nac">Fecha de nacimiento:</label>
+      <input type="date" id="fecha_nac" name="fecha_nac" required>
+    </fieldset>
+
+    <!-- FORMACIÓN PROFESIONAL -->
+    <fieldset>
+  <legend>Formación Profesional</legend>
+
+  <label for="nombre_titulo">Título obtenido:</label>
+  <input type="text" id="nombre_titulo" name="nombre_titulo" required>
+
+  <label for="anio_formacion">Año de obtención:</label>
+  <input type="number" id="anio_formacion" name="anio_formacion" min="1900" max="2099" required>
+
+  <label for="descripcion_especialidad">Descripción de la especialidad:</label>
+  <textarea id="descripcion_especialidad" name="descripcion_especialidad" required></textarea>
+</fieldset>
+
+
+    <!-- IDIOMAS -->
+<fieldset>
+  <legend>Idiomas</legend>
+  <label>Seleccione uno o más idiomas:</label>
+  <div id="checkbox-idiomas" class="checkbox-group">
+    <!-- Aquí se insertarán dinámicamente los checkboxes -->
+  </div>
+
+  <button type="button" id="btn-agregar-idioma" style="margin-top: 10px;">Agregar nuevo idioma</button>
+
+  <div id="nuevos-idiomas" style="margin-top: 10px;">
+    <!-- Aquí se insertarán dinámicamente los campos de texto para nuevos idiomas -->
+  </div>
+</fieldset>
+
+
+
+    <!-- ASIGNACIÓN ORGANIZATIVA -->
+    <fieldset>
+      <legend>Asignación organizativa</legend>
+
+      <label for="id_museo">Museo:</label>
+      <select id="id_museo" name="id_museo" required>
+        <option value="">Seleccione un museo</option>
+      </select>
+
+      <label for="id_estructura_org">Unidad organizativa:</label>
+      <select id="id_estructura_org" name="id_estructura_org" required disabled>
+        <option value="">Seleccione un museo primero</option>
+      </select>
+
+      <label for="fecha_inicio">Fecha de inicio:</label>
+      <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+
+      <label for="cargo">Cargo:</label>
+      <select id="cargo" name="cargo" required>
+        <option value="">Seleccione cargo</option>
+        <option value="D">Director</option>
+        <option value="R">Restaurador</option>
+        <option value="C">Curador</option>
+        <option value="A">Administrativo</option>
+      </select>
+    </fieldset>
+
+    <button type="submit">Registrar empleado</button>
+    <p id="mensaje"></p>
+  </form>
+
+  <script src="../js/registrar_empleado.js"></script>
+</body>
+</html>
