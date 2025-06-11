@@ -104,7 +104,7 @@ document.getElementById('form-empleado').addEventListener('submit', async (e) =>
   const nuevosIdiomas = Array.from(document.querySelectorAll('.nuevo-idioma-input'))
     .map(input => input.value.trim().toUpperCase())
     .filter(valor => valor !== '');
-
+  
   const data = {
     doc_identidad: document.getElementById('doc_identidad').value,
     primer_nombre: document.getElementById('primer_nombre').value,

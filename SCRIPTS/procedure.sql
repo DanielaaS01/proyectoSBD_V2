@@ -2,23 +2,43 @@
 -- funciones para validar registro de empleados
 CREATE OR REPLACE FUNCTION validar_formato_doc_identidad(p_doc VARCHAR)
 RETURNS VOID AS $$
+DECLARE
+  letras_validas TEXT;
+  resto TEXT;
+  i INTEGER;
+  encontrado_digito BOOLEAN := FALSE;
+  c CHAR;
 BEGIN
-  -- Longitud válida: 8 o 9 caracteres
-  IF LENGTH(p_doc) < 8 OR LENGTH(p_doc) > 9 THEN
+  -- Validar longitud
+  IF LENGTH(p_doc) NOT IN (8, 9) THEN
     RAISE EXCEPTION 'formato de pasaporte no valido';
   END IF;
 
-  -- Primeros 3 caracteres pueden ser letras
-  IF SUBSTRING(p_doc FROM 1 FOR 3) ~ '[^A-Z]' THEN
+  -- Validar que el primer carácter sea letra
+  IF SUBSTRING(p_doc FROM 1 FOR 1) !~ '^[A-Z]$' THEN
     RAISE EXCEPTION 'formato de pasaporte no valido';
   END IF;
 
-  -- El resto solo números (si hay letras después del tercer carácter => error)
-  IF SUBSTRING(p_doc FROM 4) ~ '[^0-9]' THEN
+  -- Validar los primeros 3 caracteres
+  letras_validas := SUBSTRING(p_doc FROM 1 FOR 3);
+  FOR i IN 1..LENGTH(letras_validas) LOOP
+    c := SUBSTRING(letras_validas FROM i FOR 1);
+    IF c ~ '[0-9]' THEN
+      encontrado_digito := TRUE;
+    ELSIF encontrado_digito THEN
+      -- Si ya se encontró un número y ahora aparece una letra => error
+      RAISE EXCEPTION 'formato de pasaporte no valido';
+    END IF;
+  END LOOP;
+
+  -- Validar que los caracteres a partir del cuarto sean todos números
+  resto := SUBSTRING(p_doc FROM 4);
+  IF resto ~ '[^0-9]' THEN
     RAISE EXCEPTION 'formato de pasaporte no valido';
   END IF;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 CREATE OR REPLACE FUNCTION validar_fecha_nacimiento(p_fecha DATE)
@@ -120,7 +140,7 @@ CREATE OR REPLACE FUNCTION insertar_empleado(
 DECLARE
     v_num_expediente INTEGER;
 BEGIN
-    PERFORM validar_formato_doc_identidad(p_doc_identidad);
+    PERFORM validar_formato_doc_identidad(UPPER(p_doc_identidad));
     PERFORM validar_fecha_nacimiento(p_fecha_nac);
 
     INSERT INTO EMPLEADOS_PROFESIONALES (
@@ -189,19 +209,32 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION insertar_idioma_nuevo(
-    p_lengua VARCHAR
-) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION insertar_nuevos_idiomas(p_lenguas VARCHAR[])
+RETURNS INTEGER[] AS $$
 DECLARE
-    v_id INTEGER;
+  lengua VARCHAR;
+  v_id INTEGER;
+  v_ids INTEGER[] := '{}';
 BEGIN
-    INSERT INTO IDIOMAS(lengua)
-    VALUES (UPPER(p_lengua))
-    RETURNING id_idioma INTO v_id;
+  FOREACH lengua IN ARRAY p_lenguas
+  LOOP
+    -- Insertar solo si no existe
+    INSERT INTO IDIOMAS (lengua)
+    VALUES (UPPER(lengua))
+    ON CONFLICT (lengua) DO NOTHING;
 
-    RETURN v_id;
+    -- Obtener su ID (ya sea nuevo o existente)
+    SELECT id_idioma INTO v_id
+    FROM IDIOMAS
+    WHERE lengua = UPPER(lengua);
+
+    v_ids := array_append(v_ids, v_id);
+  END LOOP;
+
+  RETURN v_ids;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 -- PROCEDURE PRINCIPAL PARA REGISTRAR EMPLEADO COMPLETO
@@ -253,6 +286,47 @@ BEGIN
     CALL insertar_idiomas_empleado(
         v_num_expediente,
         p_idiomas
+    );
+END;
+$$;
+
+
+-- REGISTRO DE EMPLEADOS DE MANTENIMIENTO Y VIGILANCIA
+CREATE OR REPLACE PROCEDURE registrar_empleado_mantenimiento_vigilancia(
+    p_nombre VARCHAR,
+    p_apellido VARCHAR,
+    p_doc_identidad VARCHAR,
+    p_tipo CHAR
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_existente INTEGER;
+BEGIN
+    -- Validar formato del documento
+    PERFORM validar_formato_doc_identidad(UPPER(p_doc_identidad));
+
+    -- Validar tipo permitido
+    IF p_tipo NOT IN ('M', 'V') THEN
+        RAISE EXCEPTION 'tipo de empleado no valido';
+    END IF;
+
+    -- Verificar si ya existe ese documento de identidad
+    SELECT COUNT(*) INTO v_existente
+    FROM EMPLEADOS_MANT_VIG
+    WHERE doc_identidad = UPPER(p_doc_identidad);
+
+    IF v_existente > 0 THEN
+        RAISE EXCEPTION 'el documento de identidad ya está registrado';
+    END IF;
+
+    -- Insertar en mayúsculas
+    INSERT INTO EMPLEADOS_MANT_VIG(nombre, apellido, doc_identidad, tipo)
+    VALUES (
+        UPPER(p_nombre),
+        UPPER(p_apellido),
+        UPPER(p_doc_identidad),
+        p_tipo
     );
 END;
 $$;

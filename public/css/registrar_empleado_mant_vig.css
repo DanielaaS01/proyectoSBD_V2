@@ -24,13 +24,13 @@ h1 {
 form {
   background-color: #fff;
   padding: 25px 35px;
-  max-width: 800px;
+  max-width: 600px;
   margin: auto;
   border-radius: 8px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Fieldsets separados */
+/* Fieldsets */
 fieldset {
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -53,94 +53,13 @@ label {
 }
 
 input[type="text"],
-input[type="number"],
-input[type="date"],
-select,
-textarea {
+select {
   width: 100%;
   padding: 8px 10px;
   margin-top: 4px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 15px;
-}
-
-textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-/* Checkbox idiomas */
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.checkbox-idioma {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.checkbox-idioma input[type="checkbox"] {
-  transform: scale(1.2);
-}
-
-.checkbox-idioma label {
-  margin-left: 4px;
-  margin-top: 1px;
-}
-
-/* Botón de agregar idioma */
-#btn-agregar-idioma {
-  background-color: #0078a0;
-  color: white;
-  font-weight: bold;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 5px;
-  margin-top: 15px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#btn-agregar-idioma:hover {
-  background-color: #005173;
-}
-
-/* Campos de idiomas nuevos */
-#nuevos-idiomas {
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.nuevo-idioma {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.nuevo-idioma input {
-  flex: 1;
-}
-
-.nuevo-idioma button {
-  background-color: #cc0000;
-  color: white;
-  font-weight: bold;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.nuevo-idioma button:hover {
-  background-color: #990000;
 }
 
 /* Botón de enviar */
