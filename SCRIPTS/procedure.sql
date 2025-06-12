@@ -331,3 +331,171 @@ BEGIN
     );
 END;
 $$;
+
+
+-- PARA ASIGNAR ACTIVIDADES DE MANTENIMIENTO Y VIGILANCIA A EMPLEADOS
+
+CREATE OR REPLACE FUNCTION truncar_a_mes(p_fecha DATE)
+RETURNS DATE AS $$
+BEGIN
+    RETURN date_trunc('month', p_fecha)::DATE;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION validar_turno_asignacion(p_turno CHAR)
+RETURNS VOID AS $$
+BEGIN
+    IF p_turno NOT IN ('M', 'V', 'N') THEN
+        RAISE EXCEPTION 'Turno inválido. Solo se permiten M (mañana), v (vespertino) o N (noche).';
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION verificar_existencia_empleado(p_id_mant_vig INTEGER)
+RETURNS VOID AS $$
+DECLARE
+    v_existe INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO v_existe
+    FROM EMPLEADOS_MANT_VIG
+    WHERE id_mant_vig = p_id_mant_vig;
+
+    IF v_existe = 0 THEN
+        RAISE EXCEPTION 'El empleado con ID % no existe', p_id_mant_vig;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+ 
+
+CREATE OR REPLACE FUNCTION verificar_existencia_estructura(
+    p_id_museo INTEGER,
+    p_id_estructura_fis INTEGER
+)
+RETURNS VOID AS $$
+DECLARE
+    v_existe INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO v_existe
+    FROM ESTRUCTURAS_FISICAS
+    WHERE id_museo = p_id_museo
+      AND id_estructura_fis = p_id_estructura_fis;
+
+    IF v_existe = 0 THEN
+        RAISE EXCEPTION 'No existe la estructura física con ID % para el museo %',
+                        p_id_estructura_fis, p_id_museo;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION verificar_asignacion_preexistente(
+    p_id_mant_vig INTEGER,
+    p_id_museo INTEGER,
+    p_id_estructura_fis INTEGER,
+    p_id_mes_anio DATE,
+    p_turno CHAR
+)
+RETURNS VOID AS $$
+DECLARE
+    v_existente INTEGER;
+BEGIN
+    -- 1. Validar duplicado exacto
+    SELECT COUNT(*) INTO v_existente
+    FROM MESES_ASIGNACIONES_EMPLEADOS
+    WHERE id_mant_vig = p_id_mant_vig
+      AND id_museo = p_id_museo
+      AND id_estructura_fis = p_id_estructura_fis
+      AND id_mes_anio = p_id_mes_anio
+      AND turno = p_turno;
+
+    IF v_existente > 0 THEN
+        RAISE EXCEPTION 'El empleado ya tiene esa asignación registrada exactamente igual.';
+    END IF;
+
+    -- 2. Validar asignación solapada en otra estructura con mismo mes y turno
+    SELECT COUNT(*) INTO v_existente
+    FROM MESES_ASIGNACIONES_EMPLEADOS
+    WHERE id_mant_vig = p_id_mant_vig
+      AND id_mes_anio = p_id_mes_anio
+      AND turno = p_turno
+      AND (id_museo != p_id_museo OR id_estructura_fis != p_id_estructura_fis);
+
+    IF v_existente > 0 THEN
+        RAISE EXCEPTION 'El empleado ya tiene asignado ese turno en otra estructura en el mismo mes.';
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE PROCEDURE asignar_empleado(
+    p_id_mant_vig INTEGER,
+    p_id_museo INTEGER,
+    p_id_estructura_fis INTEGER,
+    p_fecha DATE,
+    p_turno CHAR
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_fecha_mes DATE;
+BEGIN
+    -- 1. Validar existencia del empleado
+    PERFORM verificar_existencia_empleado(p_id_mant_vig);
+
+    -- 2. Validar existencia de la estructura física asociada al museo
+    PERFORM verificar_existencia_estructura(p_id_museo, p_id_estructura_fis);
+
+    -- 3. Validar turno
+    PERFORM validar_turno_asignacion(UPPER(p_turno));
+
+    -- 4. Truncar la fecha a mes
+    v_fecha_mes := truncar_a_mes(p_fecha);
+
+    -- 5. Validar que no haya conflicto o duplicado
+    PERFORM verificar_asignacion_preexistente(
+        p_id_mant_vig,
+        p_id_museo,
+        p_id_estructura_fis,
+        v_fecha_mes,
+        UPPER(p_turno) 
+    );
+    
+
+    -- 6. Insertar en mayúsculas (aunque solo aplica al turno, ya que los IDs son enteros)
+    INSERT INTO MESES_ASIGNACIONES_EMPLEADOS (
+        id_museo,
+        id_estructura_fis,
+        id_mant_vig,
+        id_mes_anio,
+        turno
+    ) VALUES (
+        p_id_museo,
+        p_id_estructura_fis,
+        p_id_mant_vig,
+        v_fecha_mes,
+        UPPER(p_turno)
+    );
+END;
+$$;
+
+
+CREATE OR REPLACE FUNCTION obtener_asignaciones_empleado(p_id_mant_vig INTEGER)
+RETURNS TABLE (
+  id_museo INTEGER,
+  id_estructura_fis INTEGER,
+  id_mes_anio DATE,
+  turno CHAR(1)
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+    id_museo,
+    id_estructura_fis,
+    id_mes_anio,
+    turno
+  FROM MESES_ASIGNACIONES_EMPLEADOS
+  WHERE id_mant_vig = p_id_mant_vig
+  ORDER BY id_mes_anio DESC;
+END;
+$$ LANGUAGE plpgsql;

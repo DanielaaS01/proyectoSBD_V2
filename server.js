@@ -140,7 +140,7 @@ app.post("/registrar-empleado-profesional", async (req, res) => {
   }
 });
 
-// 9. Ruta: Registrar empleado de mantenimiento o vigilancia
+// 8. Ruta: Registrar empleado de mantenimiento o vigilancia
 app.post("/registrar-empleado-mant-vig", async (req, res) => {
   const { nombre, apellido, doc_identidad, tipo } = req.body;
 
@@ -170,7 +170,101 @@ app.post("/registrar-empleado-mant-vig", async (req, res) => {
   }
 });
 
-// 8. Iniciar servidor
+// 9. Ruta: Obtener estructuras físicas por museo (para asignaciones)
+app.get("/estructuras-fisicas", async (req, res) => {
+  const idMuseo = req.query.id_museo;
+  if (!idMuseo) return res.status(400).send("Falta el parámetro id_museo");
+
+  try {
+    const result = await pool.query(
+      "SELECT id_estructura_fis, nombre FROM estructuras_fisicas WHERE id_museo = $1 ORDER BY nombre",
+      [idMuseo]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando estructuras físicas:", err);
+    res.status(500).send("Error al obtener estructuras físicas");
+  }
+});
+
+// 10. Ruta: Obtener empleados por tipo (mantenimiento o vigilancia)
+app.get("/empleados-mant-vig", async (req, res) => {
+  const tipoRaw = req.query.tipo?.toLowerCase();
+
+  let tipoCodigo;
+  if (tipoRaw === "mantenimiento") tipoCodigo = "M";
+  else if (tipoRaw === "vigilancia") tipoCodigo = "V";
+  else return res.status(400).json({ error: "Tipo inválido" });
+
+  try {
+    const result = await pool.query(
+      `SELECT id_mant_vig, nombre, apellido
+       FROM empleados_mant_vig
+       WHERE tipo = $1
+       ORDER BY apellido, nombre`,
+      [tipoCodigo]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando empleados:", err);
+    res.status(500).json({ error: "Error al obtener empleados" });
+  }
+});
+
+
+// 11. Ruta: Insertar asignación mensual
+app.post("/asignar-empleado", async (req, res) => {
+  const { id_museo, id_estructura_fis, id_mant_vig, fecha, turno } = req.body;
+
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+
+    await client.query(`CALL asignar_empleado($1, $2, $3, $4, $5)`, [
+      id_mant_vig,
+      id_museo,
+      id_estructura_fis,
+      fecha,
+      turno,
+    ]);
+
+    await client.query("COMMIT");
+    res.json({ mensaje: "Asignación realizada con éxito" });
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error al asignar empleado:", err.message);
+    res.status(500).json({ error: err.message });
+  } finally {
+    client.release();
+  }
+});
+
+// 12. Ruta: Obtener asignaciones activas por empleado
+app.get("/asignaciones-empleado", async (req, res) => {
+  const idMantVig = parseInt(req.query.id_mant_vig);
+
+  if (isNaN(idMantVig)) {
+    return res.status(400).json({ error: "ID inválido" });
+  }
+
+  try {
+    const result = await pool.query(
+      "SELECT * FROM obtener_asignaciones_empleado($1)",
+      [idMantVig]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error al consultar asignaciones del empleado:", err.message);
+    res.status(500).json({ error: "Error al obtener asignaciones" });
+  }
+});
+
+
+
+
+
+
+//  Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en: http://localhost:${PORT}`);
 });

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Gestión de Museos - Asignación de Personal</title>
+    <link rel="stylesheet" href="../css/asignar_empleado.css" />
+  </head>
+  <body>
+    <main class="main-content">
+      <!-- Cabecera -->
+      <header class="header">
+        <h1 class="page-title">Asignación de Personal</h1>
+      </header>
+
+      <!-- Sección de selección de museo -->
+      <section class="museum-selection-section">
+        <h2 class="section-title">
+          <svg
+            class="section-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+            />
+          </svg>
+          Museos Activos
+        </h2>
+        <div class="museum-count">5</div>
+        <div class="museum-label">
+          Seleccione un museo para gestionar su personal
+        </div>
+
+        <div class="museum-selector">
+          <select id="museoPrincipal" class="museum-select">
+            <!-- Dinámico -->
+          </select>
+          <button id="seleccionarMuseo" class="select-btn">
+            <svg
+              class="btn-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="white"
+            >
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+            </svg>
+            Seleccionar
+          </button>
+        </div>
+      </section>
+
+      <!-- Formulario de asignación -->
+      <section
+        id="asignacionesSection"
+        class="main-form-container"
+        style="display: none"
+      >
+        <div class="form-panel">
+          <h2 class="form-title">
+            <svg
+              class="form-title-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
+              />
+            </svg>
+            Nueva Asignación
+          </h2>
+
+          <form id="assignmentForm">
+            <div class="form-group">
+              <label for="museo" class="form-label">Museo</label>
+              <select id="museo" class="form-control" disabled>
+                <!-- Será llenado automáticamente -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="estructura" class="form-label"
+                >Estructura física</label
+              >
+              <select id="estructura" class="form-control" required></select>
+            </div>
+
+            <div class="form-group">
+              <label for="tipoEmpleado" class="form-label"
+                >Tipo de empleado</label
+              >
+              <select id="tipoEmpleado" class="form-control" required>
+                <option value="" disabled selected>Seleccione un tipo</option>
+                <option value="mantenimiento">Mantenimiento</option>
+                <option value="vigilancia">Vigilancia</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="empleado" class="form-label">Empleado</label>
+              <select id="empleado" class="form-control" required>
+                <option value="" disabled selected>
+                  Seleccione un empleado
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="mes" class="form-label">Mes de asignación</label>
+              <input type="month" id="mes" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+              <label for="turno" class="form-label">Turno asignado</label>
+              <select id="turno" class="form-control" required>
+                <option value="" disabled selected>Seleccione un turno</option>
+                <option value="M">Mañana</option>
+                <option value="V">Vespertino</option>
+                <option value="N">Noche</option>
+              </select>
+            </div>
+
+            <button type="submit" class="action-btn">
+              <svg
+                class="btn-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="white"
+              >
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              Asignar empleado
+            </button>
+          </form>
+        </div>
+
+        <!-- Panel de visualización (sin cambios) -->
+        <div class="view-panel">
+          <h2 class="form-title">
+            <svg
+              class="form-title-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
+              />
+            </svg>
+            Asignaciones del Empleado
+          </h2>
+          <div id="employeeAssignmentsContainer" class="assignments-container">
+            <div id="noEmployeeSelected" class="no-employee-selected">
+              <svg
+                class="no-employee-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                />
+              </svg>
+              <p class="no-employee-text">Ningún empleado seleccionado</p>
+              <p class="no-employee-subtext">
+                Seleccione un empleado para ver sus asignaciones
+              </p>
+            </div>
+            <div id="employeeInfo" style="display: none"></div>
+            <div id="yearSelector" class="year-selector" style="display: none">
+              <span class="year-label">Filtrar por año:</span>
+              <select id="yearSelect" class="year-select"></select>
+            </div>
+            <div id="assignmentsByMonth"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Notificación -->
+    <div id="notification" class="notification">
+      <svg
+        id="notificationIcon"
+        class="notification-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+      >
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+      </svg>
+      <span id="notificationMessage" class="notification-message"
+        >Operación completada con éxito</span
+      >
+      <span class="notification-close" id="notificationClose">×</span>
+    </div>
+
+    <script src="../js/asignar_empleado.js"></script>
+  </body>
+</html>
