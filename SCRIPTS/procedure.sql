@@ -568,3 +568,190 @@ BEGIN
     ORDER BY empleados_mant_vig.apellido, empleados_mant_vig.nombre;
 END;
 $$ LANGUAGE plpgsql;
+
+
+-- HISTORICO EMPLEADOS 
+--Abrir historico de empleado
+CREATE OR REPLACE PROCEDURE registrar_historico_empleado(
+    p_id_museo INTEGER,
+    p_id_estructura_org INTEGER,
+    p_num_expediente INTEGER,
+    p_fecha_inicio DATE,
+    p_fecha_fin DATE,
+    p_cargo CHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- 1. Validar que exista el museo y la estructura organizacional
+    IF NOT EXISTS (
+        SELECT 1 FROM ESTRUCTURAS_ORGANIZACIONALES
+        WHERE id_museo = p_id_museo AND id_estructura_org = p_id_estructura_org
+    ) THEN
+        RAISE EXCEPTION 'La estructura organizacional no existe para el museo indicado.';
+    END IF;
+
+    -- 2. Validar que el empleado profesional exista
+    IF NOT EXISTS (
+        SELECT 1 FROM EMPLEADOS_PROFESIONALES
+        WHERE num_expediente = p_num_expediente
+    ) THEN
+        RAISE EXCEPTION 'El número de expediente no existe.';
+    END IF;
+
+    -- 3. Validar que no haya ya un historico abierto para ese empleado
+    IF EXISTS (
+        SELECT 1 FROM HISTORICOS_EMPLEADOS
+        WHERE num_expediente = p_num_expediente AND fecha_fin IS NULL
+    ) THEN
+        RAISE EXCEPTION 'El empleado ya tiene un historico de cargo activo. Debe cerrarse antes de asignar uno nuevo.';
+    END IF;
+
+    -- 5. Insertar el nuevo historico
+    INSERT INTO HISTORICOS_EMPLEADOS (
+        id_museo,
+        id_estructura_org,
+        num_expediente,
+        fecha_inicio,
+        fecha_fin,
+        cargo
+    ) VALUES (
+        p_id_museo,
+        p_id_estructura_org,
+        p_num_expediente,
+        p_fecha_inicio,
+        p_fecha_fin,
+        UPPER(p_cargo)
+    );
+
+    RAISE NOTICE 'historico registrado correctamente.';
+END;
+$$;
+
+
+-- Cierre de historico de empleado
+CREATE OR REPLACE PROCEDURE cerrar_historico_empleado(
+    p_id_museo INTEGER,
+    p_id_estructura_org INTEGER,
+    p_num_expediente INTEGER,
+    p_fecha_inicio DATE,
+    p_fecha_fin DATE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_fecha_inicio_actual DATE;
+BEGIN
+    -- 1. Verificar que existe el historico activo exacto
+    SELECT fecha_inicio INTO v_fecha_inicio_actual
+    FROM HISTORICOS_EMPLEADOS
+    WHERE id_museo = p_id_museo
+      AND id_estructura_org = p_id_estructura_org
+      AND num_expediente = p_num_expediente
+      AND fecha_inicio = p_fecha_inicio
+      AND fecha_fin IS NULL;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No se encontró un historico activo con los datos especificados.';
+    END IF;
+
+    -- 2. Validar que la fecha de cierre sea posterior o igual al inicio
+    IF p_fecha_fin < v_fecha_inicio_actual THEN
+        RAISE EXCEPTION 'La fecha de fin no puede ser menor que la fecha de inicio.';
+    END IF;
+
+    -- 3. Actualizar el historico
+    UPDATE HISTORICOS_EMPLEADOS
+    SET fecha_fin = p_fecha_fin
+    WHERE id_museo = p_id_museo
+      AND id_estructura_org = p_id_estructura_org
+      AND num_expediente = p_num_expediente
+      AND fecha_inicio = p_fecha_inicio
+      AND fecha_fin IS NULL;
+
+    RAISE NOTICE 'historico cerrado correctamente.';
+END;
+$$;
+
+
+---ver historico empleados
+CREATE OR REPLACE FUNCTION ver_historico_empleado(p_num_expediente INTEGER)
+RETURNS TABLE (
+    id_museo INTEGER,
+    nombre_museo VARCHAR,
+    id_estructura_org INTEGER,
+    nombre_estructura VARCHAR,
+    cargo CHAR,
+    fecha_inicio DATE,
+    fecha_fin DATE
+)
+LANGUAGE sql
+AS $$
+    SELECT 
+        h.id_museo,
+        m.nombre AS nombre_museo,
+        h.id_estructura_org,
+        eo.nombre AS nombre_estructura,
+        h.cargo,
+        h.fecha_inicio,
+        h.fecha_fin
+    FROM HISTORICOS_EMPLEADOS h
+    JOIN ESTRUCTURAS_ORGANIZACIONALES eo 
+        ON h.id_museo = eo.id_museo AND h.id_estructura_org = eo.id_estructura_org
+    JOIN MUSEOS m 
+        ON h.id_museo = m.id_museo
+    WHERE h.num_expediente = p_num_expediente
+    ORDER BY h.fecha_inicio DESC;
+$$;
+
+---Eliminar un historico---
+CREATE OR REPLACE PROCEDURE eliminar_historico_empleado(
+    p_id_museo          INTEGER,
+    p_id_estructura_org INTEGER,
+    p_num_expediente    INTEGER,
+    p_fecha_inicio      DATE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_fecha_fin DATE;
+    v_min_fecha DATE;
+BEGIN
+    -- 1. Comprobar que el registro exista y capturar su fecha_fin
+    SELECT fecha_fin
+      INTO v_fecha_fin
+    FROM historicos_empleados
+    WHERE id_museo          = p_id_museo
+      AND id_estructura_org = p_id_estructura_org
+      AND num_expediente    = p_num_expediente
+      AND fecha_inicio      = p_fecha_inicio;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No se encontró el historico especificado.';
+    END IF;
+
+    -- 2. Validar que ya tenga fecha_fin (no eliminar activos)
+    IF v_fecha_fin IS NULL THEN
+        RAISE EXCEPTION 'No se puede eliminar un histórico con fecha_fin NULL (activo).';
+    END IF;
+
+    -- 3. Calcular la fecha_inicio más antigua de este empleado
+    SELECT MIN(fecha_inicio)
+      INTO v_min_fecha
+    FROM historicos_empleados
+    WHERE num_expediente = p_num_expediente;
+    
+    -- 4. Validar que no sea el primer histórico
+    IF p_fecha_inicio = v_min_fecha THEN
+        RAISE EXCEPTION 'No se puede eliminar el primer histórico del empleado.';
+    END IF;
+
+    -- 5. Si pasa todas las validaciones, borrar
+    DELETE FROM historicos_empleados
+     WHERE id_museo          = p_id_museo
+       AND id_estructura_org = p_id_estructura_org
+       AND num_expediente    = p_num_expediente
+       AND fecha_inicio      = p_fecha_inicio;
+
+    RAISE NOTICE 'historico eliminado correctamente.';
+END;
+$$;
