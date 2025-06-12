@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/museos", async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT id_museo, nombre FROM museos ORDER BY nombre"
+      "SELECT * FROM obtener_museos()"
     );
     res.json(result.rows);
   } catch (err) {
@@ -35,7 +35,7 @@ app.get("/estructuras", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT id_estructura_org, nombre FROM estructuras_organizacionales WHERE id_museo = $1 ORDER BY nombre",
+      "SELECT * FROM obtener_estructuras_org_por_museo($1)",
       [idMuseo]
     );
     res.json(result.rows);
@@ -49,7 +49,7 @@ app.get("/estructuras", async (req, res) => {
 app.get("/idiomas", async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT id_idioma, lengua FROM idiomas ORDER BY lengua"
+      "SELECT * FROM obtener_idiomas()"
     );
     res.json(result.rows);
   } catch (err) {
@@ -177,7 +177,7 @@ app.get("/estructuras-fisicas", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT id_estructura_fis, nombre FROM estructuras_fisicas WHERE id_museo = $1 ORDER BY nombre",
+      "SELECT * FROM obtener_estructuras_fisicas_por_museo($1)",
       [idMuseo]
     );
     res.json(result.rows);
@@ -198,10 +198,7 @@ app.get("/empleados-mant-vig", async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT id_mant_vig, nombre, apellido
-       FROM empleados_mant_vig
-       WHERE tipo = $1
-       ORDER BY apellido, nombre`,
+      "SELECT * FROM obtener_empleados_mant_vig_por_tipo($1)",
       [tipoCodigo]
     );
     res.json(result.rows);

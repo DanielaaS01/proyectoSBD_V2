@@ -508,3 +508,63 @@ BEGIN
   ORDER BY m.id_mes_anio DESC;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+
+--para agregar
+
+-- Obtener museos
+CREATE OR REPLACE FUNCTION obtener_museos()
+RETURNS TABLE(id_museo INTEGER, nombre VARCHAR) AS $$
+BEGIN
+  RETURN QUERY SELECT museos.id_museo, museos.nombre FROM museos ORDER BY museos.nombre;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Obtener estructuras organizacionales por museo
+CREATE OR REPLACE FUNCTION obtener_estructuras_org_por_museo(id_museo_param INTEGER)
+RETURNS TABLE(id_estructura_org INTEGER, nombre VARCHAR) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT estructuras_organizacionales.id_estructura_org, estructuras_organizacionales.nombre
+    FROM estructuras_organizacionales
+    WHERE estructuras_organizacionales.id_museo = id_museo_param
+    ORDER BY estructuras_organizacionales.nombre;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Obtener idiomas
+CREATE OR REPLACE FUNCTION obtener_idiomas()
+RETURNS TABLE(id_idioma INTEGER, lengua VARCHAR) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT idiomas.id_idioma, idiomas.lengua
+    FROM idiomas
+    ORDER BY idiomas.lengua;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Obtener estructuras físicas por museo
+CREATE OR REPLACE FUNCTION obtener_estructuras_fisicas_por_museo(id_museo_param INTEGER)
+RETURNS TABLE(id_estructura_fis INTEGER, nombre VARCHAR) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT estructuras_fisicas.id_estructura_fis, estructuras_fisicas.nombre
+    FROM estructuras_fisicas
+    WHERE estructuras_fisicas.id_museo = id_museo_param
+    ORDER BY estructuras_fisicas.nombre;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Obtener empleados de mantenimiento/vigilancia por tipo
+CREATE OR REPLACE FUNCTION obtener_empleados_mant_vig_por_tipo(tipo_param CHAR)
+RETURNS TABLE(id_mant_vig INTEGER, nombre VARCHAR, apellido VARCHAR) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT empleados_mant_vig.id_mant_vig, empleados_mant_vig.nombre, empleados_mant_vig.apellido
+    FROM empleados_mant_vig
+    WHERE empleados_mant_vig.tipo = tipo_param
+    ORDER BY empleados_mant_vig.apellido, empleados_mant_vig.nombre;
+END;
+$$ LANGUAGE plpgsql;
