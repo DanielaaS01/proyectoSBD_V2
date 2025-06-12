@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro de Empleados</title>
+  <link rel="stylesheet" href="../css/registro_empleados.css" />
+</head>
+<body>
+  <h1>Registro de Empleados</h1>
+
+  <!-- Selector de tipo de empleado -->
+  <section class="selector-tipo">
+    <label for="tipo_empleado">¿Qué tipo de empleado desea registrar?</label>
+    <select id="tipo_empleado">
+      <option value="">Seleccione una opción</option>
+      <option value="profesional">Empleado profesional</option>
+      <option value="mant_vig">Empleado de mantenimiento o vigilancia</option>
+    </select>
+  </section>
+
+  <!-- FORMULARIO PROFESIONAL -->
+  <form id="form-empleado-profesional" style="display: none;">
+    <fieldset>
+      <legend>Datos personales</legend>
+      <label for="doc_identidad">Documento de identidad:</label>
+      <input type="text" id="doc_identidad" name="doc_identidad" required>
+
+      <label for="primer_nombre">Primer nombre:</label>
+      <input type="text" id="primer_nombre" name="primer_nombre" required>
+
+      <label for="segundo_nombre">Segundo nombre:</label>
+      <input type="text" id="segundo_nombre" name="segundo_nombre">
+
+      <label for="primer_apellido">Primer apellido:</label>
+      <input type="text" id="primer_apellido" name="primer_apellido" required>
+
+      <label for="segundo_apellido">Segundo apellido:</label>
+      <input type="text" id="segundo_apellido" name="segundo_apellido" required>
+
+      <label for="fecha_nac">Fecha de nacimiento:</label>
+      <input type="date" id="fecha_nac" name="fecha_nac" required>
+    </fieldset>
+
+    <fieldset>
+      <legend>Formación Profesional</legend>
+      <label for="nombre_titulo">Título obtenido:</label>
+      <input type="text" id="nombre_titulo" name="nombre_titulo" required>
+
+      <label for="anio_formacion">Año de obtención:</label>
+      <input type="number" id="anio_formacion" name="anio_formacion" min="1900" max="2099" required>
+
+      <label for="descripcion_especialidad">Descripción de la especialidad:</label>
+      <textarea id="descripcion_especialidad" name="descripcion_especialidad" required></textarea>
+    </fieldset>
+
+    <fieldset>
+      <legend>Idiomas</legend>
+      <label>Seleccione uno o más idiomas:</label>
+      <div id="checkbox-idiomas" class="checkbox-group"></div>
+
+      <button type="button" id="btn-agregar-idioma">Agregar nuevo idioma</button>
+      <div id="nuevos-idiomas"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Asignación organizativa</legend>
+      <label for="id_museo">Museo:</label>
+      <select id="id_museo" name="id_museo" required>
+        <option value="">Seleccione un museo</option>
+      </select>
+
+      <label for="id_estructura_org">Unidad organizativa:</label>
+      <select id="id_estructura_org" name="id_estructura_org" required disabled>
+        <option value="">Seleccione un museo primero</option>
+      </select>
+
+      <label for="fecha_inicio">Fecha de inicio:</label>
+      <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+
+      <label for="cargo">Cargo:</label>
+      <select id="cargo" name="cargo" required>
+        <option value="">Seleccione cargo</option>
+        <option value="D">Director</option>
+        <option value="R">Restaurador</option>
+        <option value="C">Curador</option>
+        <option value="A">Administrativo</option>
+      </select>
+    </fieldset>
+
+    <button type="submit">Registrar empleado profesional</button>
+    <p id="mensaje-profesional"></p>
+  </form>
+
+  <!-- FORMULARIO MANTENIMIENTO / VIGILANCIA -->
+  <form id="form-mant-vig" style="display: none;">
+    <fieldset>
+      <legend>Datos del Empleado</legend>
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required>
+
+      <label for="apellido">Apellido:</label>
+      <input type="text" id="apellido" name="apellido" required>
+
+      <label for="doc_identidad_mant_vig">Documento de Identidad:</label>
+      <input type="text" id="doc_identidad_mant_vig" name="doc_identidad_mant_vig" required>
+
+      <label for="tipo">Tipo de Empleado:</label>
+      <select id="tipo" name="tipo" required>
+        <option value="">Seleccione una opción</option>
+        <option value="M">Mantenimiento</option>
+        <option value="V">Vigilancia</option>
+      </select>
+    </fieldset>
+
+    <button type="submit">Registrar empleado M/V</button>
+    <p id="mensaje-mant-vig"></p>
+  </form>
+
+  <script src="../js/registro_empleados.js"></script>
+</body>
+</html>

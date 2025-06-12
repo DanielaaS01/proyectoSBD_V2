@@ -65,11 +65,11 @@ DECLARE
   anio_actual INTEGER := EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER;
 BEGIN
   IF p_anio < 1900 OR p_anio > anio_actual THEN
-    RAISE EXCEPTION 'anio de formacion no valido';
+    RAISE EXCEPTION 'año de formacion no valido';
   END IF;
 
   IF LENGTH(p_anio::TEXT) != 4 THEN
-    RAISE EXCEPTION 'anio de formacion no valido';
+    RAISE EXCEPTION 'año de formacion no valido';
   END IF;
 END;
 $$ LANGUAGE plpgsql;
@@ -212,21 +212,21 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION insertar_nuevos_idiomas(p_lenguas VARCHAR[])
 RETURNS INTEGER[] AS $$
 DECLARE
-  lengua VARCHAR;
+  nueva_lengua VARCHAR;
   v_id INTEGER;
   v_ids INTEGER[] := '{}';
 BEGIN
-  FOREACH lengua IN ARRAY p_lenguas
+  FOREACH nueva_lengua IN ARRAY p_lenguas
   LOOP
     -- Insertar solo si no existe
     INSERT INTO IDIOMAS (lengua)
-    VALUES (UPPER(lengua))
+    VALUES (UPPER(nueva_lengua))
     ON CONFLICT (lengua) DO NOTHING;
 
     -- Obtener su ID (ya sea nuevo o existente)
-    SELECT id_idioma INTO v_id
-    FROM IDIOMAS
-    WHERE lengua = UPPER(lengua);
+    SELECT i.id_idioma INTO v_id
+    FROM IDIOMAS i
+    WHERE i.lengua = UPPER(nueva_lengua);
 
     v_ids := array_append(v_ids, v_id);
   END LOOP;
@@ -234,6 +234,7 @@ BEGIN
   RETURN v_ids;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 

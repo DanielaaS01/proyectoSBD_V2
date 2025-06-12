@@ -20,7 +20,26 @@ h1 {
   color: #005173;
 }
 
-/* Estilo del formulario */
+/* Selector de tipo de empleado */
+.selector-tipo {
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  text-align: center;
+}
+
+.selector-tipo label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.selector-tipo select {
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Estilo general de formularios */
 form {
   background-color: #fff;
   padding: 25px 35px;
@@ -30,7 +49,7 @@ form {
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Fieldsets separados */
+/* Fieldsets */
 fieldset {
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -45,7 +64,7 @@ legend {
   color: #005173;
 }
 
-/* Etiquetas y campos alineados */
+/* Etiquetas y campos */
 label {
   display: block;
   margin-top: 12px;
@@ -93,7 +112,7 @@ textarea {
   margin-top: 1px;
 }
 
-/* Botón de agregar idioma */
+/* Botón agregar idioma */
 #btn-agregar-idioma {
   background-color: #0078a0;
   color: white;
@@ -110,7 +129,7 @@ textarea {
   background-color: #005173;
 }
 
-/* Campos de idiomas nuevos */
+/* Nuevos idiomas */
 #nuevos-idiomas {
   margin-top: 15px;
   display: flex;
@@ -161,8 +180,10 @@ button[type="submit"]:hover {
   background-color: #005173;
 }
 
-/* Mensaje de resultado */
-#mensaje {
+/* Mensajes de resultado */
+#mensaje,
+#mensaje-profesional,
+#mensaje-mant-vig {
   text-align: center;
   margin-top: 15px;
   font-weight: bold;
