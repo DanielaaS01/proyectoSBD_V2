@@ -483,19 +483,28 @@ $$;
 CREATE OR REPLACE FUNCTION obtener_asignaciones_empleado(p_id_mant_vig INTEGER)
 RETURNS TABLE (
   id_museo INTEGER,
+  nombre_museo VARCHAR,
   id_estructura_fis INTEGER,
-  id_mes_anio DATE,
-  turno CHAR(1)
+  nombre_estructura VARCHAR,
+  fecha DATE,
+  turno CHAR(1),
+  tipo CHAR(1)
 ) AS $$
 BEGIN
   RETURN QUERY
-  SELECT
-    id_museo,
-    id_estructura_fis,
-    id_mes_anio,
-    turno
-  FROM MESES_ASIGNACIONES_EMPLEADOS
-  WHERE id_mant_vig = p_id_mant_vig
-  ORDER BY id_mes_anio DESC;
+  SELECT 
+    m.id_museo,
+    mu.nombre AS nombre_museo,
+    m.id_estructura_fis,
+    ef.nombre AS nombre_estructura,
+    m.id_mes_anio AS fecha,
+    m.turno,
+    emv.tipo
+  FROM MESES_ASIGNACIONES_EMPLEADOS m
+    JOIN MUSEOS mu ON mu.id_museo = m.id_museo
+    JOIN ESTRUCTURAS_FISICAS ef ON ef.id_estructura_fis = m.id_estructura_fis
+    JOIN EMPLEADOS_MANT_VIG emv ON emv.id_mant_vig = m.id_mant_vig
+  WHERE m.id_mant_vig = p_id_mant_vig
+  ORDER BY m.id_mes_anio DESC;
 END;
 $$ LANGUAGE plpgsql;

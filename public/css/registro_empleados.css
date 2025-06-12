@@ -1,3 +1,28 @@
+/* Importar fuente y definir variables igual que en asignar_empleado.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --color-beige: #F5F5DC;
+  --color-beige-claro: #FAF9F0;
+  --color-mostaza: #D4AF37;
+  --color-mostaza-claro: #E6C158;
+  --color-mostaza-oscuro: #B89429;
+  --color-azul-oscuro: #002F5F;
+  --color-azul-medio: #004E8A;
+  --color-azul-claro: #E5EFF8;
+  --color-gris-claro: #f8f8f8;
+  --color-gris-medio: #e0e0e0;
+  --color-texto: #333333;
+  --color-texto-claro: #666666;
+  --color-exito: #4CAF50;
+  --color-error: #F44336;
+  --color-advertencia: #FF9800;
+  --sombra-suave: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --sombra-media: 0 15px 35px rgba(0, 0, 0, 0.12);
+  --radio-borde: 16px;
+  --transicion: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
 /* Reset básico */
 * {
   box-sizing: border-box;
@@ -7,17 +32,25 @@
 
 /* Estilo general del cuerpo */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f6f8;
-  color: #333;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f0f0f0;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(0, 47, 95, 0.05) 0%, transparent 20%);
+  color: var(--color-texto);
+  line-height: 1.6;
+  min-height: 100vh;
   padding: 30px;
+  overflow-x: hidden;
 }
 
 /* Título principal */
 h1 {
   text-align: center;
   margin-bottom: 30px;
-  color: #005173;
+  color: var(--color-azul-oscuro);
+  font-size: 2rem;
+  font-weight: 600;
 }
 
 /* Selector de tipo de empleado */
@@ -25,50 +58,76 @@ h1 {
   max-width: 600px;
   margin: 0 auto 40px auto;
   text-align: center;
+  background-color: white;
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra-suave);
+  padding: 1.5rem;
+  transition: var(--transicion);
 }
 
 .selector-tipo label {
-  font-weight: bold;
+  font-weight: 600;
   margin-right: 10px;
+  color: var(--color-azul-oscuro);
 }
 
 .selector-tipo select {
-  padding: 8px 12px;
-  font-size: 16px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-gris-medio);
+  background-color: var(--color-gris-claro);
+  transition: var(--transicion);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px;
+  padding-right: 2.8rem;
+}
+
+.selector-tipo select:focus {
+  outline: none;
+  border-color: var(--color-mostaza);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+  background-color: white;
 }
 
 /* Estilo general de formularios */
 form {
-  background-color: #fff;
-  padding: 25px 35px;
+  background-color: white;
+  padding: 2rem 2.5rem;
   max-width: 800px;
   margin: auto;
-  border-radius: 8px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra-suave);
+  animation: fadeIn 0.6s ease forwards;
 }
 
 /* Fieldsets */
 fieldset {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 20px;
-  margin-bottom: 20px;
+  border: 1px solid var(--color-gris-medio);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--color-gris-claro);
 }
 
 /* Título de cada sección */
 legend {
-  font-weight: bold;
+  font-weight: 600;
+  color: var(--color-azul-oscuro);
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
   padding: 0 10px;
-  color: #005173;
 }
 
 /* Etiquetas y campos */
 label {
   display: block;
-  margin-top: 12px;
+  margin-bottom: 0.5rem;
   font-weight: 500;
+  color: var(--color-texto);
 }
 
 input[type="text"],
@@ -77,11 +136,23 @@ input[type="date"],
 select,
 textarea {
   width: 100%;
-  padding: 8px 10px;
-  margin-top: 4px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 15px;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--color-gris-medio);
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: var(--color-gris-claro);
+  transition: var(--transicion);
+  font-family: inherit;
+  margin-bottom: 0.5rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-mostaza);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+  background-color: white;
 }
 
 textarea {
@@ -105,28 +176,32 @@ textarea {
 
 .checkbox-idioma input[type="checkbox"] {
   transform: scale(1.2);
+  accent-color: var(--color-mostaza);
 }
 
 .checkbox-idioma label {
   margin-left: 4px;
   margin-top: 1px;
+  font-weight: 500;
 }
 
 /* Botón agregar idioma */
 #btn-agregar-idioma {
-  background-color: #0078a0;
+  background: linear-gradient(135deg, var(--color-mostaza) 0%, var(--color-mostaza-oscuro) 100%);
   color: white;
-  font-weight: bold;
-  padding: 8px 14px;
+  font-weight: 600;
+  padding: 0.7rem 1.2rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   margin-top: 15px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: var(--transicion);
 }
 
 #btn-agregar-idioma:hover {
-  background-color: #005173;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+  background: linear-gradient(135deg, var(--color-mostaza-oscuro) 0%, var(--color-mostaza) 100%);
 }
 
 /* Nuevos idiomas */
@@ -148,36 +223,39 @@ textarea {
 }
 
 .nuevo-idioma button {
-  background-color: #cc0000;
+  background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
   color: white;
   font-weight: bold;
   border: none;
   padding: 6px 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: var(--transicion);
 }
 
 .nuevo-idioma button:hover {
-  background-color: #990000;
+  background: linear-gradient(135deg, #990000 0%, #cc0000 100%);
 }
 
 /* Botón de enviar */
 button[type="submit"] {
   display: block;
-  background-color: #0078a0;
+  background: linear-gradient(135deg, var(--color-mostaza) 0%, var(--color-mostaza-oscuro) 100%);
   color: white;
-  font-weight: bold;
-  padding: 12px 18px;
+  font-weight: 600;
+  padding: 1rem 1.5rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  margin: 20px auto 0 auto;
-  transition: background-color 0.3s ease;
+  margin: 2rem auto 0 auto;
+  transition: var(--transicion);
+  font-size: 1.1rem;
 }
 
 button[type="submit"]:hover {
-  background-color: #005173;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+  background: linear-gradient(135deg, var(--color-mostaza-oscuro) 0%, var(--color-mostaza) 100%);
 }
 
 /* Mensajes de resultado */
@@ -187,5 +265,76 @@ button[type="submit"]:hover {
   text-align: center;
   margin-top: 15px;
   font-weight: bold;
-  color: #cc0000;
+  color: var(--color-error);
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.08);
+}
+
+/* Animación fadeIn igual que en asignar_empleado.css */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* Botón de acción */
+.action-btn, button[type="submit"], #btn-agregar-idioma {
+  background: linear-gradient(135deg, var(--color-mostaza) 0%, var(--color-mostaza-oscuro) 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.9rem 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transicion);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.5rem auto 0 auto;
+}
+
+.action-btn:hover, button[type="submit"]:hover, #btn-agregar-idioma:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+  background: linear-gradient(135deg, var(--color-mostaza-oscuro) 0%, var(--color-mostaza) 100%);
+}
+
+  /* Panel principal para los formularios */
+.form-panel {
+  background-color: white;
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra-suave);
+  padding: 2rem 2.5rem;
+  margin: 2rem auto;
+  max-width: 700px;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+/* Agrupa cada campo */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* Mensajes de resultado */
+#mensaje,
+#mensaje-profesional,
+#mensaje-mant-vig {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: bold;
+  color: var(--color-error);
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.08);
+}
+
+/* Animación fadeIn */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
