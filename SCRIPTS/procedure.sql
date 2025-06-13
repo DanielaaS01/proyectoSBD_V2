@@ -765,3 +765,162 @@ BEGIN
   RETURN QUERY SELECT m.id_museo, m.nombre FROM museos m;
 END;
 $$ LANGUAGE plpgsql;
+
+
+-- funcion obtener informacion de una obra
+CREATE OR REPLACE FUNCTION obtener_detalle_obra(p_id_obra INTEGER)
+RETURNS TABLE(
+    id_obra INTEGER,
+    nombre VARCHAR,
+    coleccion VARCHAR,
+    periodo DATE,
+    dimensiones VARCHAR,
+    tipo CHAR,
+    estilos VARCHAR,
+    caracteristicas VARCHAR,
+    artistas JSON,
+    ubicacion VARCHAR,
+    metodo_adquisicion VARCHAR,
+    fecha_adquisicion DATE
+) AS $$
+DECLARE
+    v_id_museo INTEGER;
+    v_fecha_inicio_actual DATE;
+    v_fecha_adquisicion DATE;
+    v_metodo_adquisicion VARCHAR;
+    v_fecha_inicio_anterior DATE;
+    v_fecha_fin_anterior DATE;
+    v_hubo_otro_museo BOOLEAN;
+BEGIN
+    -- 1. Museo y fecha_inicio del registro activo
+    SELECT hm.id_museo, hm.fecha_inicio
+    INTO v_id_museo, v_fecha_inicio_actual
+    FROM historicos_movimientos hm
+    WHERE hm.id_obra = p_id_obra AND hm.fecha_fin IS NULL
+    ORDER BY hm.fecha_inicio DESC
+    LIMIT 1;
+
+    IF v_id_museo IS NULL THEN
+        -- No está en ningún museo
+        RETURN QUERY
+        SELECT
+            o.id_obra, o.nombre, NULL, o.periodo, o.dimension, o.tipo, o.estilos, o.caract_mat_tec,
+            (
+                SELECT 
+                    CASE WHEN COUNT(*) = 0 THEN NULL
+                         ELSE json_agg(json_build_object(
+                            'nombre', NULLIF(a.nombre, ''),
+                            'apellido', NULLIF(a.apellido, ''),
+                            'nombre_artistico', 
+                                CASE WHEN COALESCE(NULLIF(a.nombre_artistico, ''), NULLIF(a.nombre, ''), NULLIF(a.apellido, '')) IS NULL 
+                                     THEN NULL
+                                     ELSE NULLIF(a.nombre_artistico, '')
+                                END
+                         ))
+                    END
+                FROM obras_artistas oa
+                JOIN artistas a ON oa.id_artista = a.id_artista
+                WHERE oa.id_obra = o.id_obra
+            ),
+            NULL, NULL, NULL
+        FROM obras o
+        WHERE o.id_obra = p_id_obra;
+        RETURN;
+    END IF;
+
+    -- 2. Buscar la fecha de adquisición real (recursivo hacia atrás)
+    v_fecha_adquisicion := v_fecha_inicio_actual;
+    v_metodo_adquisicion := (
+        SELECT CASE hm.tipo_llegada WHEN 'C' THEN 'Compra' WHEN 'D' THEN 'Donación' ELSE 'Desconocido' END
+        FROM historicos_movimientos hm
+        WHERE hm.id_obra = p_id_obra AND hm.id_museo = v_id_museo AND hm.fecha_inicio = v_fecha_inicio_actual
+        LIMIT 1
+    );
+
+    LOOP
+        -- Buscar registro anterior en el mismo museo
+        SELECT hm.fecha_inicio, hm.fecha_fin
+        INTO v_fecha_inicio_anterior, v_fecha_fin_anterior
+        FROM historicos_movimientos hm
+        WHERE hm.id_obra = p_id_obra
+          AND hm.id_museo = v_id_museo
+          AND hm.fecha_inicio < v_fecha_adquisicion
+        ORDER BY hm.fecha_inicio DESC
+        LIMIT 1;
+
+        EXIT WHEN v_fecha_inicio_anterior IS NULL;
+
+        -- ¿Estuvo en otro museo entre la salida y el reingreso?
+        SELECT EXISTS (
+            SELECT 1
+            FROM historicos_movimientos hm
+            WHERE hm.id_obra = p_id_obra
+              AND hm.id_museo <> v_id_museo
+              AND hm.fecha_inicio > v_fecha_fin_anterior
+              AND hm.fecha_inicio < v_fecha_adquisicion
+        ) INTO v_hubo_otro_museo;
+
+        IF v_hubo_otro_museo THEN
+            -- Si estuvo en otro museo, la fecha de adquisición es la actual
+            EXIT;
+        ELSE
+            -- Si no, seguimos hacia atrás
+            v_fecha_adquisicion := v_fecha_inicio_anterior;
+            v_metodo_adquisicion := (
+                SELECT CASE hm.tipo_llegada WHEN 'C' THEN 'Compra' WHEN 'D' THEN 'Donación' ELSE 'Desconocido' END
+                FROM historicos_movimientos hm
+                WHERE hm.id_obra = p_id_obra AND hm.id_museo = v_id_museo AND hm.fecha_inicio = v_fecha_inicio_anterior
+                LIMIT 1
+            );
+        END IF;
+    END LOOP;
+
+    RETURN QUERY
+    SELECT
+        o.id_obra,
+        o.nombre,
+        (
+            SELECT c.nombre_coleccion
+            FROM historicos_movimientos hm
+            JOIN colecciones c ON hm.id_museo = c.id_museo AND hm.id_estructura_org = c.id_estructura_org AND hm.id_coleccion = c.id_coleccion
+            WHERE hm.id_obra = o.id_obra AND hm.fecha_fin IS NULL
+            LIMIT 1
+        ),
+        o.periodo,
+        o.dimension,
+        o.tipo,
+        o.estilos,
+        o.caract_mat_tec,
+        (
+            SELECT 
+                CASE WHEN COUNT(*) = 0 THEN NULL
+                     ELSE json_agg(json_build_object(
+                        'nombre', NULLIF(a.nombre, ''),
+                        'apellido', NULLIF(a.apellido, ''),
+                        'nombre_artistico', 
+                            CASE WHEN COALESCE(NULLIF(a.nombre_artistico, ''), NULLIF(a.nombre, ''), NULLIF(a.apellido, '')) IS NULL 
+                                 THEN NULL
+                                 ELSE NULLIF(a.nombre_artistico, '')
+                            END
+                     ))
+                END
+            FROM obras_artistas oa
+            JOIN artistas a ON oa.id_artista = a.id_artista
+            WHERE oa.id_obra = o.id_obra
+        ),
+        (
+            SELECT 
+                (m.nombre || ', ' || ef.nombre || ', Sala ' || s.nombre)::VARCHAR
+            FROM historicos_movimientos hm
+            JOIN museos m ON hm.id_museo = m.id_museo
+            JOIN estructuras_fisicas ef ON hm.id_museo = ef.id_museo AND hm.id_estructura_fis = ef.id_estructura_fis
+            JOIN salas_exp s ON hm.id_museo = s.id_museo AND hm.id_estructura_fis = s.id_estructura_fis AND hm.id_sala = s.id_sala
+            WHERE hm.id_obra = o.id_obra AND hm.fecha_fin IS NULL
+            LIMIT 1
+        ),
+        v_metodo_adquisicion,
+        v_fecha_adquisicion
+    FROM obras o
+    WHERE o.id_obra = p_id_obra;
+END;
+$$ LANGUAGE plpgsql;
