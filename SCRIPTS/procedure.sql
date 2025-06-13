@@ -516,11 +516,12 @@ $$ LANGUAGE plpgsql;
 
 -- Obtener museos
 CREATE OR REPLACE FUNCTION obtener_museos()
-RETURNS TABLE(id_museo INTEGER, nombre VARCHAR) AS $$
+RETURNS TABLE(id_museo INTEGER, nombre VARCHAR, fecha_fundacion DATE) AS $$
 BEGIN
-  RETURN QUERY SELECT museos.id_museo, museos.nombre FROM museos ORDER BY museos.nombre;
+  RETURN QUERY SELECT museos.id_museo, museos.nombre , museos.fecha_fundacion FROM museos ORDER BY museos.nombre;
 END;
 $$ LANGUAGE plpgsql;
+
 
 -- Obtener estructuras organizacionales por museo
 CREATE OR REPLACE FUNCTION obtener_estructuras_org_por_museo(id_museo_param INTEGER)
