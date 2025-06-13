@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reporte de Obras de Museo</title>
+    <link rel="stylesheet" href="../css/reporte_obras.css">
 </head>
 <body>
     <!-- Contenido principal -->
@@ -54,9 +55,6 @@
             <div class="artwork-list-container">
                 <div class="list-header">
                     <h3 class="list-title">
-                        <svg class="list-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/>
-                        </svg>
                         Obras Disponibles
                     </h3>
                     <div id="artworkCount" class="artwork-count">Mostrando x obras</div> <!-- Generar dinamicamente -->
@@ -95,22 +93,6 @@
                     </div>
                     
                     <div class="detail-content">
-                        <div class="artwork-image-container">
-                            <div id="imagePlaceholder" class="image-placeholder">
-                                <svg class="placeholder-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-                                </svg>
-                                <p>No hay imagen disponible</p>
-                                <button id="uploadImageBtn" class="upload-btn">
-                                    <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/>
-                                    </svg>
-                                    Cargar imagen
-                                </button>
-                            </div>
-                            <img id="artworkImage" class="artwork-image" style="display: none;" alt="Imagen de la obra">
-                        </div>
-                        
                         <div class="artwork-info">
                             <!-- Información general -->
                             <div class="info-section">
@@ -188,10 +170,6 @@
                                     Información de Adquisición
                                 </h4>
                                 <div class="info-item">
-                                    <div class="info-label">Método de Adquisición</div>
-                                    <div id="metodoAdquisicion" class="info-value">-</div>
-                                </div>
-                                <div class="info-item">
                                     <div class="info-label">Fecha de Adquisición</div>
                                     <div id="fechaAdquisicion" class="info-value">-</div>
                                 </div>
@@ -214,5 +192,8 @@
         <span id="notificationMessage" class="notification-message">Operación completada con éxito</span>
         <span class="notification-close" id="notificationClose">×</span>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="../js/reporte_obras.js"></script>
 </body>
 </html>

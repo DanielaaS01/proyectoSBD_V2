@@ -778,7 +778,7 @@ RETURNS TABLE(
     tipo CHAR,
     estilos VARCHAR,
     caracteristicas VARCHAR,
-    artistas JSON,
+    artistas VARCHAR[], -- Arreglo de VARCHAR con separador seguro
     ubicacion VARCHAR,
     metodo_adquisicion VARCHAR,
     fecha_adquisicion DATE
@@ -801,23 +801,13 @@ BEGIN
     LIMIT 1;
 
     IF v_id_museo IS NULL THEN
-        -- No está en ningún museo
         RETURN QUERY
         SELECT
             o.id_obra, o.nombre, NULL, o.periodo, o.dimension, o.tipo, o.estilos, o.caract_mat_tec,
             (
-                SELECT 
-                    CASE WHEN COUNT(*) = 0 THEN NULL
-                         ELSE json_agg(json_build_object(
-                            'nombre', NULLIF(a.nombre, ''),
-                            'apellido', NULLIF(a.apellido, ''),
-                            'nombre_artistico', 
-                                CASE WHEN COALESCE(NULLIF(a.nombre_artistico, ''), NULLIF(a.nombre, ''), NULLIF(a.apellido, '')) IS NULL 
-                                     THEN NULL
-                                     ELSE NULLIF(a.nombre_artistico, '')
-                                END
-                         ))
-                    END
+                SELECT array_agg(
+                    'Nombre: ' || a.nombre || '; Apellido: ' || a.apellido || '; Nombre artistico: ' || COALESCE(a.nombre_artistico, '')
+                )::VARCHAR[]
                 FROM obras_artistas oa
                 JOIN artistas a ON oa.id_artista = a.id_artista
                 WHERE oa.id_obra = o.id_obra
@@ -838,7 +828,6 @@ BEGIN
     );
 
     LOOP
-        -- Buscar registro anterior en el mismo museo
         SELECT hm.fecha_inicio, hm.fecha_fin
         INTO v_fecha_inicio_anterior, v_fecha_fin_anterior
         FROM historicos_movimientos hm
@@ -850,7 +839,6 @@ BEGIN
 
         EXIT WHEN v_fecha_inicio_anterior IS NULL;
 
-        -- ¿Estuvo en otro museo entre la salida y el reingreso?
         SELECT EXISTS (
             SELECT 1
             FROM historicos_movimientos hm
@@ -861,10 +849,8 @@ BEGIN
         ) INTO v_hubo_otro_museo;
 
         IF v_hubo_otro_museo THEN
-            -- Si estuvo en otro museo, la fecha de adquisición es la actual
             EXIT;
         ELSE
-            -- Si no, seguimos hacia atrás
             v_fecha_adquisicion := v_fecha_inicio_anterior;
             v_metodo_adquisicion := (
                 SELECT CASE hm.tipo_llegada WHEN 'C' THEN 'Compra' WHEN 'D' THEN 'Donación' ELSE 'Desconocido' END
@@ -892,18 +878,9 @@ BEGIN
         o.estilos,
         o.caract_mat_tec,
         (
-            SELECT 
-                CASE WHEN COUNT(*) = 0 THEN NULL
-                     ELSE json_agg(json_build_object(
-                        'nombre', NULLIF(a.nombre, ''),
-                        'apellido', NULLIF(a.apellido, ''),
-                        'nombre_artistico', 
-                            CASE WHEN COALESCE(NULLIF(a.nombre_artistico, ''), NULLIF(a.nombre, ''), NULLIF(a.apellido, '')) IS NULL 
-                                 THEN NULL
-                                 ELSE NULLIF(a.nombre_artistico, '')
-                            END
-                     ))
-                END
+            SELECT array_agg(
+                'Nombre: ' || a.nombre || '; Apellido: ' || a.apellido || '; Nombre artistico: ' || COALESCE(a.nombre_artistico, '')
+            )::VARCHAR[]
             FROM obras_artistas oa
             JOIN artistas a ON oa.id_artista = a.id_artista
             WHERE oa.id_obra = o.id_obra
@@ -922,5 +899,16 @@ BEGIN
         v_fecha_adquisicion
     FROM obras o
     WHERE o.id_obra = p_id_obra;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION obtener_obras(p_id_museo INTEGER DEFAULT NULL, p_tipo CHAR DEFAULT NULL)
+RETURNS TABLE(id_obra INTEGER, nombre VARCHAR, tipo CHAR, id_museo INTEGER) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT o.id_obra, o.nombre, o.tipo, o.id_museo
+    FROM obras o
+    WHERE (p_id_museo IS NULL OR o.id_museo = p_id_museo)
+      AND (p_tipo IS NULL OR o.tipo = p_tipo);
 END;
 $$ LANGUAGE plpgsql;

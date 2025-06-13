@@ -1,411 +1,343 @@
-// Datos de ejemplo para obras
-        const obras = [
-            {
-                id: 1,
-                nombre: "La Noche Estrellada",
-                tipo: "pintura",
-                coleccion: "Arte Moderno Europeo",
-                periodo: "Post-Impresionismo (1889)",
-                dimensiones: "73.7 cm × 92.1 cm",
-                ubicacion: "Galería Principal, Sala 3",
-                estilos: ["Post-Impresionismo", "Expresionismo"],
-                materiales: "Óleo sobre lienzo",
-                caracteristicas: "Pinceladas ondulantes, colores vibrantes, cielo nocturno con estrellas en espiral",
-                artistas: [
-                    { nombre: "Vincent van Gogh", iniciales: "VG", rol: "Autor principal" }
-                ],
-                adquisicion: {
-                    metodo: "Adquirida",
-                    fecha: "15 de marzo de 1941"
-                },
-                museo: 1
-            },
-            {
-                id: 2,
-                nombre: "El Pensador",
-                tipo: "escultura",
-                coleccion: "Esculturas Clásicas",
-                periodo: "Arte Moderno (1904)",
-                dimensiones: "180 cm × 98 cm × 145 cm",
-                ubicacion: "Jardín de Esculturas, Pedestal 5",
-                estilos: ["Realismo", "Simbolismo"],
-                materiales: "Bronce fundido con pátina",
-                caracteristicas: "Figura masculina sentada en posición pensativa, musculatura detallada",
-                artistas: [
-                    { nombre: "Auguste Rodin", iniciales: "AR", rol: "Escultor" }
-                ],
-                adquisicion: {
-                    metodo: "Donada",
-                    fecha: "7 de septiembre de 1973"
-                },
-                museo: 1
-            },
-            {
-                id: 3,
-                nombre: "Guernica",
-                tipo: "pintura",
-                coleccion: "Arte del Siglo XX",
-                periodo: "Cubismo (1937)",
-                dimensiones: "349.3 cm × 776.6 cm",
-                ubicacion: "Sala de Exposiciones Temporales",
-                estilos: ["Cubismo", "Surrealismo"],
-                materiales: "Óleo sobre lienzo",
-                caracteristicas: "Monocromático en tonos grises, negros y blancos, representa el bombardeo de Guernica",
-                artistas: [
-                    { nombre: "Pablo Picasso", iniciales: "PP", rol: "Autor principal" }
-                ],
-                adquisicion: {
-                    metodo: "Adquirida",
-                    fecha: "24 de junio de 1992"
-                },
-                museo: 3
-            },
-            {
-                id: 4,
-                nombre: "David",
-                tipo: "escultura",
-                coleccion: "Renacimiento Italiano",
-                periodo: "Renacimiento (1501-1504)",
-                dimensiones: "517 cm × 199 cm",
-                ubicacion: "Galería de Esculturas Clásicas",
-                estilos: ["Renacimiento", "Clasicismo"],
-                materiales: "Mármol blanco",
-                caracteristicas: "Figura masculina de pie, representación del héroe bíblico antes de enfrentarse a Goliat",
-                artistas: [
-                    { nombre: "Miguel Ángel", iniciales: "MA", rol: "Escultor" }
-                ],
-                adquisicion: {
-                    metodo: "Adquirida",
-                    fecha: "12 de agosto de 1882"
-                },
-                museo: 2
-            },
-            {
-                id: 5,
-                nombre: "La Persistencia de la Memoria",
-                tipo: "pintura",
-                coleccion: "Surrealismo",
-                periodo: "Surrealismo (1931)",
-                dimensiones: "24 cm × 33 cm",
-                ubicacion: "Sala de Arte Moderno, Vitrina 7",
-                estilos: ["Surrealismo", "Arte Moderno"],
-                materiales: "Óleo sobre lienzo",
-                caracteristicas: "Relojes derretidos en un paisaje onírico, colores cálidos y atmósfera desértica",
-                artistas: [
-                    { nombre: "Salvador Dalí", iniciales: "SD", rol: "Autor principal" }
-                ],
-                adquisicion: {
-                    metodo: "Donada",
-                    fecha: "3 de noviembre de 1934"
-                },
-                museo: 3
-            },
-            {
-                id: 6,
-                nombre: "Venus de Milo",
-                tipo: "escultura",
-                coleccion: "Arte Helenístico",
-                periodo: "Helenístico (130-100 a.C.)",
-                dimensiones: "202 cm × 80 cm",
-                ubicacion: "Sala de Antigüedades, Pedestal 2",
-                estilos: ["Helenístico", "Clásico"],
-                materiales: "Mármol de Paros",
-                caracteristicas: "Figura femenina sin brazos, representa a Afrodita (Venus), diosa del amor",
-                artistas: [
-                    { nombre: "Alejandro de Antioquía", iniciales: "AA", rol: "Escultor" }
-                ],
-                adquisicion: {
-                    metodo: "Adquirida",
-                    fecha: "25 de abril de 1820"
-                },
-                museo: 4
-            },
-            {
-                id: 7,
-                nombre: "La Gioconda (Mona Lisa)",
-                tipo: "pintura",
-                coleccion: "Renacimiento Italiano",
-                periodo: "Alto Renacimiento (1503-1519)",
-                dimensiones: "77 cm × 53 cm",
-                ubicacion: "Galería Principal, Sala 1 (Alta Seguridad)",
-                estilos: ["Renacimiento", "Sfumato"],
-                materiales: "Óleo sobre tabla de álamo",
-                caracteristicas: "Retrato de medio cuerpo de una mujer con sonrisa enigmática, técnica sfumato",
-                artistas: [
-                    { nombre: "Leonardo da Vinci", iniciales: "LV", rol: "Autor principal" }
-                ],
-                adquisicion: {
-                    metodo: "Adquirida",
-                    fecha: "10 de diciembre de 1797"
-                },
-                museo: 2
-            },
-            {
-                id: 8,
-                nombre: "Los Girasoles",
-                tipo: "pintura",
-                coleccion: "Post-Impresionismo",
-                periodo: "Post-Impresionismo (1888)",
-                dimensiones: "92.1 cm × 73 cm",
-                ubicacion: "Galería de Arte Moderno, Sala 4",
-                estilos: ["Post-Impresionismo", "Naturaleza Muerta"],
-                materiales: "Óleo sobre lienzo",
-                caracteristicas: "Serie de bodegones con girasoles en un jarrón, predominan los tonos amarillos",
-                artistas: [
-                    { nombre: "Vincent van Gogh", iniciales: "VG", rol: "Autor principal" }
-                ],
-                adquisicion: {
-                    metodo: "Donada",
-                    fecha: "17 de julio de 1924"
-                },
-                museo: 5
-            }
-        ];
-        
-        // Datos de ejemplo para museos
-        const museos = [
-            {id: 1, nombre: 'Museo Nacional de Arte'},
-            {id: 2, nombre: 'Museo de Historia Natural'},
-            {id: 3, nombre: 'Museo de Arte Contemporáneo'},
-            {id: 4, nombre: 'Museo de Antropología'},
-            {id: 5, nombre: 'Museo de Ciencias'}
-        ];
-        
-        // Función para cargar la lista de obras según los filtros
-        function cargarObras(filtroMuseo = '', filtroTipo = '') {
-            const listaObras = document.getElementById('artworkList');
-            listaObras.innerHTML = '';
-            
-            // Filtrar las obras según los criterios
-            let obrasFiltradas = obras;
-            
-            if (filtroMuseo) {
-                obrasFiltradas = obrasFiltradas.filter(obra => obra.museo === parseInt(filtroMuseo));
-            }
-            
-            if (filtroTipo) {
-                obrasFiltradas = obrasFiltradas.filter(obra => obra.tipo === filtroTipo);
-            }
-            
-            // Actualizar contador de obras
-            document.getElementById('artworkCount').textContent = `Mostrando ${obrasFiltradas.length} obras`;
-            
-            // Si no hay resultados
-            if (obrasFiltradas.length === 0) {
-                listaObras.innerHTML = `
-                    <div class="no-results">
-                        <svg class="no-results-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                        </svg>
-                        <p>No se encontraron obras con los filtros seleccionados</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Crear elementos para cada obra
-            obrasFiltradas.forEach(obra => {
-                const obraElement = document.createElement('div');
-                obraElement.className = 'artwork-item';
-                obraElement.dataset.id = obra.id;
-                
-                // Determinar la clase para el tipo de obra
-                const tipoClass = obra.tipo === 'pintura' ? 'type-painting' : 'type-sculpture';
-                const tipoTexto = obra.tipo === 'pintura' ? 'Pintura' : 'Escultura';
-                
-                // Encontrar el nombre del museo
-                const museo = museos.find(m => m.id === obra.museo);
-                const nombreMuseo = museo ? museo.nombre : 'Museo desconocido';
-                
-                obraElement.innerHTML = `
-                    <div class="artwork-name">${obra.nombre}</div>
-                    <div class="artwork-meta">
-                        ${nombreMuseo}
-                        <span class="artwork-type ${tipoClass}">${tipoTexto}</span>
-                    </div>
-                `;
-                
-                // Agregar evento de clic para mostrar detalles
-                obraElement.addEventListener('click', () => mostrarDetalleObra(obra.id));
-                
-                listaObras.appendChild(obraElement);
-            });
+// reporte_obras.js
+
+// Utilidad para limpiar nodos
+function limpiarNodo(nodo) {
+  while (nodo.firstChild) nodo.removeChild(nodo.firstChild);
+}
+
+// Cargar museos en el filtro
+async function cargarMuseos() {
+  const museoSelect = document.getElementById("museoFilter");
+  limpiarNodo(museoSelect);
+  const optionTodos = document.createElement("option");
+  optionTodos.value = "";
+  optionTodos.textContent = "Todos los museos";
+  museoSelect.appendChild(optionTodos);
+
+  try {
+    const res = await fetch("/museos");
+    const museos = await res.json();
+    museos.forEach((museo) => {
+      const opt = document.createElement("option");
+      opt.value = museo.id_museo;
+      opt.textContent = museo.nombre;
+      museoSelect.appendChild(opt);
+    });
+  } catch (e) {
+    mostrarNotificacion("Error al cargar museos", "error");
+  }
+}
+
+// Cargar lista de obras según filtros
+async function cargarObras() {
+  const museo = document.getElementById("museoFilter").value;
+  const tipo = document.getElementById("tipoObraFilter").value;
+  const listaObras = document.getElementById("artworkList");
+  limpiarNodo(listaObras);
+
+  let url = "/obras";
+  const params = [];
+  if (museo) params.push(`museo=${encodeURIComponent(museo)}`);
+  if (tipo) params.push(`tipo=${encodeURIComponent(tipo)}`);
+  if (params.length) url += "?" + params.join("&");
+
+  try {
+    const res = await fetch(url);
+    const obras = await res.json();
+
+    document.getElementById(
+      "artworkCount"
+    ).textContent = `Mostrando ${obras.length} obras`;
+
+    if (obras.length === 0) {
+      listaObras.innerHTML = `<div class="no-results">No se encontraron obras con los filtros seleccionados</div>`;
+      return;
+    }
+
+    obras.forEach((obra) => {
+      const obraElement = document.createElement("div");
+      obraElement.className = "artwork-item";
+      obraElement.dataset.id = obra.id_obra;
+      obraElement.innerHTML = `
+        <div class="artwork-name">${obra.nombre}</div>
+        <div class="artwork-meta">
+          <span class="artwork-type ${
+            obra.tipo === "P" ? "type-painting" : "type-sculpture"
+          }">
+            ${obra.tipo === "P" ? "Pintura" : "Escultura"}
+          </span>
+        </div>
+      `;
+      obraElement.addEventListener("click", () =>
+        mostrarDetalleObra(obra.id_obra)
+      );
+      listaObras.appendChild(obraElement);
+    });
+  } catch (e) {
+    mostrarNotificacion("Error al cargar obras", "error");
+  }
+}
+
+// Mostrar detalle de una obra
+async function mostrarDetalleObra(obraId) {
+  // Marcar como activa en la lista
+  document.querySelectorAll(".artwork-item").forEach((item) => {
+    item.classList.toggle("active", Number(item.dataset.id) === Number(obraId));
+  });
+
+  try {
+    const res = await fetch(`/obras/${obraId}`);
+    if (!res.ok) {
+      mostrarNotificacion("Error al cargar detalle de la obra", "error");
+      return;
+    }
+    const obra = await res.json();
+
+    // Mostrar el detalle
+    document.getElementById("noArtworkSelected").style.display = "none";
+    document.getElementById("artworkDetail").style.display = "block";
+
+    // Título
+    document.getElementById("detailTitle").textContent = obra.nombre || "-";
+    document.getElementById("nombreObra").textContent = obra.nombre || "-";
+    document.getElementById("tipoObra").textContent =
+      obra.tipo === "P" ? "Pintura" : obra.tipo === "E" ? "Escultura" : "-";
+    document.getElementById("coleccion").textContent = obra.coleccion || "-";
+    document.getElementById("periodo").textContent = obra.periodo
+      ? typeof obra.periodo === "string"
+        ? obra.periodo
+        : obra.periodo.toString()
+      : "-";
+    document.getElementById("dimensiones").textContent =
+      obra.dimensiones || "-";
+    document.getElementById("ubicacion").textContent = obra.ubicacion || "-";
+
+    // Estilos
+    const estilosContainer = document.getElementById("estilos");
+    limpiarNodo(estilosContainer);
+    if (obra.estilos) {
+      obra.estilos.split(",").forEach((estilo) => {
+        if (estilo.trim()) {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = estilo.trim();
+          estilosContainer.appendChild(tag);
         }
-        
-        // Función para mostrar el detalle de una obra
-        function mostrarDetalleObra(obraId) {
-            // Buscar la obra por ID
-            const obra = obras.find(o => o.id === obraId);
-            
-            if (!obra) {
-                mostrarNotificacion('No se encontró la información de la obra', 'error');
-                return;
-            }
-            
-            // Marcar como activa en la lista
-            const items = document.querySelectorAll('.artwork-item');
-            items.forEach(item => {
-                if (parseInt(item.dataset.id) === obraId) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-            
-            // Ocultar mensaje de "ninguna obra seleccionada"
-            document.getElementById('noArtworkSelected').style.display = 'none';
-            
-            // Mostrar el detalle
-            const detalle = document.getElementById('artworkDetail');
-            detalle.style.display = 'block';
-            
-            // Actualizar título
-            document.getElementById('detailTitle').textContent = obra.nombre;
-            
-            // Actualizar información general
-            document.getElementById('nombreObra').textContent = obra.nombre;
-            document.getElementById('tipoObra').textContent = obra.tipo === 'pintura' ? 'Pintura' : 'Escultura';
-            document.getElementById('coleccion').textContent = obra.coleccion;
-            document.getElementById('periodo').textContent = obra.periodo;
-            document.getElementById('dimensiones').textContent = obra.dimensiones;
-            document.getElementById('ubicacion').textContent = obra.ubicacion;
-            
-            // Actualizar estilos
-            const estilosContainer = document.getElementById('estilos');
-            estilosContainer.innerHTML = '';
-            obra.estilos.forEach(estilo => {
-                const tag = document.createElement('span');
-                tag.className = 'tag';
-                tag.textContent = estilo;
-                estilosContainer.appendChild(tag);
-            });
-            
-            // Actualizar materiales y características
-            document.getElementById('materiales').textContent = obra.materiales;
-            document.getElementById('caracteristicas').textContent = obra.caracteristicas;
-            
-            // Actualizar artistas
-            const artistasContainer = document.getElementById('artistasContainer');
-            artistasContainer.innerHTML = '';
-            obra.artistas.forEach(artista => {
-                const artistaCard = document.createElement('div');
-                artistaCard.className = 'artist-card';
-                artistaCard.innerHTML = `
-                    <div class="artist-avatar">${artista.iniciales}</div>
-                    <div class="artist-info">
-                        <div class="artist-name">${artista.nombre}</div>
-                        <div class="artist-role">${artista.rol}</div>
-                    </div>
-                `;
-                artistasContainer.appendChild(artistaCard);
-            });
-            
-            // Actualizar información de adquisición
-            document.getElementById('metodoAdquisicion').textContent = obra.adquisicion.metodo;
-            document.getElementById('fechaAdquisicion').textContent = obra.adquisicion.fecha;
-            
-            const badgeAdquisicion = document.getElementById('badgeAdquisicion');
-            if (obra.adquisicion.metodo === 'Adquirida') {
-                badgeAdquisicion.className = 'acquisition-badge badge-acquired';
-                badgeAdquisicion.textContent = 'Adquirida por el museo';
-            } else {
-                badgeAdquisicion.className = 'acquisition-badge badge-donated';
-                badgeAdquisicion.textContent = 'Donada al museo';
-            }
-            
-            // Actualizar imagen
-            const imagePlaceholder = document.getElementById('imagePlaceholder');
-            const artworkImage = document.getElementById('artworkImage');
-            
-            // Por defecto mostrar el placeholder ya que no tenemos imágenes reales
-            artworkImage.style.display = 'none';
-            imagePlaceholder.style.display = 'flex';
-        }
-        
-        // Función para aplicar filtros
-        document.getElementById('aplicarFiltros').addEventListener('click', function() {
-            const filtroMuseo = document.getElementById('museoFilter').value;
-            const filtroTipo = document.getElementById('tipoObraFilter').value;
-            
-            cargarObras(filtroMuseo, filtroTipo);
-            
-            // Mostrar notificación
-            mostrarNotificacion('Filtros aplicados correctamente', 'success');
-        });
-        
-        // Función para mostrar notificaciones
-        function mostrarNotificacion(mensaje, tipo) {
-            const notification = document.getElementById('notification');
-            const notificationIcon = document.getElementById('notificationIcon');
-            const notificationMessage = document.getElementById('notificationMessage');
-            
-            // Configurar tipo de notificación
-            if (tipo === 'success') {
-                notification.className = 'notification notification-success show';
-                notificationIcon.innerHTML = '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>';
-            } else {
-                notification.className = 'notification notification-error show';
-                notificationIcon.innerHTML = '<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>';
-            }
-            
-            // Establecer mensaje
-            notificationMessage.textContent = mensaje;
-            
-            // Ocultar después de 3 segundos
-            setTimeout(() => {
-                notification.className = 'notification';
-            }, 3000);
-        }
-        
-        // Cerrar notificación al hacer clic en X
-        document.getElementById('notificationClose').addEventListener('click', function() {
-            document.getElementById('notification').className = 'notification';
-        });
-        
-        // Botón para cargar imagen
-        document.getElementById('uploadImageBtn').addEventListener('click', function() {
-            // Simulación de carga de imagen
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const artworkImage = document.getElementById('artworkImage');
-                        artworkImage.src = event.target.result;
-                        artworkImage.style.display = 'block';
-                        document.getElementById('imagePlaceholder').style.display = 'none';
-                        mostrarNotificacion('Imagen cargada correctamente', 'success');
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-            
-            input.click();
-        });
-        
-        // Botón para imprimir reporte
-        document.getElementById('printReport').addEventListener('click', function() {
-            window.print();
-        });
-        
-        // Botón para exportar a PDF
-        document.getElementById('exportPDF').addEventListener('click', function() {
-            mostrarNotificacion('Exportación a PDF iniciada', 'success');
-            // En una implementación real, aquí iría el código para generar el PDF
-        });
-        
-        // Inicializar la página cargando todas las obras
-        document.addEventListener('DOMContentLoaded', function() {
-            cargarObras();
-            
-            // Mostrar animaciones después de cargar
-            setTimeout(() => {
-                document.querySelector('.filters-section').style.opacity = '1';
-                document.querySelector('.artwork-list-container').style.opacity = '1';
-                document.querySelector('.artwork-detail-container').style.opacity = '1';
-            }, 100);
-        });
+      });
+    } else {
+      estilosContainer.textContent = "-";
+    }
+
+    // Materiales y características
+    document.getElementById("materiales").textContent =
+      obra.caracteristicas || "-";
+    // Características ya incluidas en materiales (según tu HTML)
+
+    // ARTISTAS
+const artistasContainer = document.getElementById("artistasContainer");
+limpiarNodo(artistasContainer);
+
+if (obra && Array.isArray(obra.artistas) && obra.artistas.length > 0) {
+  obra.artistas.forEach(info => {
+    let nombre = "", apellido = "", nombre_artistico = "";
+
+    info.split(";").forEach(parte => {
+      const [clave, valor] = parte.split(":").map(s => s.trim());
+      if (clave && valor !== undefined) {
+        if (clave.toLowerCase().includes("nombre artistico")) nombre_artistico = valor;
+        else if (clave.toLowerCase() === "nombre") nombre = valor;
+        else if (clave.toLowerCase() === "apellido") apellido = valor;
+      }
+    });
+
+    // Lógica de visualización según disponibilidad
+    let contenidoNombre = "";
+    let contenidoRol = "";
+
+    if (nombre_artistico && (!nombre || !apellido)) {
+      contenidoNombre = nombre_artistico;
+      contenidoRol = "Nombre real no conocido";
+    } else {
+      contenidoNombre = nombre_artistico || `${nombre} ${apellido}`.trim();
+      contenidoRol = `${nombre} ${apellido}`.trim();
+    }
+
+    const artistaCard = document.createElement("div");
+    artistaCard.className = "artist-card";
+    artistaCard.innerHTML = `
+      <div class="artist-info">
+        <div class="artist-name">${contenidoNombre}</div>
+        <div class="artist-role">${contenidoRol}</div>
+      </div>
+    `;
+    artistasContainer.appendChild(artistaCard);
+  });
+} else {
+  artistasContainer.innerHTML = '<div class="artist-card">Artista Desconocido</div>';
+}
+
+
+    // Adquisición
+    let fechaFormateada = "-";
+    if (obra.fecha_adquisicion) {
+      const fecha = new Date(obra.fecha_adquisicion);
+      if (!isNaN(fecha)) {
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const anio = fecha.getFullYear();
+        fechaFormateada = `${dia}/${mes}/${anio}`;
+      }
+    }
+    document.getElementById("fechaAdquisicion").textContent = fechaFormateada;
+
+    // Badge de adquisición
+    const badgeAdquisicion = document.getElementById("badgeAdquisicion");
+    if (obra.metodo_adquisicion) {
+      if (obra.metodo_adquisicion.toLowerCase().includes("compra")) {
+        badgeAdquisicion.className = "acquisition-badge badge-acquired";
+        badgeAdquisicion.textContent = "Adquirida por el museo";
+      } else if (
+        obra.metodo_adquisicion.toLowerCase().includes("donación") ||
+        obra.metodo_adquisicion.toLowerCase().includes("donada")
+      ) {
+        badgeAdquisicion.className = "acquisition-badge badge-donated";
+        badgeAdquisicion.textContent = "Donada al museo";
+      } else {
+        badgeAdquisicion.className = "acquisition-badge";
+        badgeAdquisicion.textContent = obra.metodo_adquisicion;
+      }
+    } else {
+      badgeAdquisicion.className = "acquisition-badge";
+      badgeAdquisicion.textContent = "";
+    }
+
+    // Imagen (placeholder siempre)
+    
+  } catch (e) {
+    mostrarNotificacion("Error al cargar detalle de la obra", "error");
+  }
+}
+
+// Notificación
+function mostrarNotificacion(mensaje, tipo) {
+  const notification = document.getElementById("notification");
+  const notificationIcon = document.getElementById("notificationIcon");
+  const notificationMessage = document.getElementById("notificationMessage");
+  if (tipo === "success") {
+    notification.className = "notification notification-success show";
+    notificationIcon.innerHTML =
+      '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>';
+  } else {
+    notification.className = "notification notification-error show";
+    notificationIcon.innerHTML =
+      '<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>';
+  }
+  notificationMessage.textContent = mensaje;
+  setTimeout(() => {
+    notification.className = "notification";
+  }, 3000);
+}
+
+// Cerrar notificación al hacer clic en X
+document.addEventListener("DOMContentLoaded", function () {
+  document
+    .getElementById("notificationClose")
+    .addEventListener("click", function () {
+      document.getElementById("notification").className = "notification";
+    });
+
+
+
+  // Botón para imprimir reporte
+  document.getElementById("printReport").addEventListener("click", function () {
+  window.print();
+});
+
+// Botón para exportar a PDF
+document.getElementById("exportPDF").addEventListener("click", async function () {
+  const detailPanel = document.getElementById("artworkDetail");
+  if (!detailPanel || detailPanel.style.display === "none") {
+    mostrarNotificacion("Seleccione una obra para exportar", "error");
+    return;
+  }
+  mostrarNotificacion("Generando PDF...", "success");
+  await new Promise(r => setTimeout(r, 300));
+
+  // Oculta los botones dentro del panel de detalles
+  const btnPDF = detailPanel.querySelector("#exportPDF");
+  const btnPrint = detailPanel.querySelector("#printReport");
+  if (btnPDF) btnPDF.classList.add("oculto-para-pdf");
+  if (btnPrint) btnPrint.classList.add("oculto-para-pdf");
+
+  // Espera a que el DOM se actualice
+  await new Promise(r => setTimeout(r, 200));
+
+  // Fecha y hora actual
+  const fecha = new Date();
+  const fechaStr = fecha.toLocaleDateString("es-ES");
+  const horaStr = fecha.toLocaleTimeString("es-ES", { hour: '2-digit', minute: '2-digit' });
+
+  html2canvas(detailPanel, { scale: 2 }).then(canvas => {
+    // Vuelve a mostrar los botones después de capturar
+    if (btnPDF) btnPDF.classList.remove("oculto-para-pdf");
+    if (btnPrint) btnPrint.classList.remove("oculto-para-pdf");
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new window.jspdf.jsPDF({
+      orientation: "landscape",
+      unit: "pt",
+      format: [400, 576]
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+
+    // Colores de la paleta
+    const colorMostaza = "#D4AF37";
+    const colorAzulOscuro = "#002F5F";
+    const colorTexto = "#333333";
+    const colorBeigeClaro = "#FAF9F0";
+
+    // Fondo superior
+    pdf.setFillColor(colorBeigeClaro);
+    pdf.rect(0, 0, pageWidth, 80, "F");
+
+    // Responsable y fecha
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(8);
+    pdf.setTextColor(colorTexto);
+    pdf.text("Generación de reporte por grupo especializado: grupo 4", 40, 40);
+    pdf.text(`Fecha de generación: ${fechaStr} ${horaStr}`, pageWidth - 40, 40, { align: "right" });
+
+    // Línea separadora mostaza
+    pdf.setDrawColor(colorMostaza);
+    pdf.setLineWidth(2);
+    pdf.line(40, 50, pageWidth - 40, 50);
+
+    // Imagen del panel de detalles
+    const imgWidth = pageWidth - 80;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+    pdf.addImage(imgData, "PNG", 40, 60, imgWidth, imgHeight);
+
+    pdf.save("detalle_obra.pdf");
+  });
+});
+
+
+  // Filtros
+  document
+    .getElementById("aplicarFiltros")
+    .addEventListener("click", function () {
+      cargarObras();
+      mostrarNotificacion("Filtros aplicados correctamente", "success");
+    });
+
+  // Inicializar filtros y obras
+  cargarMuseos().then(cargarObras);
+
+  // Mostrar animaciones después de cargar
+  setTimeout(() => {
+    document.querySelector(".filters-section").style.opacity = "1";
+    document.querySelector(".artwork-list-container").style.opacity = "1";
+    document.querySelector(".artwork-detail-container").style.opacity = "1";
+  }, 100);
+});

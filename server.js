@@ -275,6 +275,43 @@ app.post("/registrar-resumen-historico", async (req, res) => {
   }
 });
 
+// 14. Ruta: Listar obras usando SOLO la función almacenada
+app.get("/obras", async (req, res) => {
+  const museo = req.query.museo ? parseInt(req.query.museo, 10) : null;
+  const tipo = req.query.tipo || null;
+  try {
+    const result = await pool.query(
+      "SELECT * FROM obtener_obras($1, $2)",
+      [museo, tipo]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando obras:", err);
+    res.status(500).json({ error: "Error al obtener obras" });
+  }
+});
+
+// 15. Ruta: Detalle de obra usando SOLO la función almacenada
+app.get("/obras/:id", async (req, res) => {
+  const idObra = parseInt(req.params.id, 10);
+  if (isNaN(idObra)) {
+    return res.status(400).json({ error: "ID de obra inválido" });
+  }
+  try {
+    const result = await pool.query(
+      "SELECT * FROM obtener_detalle_obra($1)",
+      [idObra]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Obra no encontrada" });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Error consultando detalle de obra:", err);
+    res.status(500).json({ error: "Error al obtener detalle de obra" });
+  }
+});
+
 //  Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en: http://localhost:${PORT}`);
