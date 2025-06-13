@@ -755,3 +755,13 @@ BEGIN
     RAISE NOTICE 'historico eliminado correctamente.';
 END;
 $$;
+
+
+--FUNCION OBTENER MUSEO 
+CREATE OR REPLACE FUNCTION obtener_museos()
+RETURNS TABLE(id_museo INTEGER, nombre VARCHAR)
+AS $$
+BEGIN
+  RETURN QUERY SELECT m.id_museo, m.nombre FROM museos m;
+END;
+$$ LANGUAGE plpgsql;

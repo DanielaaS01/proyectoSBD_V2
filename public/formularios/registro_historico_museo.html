@@ -1,0 +1,42 @@
+<!-- formulario_resumen_historico.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registrar Resumen Histórico</title>
+  <link rel="stylesheet" href="../css/registro_historico_museo.css" />
+</head>
+<body>
+  <main class="container">
+    <section class="form-section">
+      <header>
+        <h1>Registrar Resumen Histórico</h1>
+      </header>
+      <form id="form-resumen-historico" autocomplete="off">
+        <div class="form-group">
+          <label for="id_museo">Museo</label>
+          <select id="id_museo" name="id_museo" required>
+            <option value="">Seleccione un museo</option>
+            <!-- Opciones llenadas dinámicamente -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="anio">Año</label>
+          <input type="number" id="anio" name="anio" min="1800" max="2025" required>
+        </div>
+
+        <div class="form-group">
+          <label for="hechos">Hechos</label>
+          <textarea id="hechos" name="hechos" maxlength="200" required placeholder="Describe los hechos históricos (máx. 200 caracteres)"></textarea>
+        </div>
+
+        <button type="submit">Registrar</button>
+        <p id="mensaje"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="../js/registro_historico_museo.js"></script>
+</body>
+</html>

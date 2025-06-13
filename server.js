@@ -256,10 +256,24 @@ app.get("/asignaciones-empleado", async (req, res) => {
   }
 });
 
-
-
-
-
+// 13. Ruta: Registrar resumen histórico
+app.post("/registrar-resumen-historico", async (req, res) => {
+  console.log("Datos recibidos:", req.body); // <-- Agrega esto
+  const { id_museo, anio, hechos } = req.body;
+  const client = await pool.connect();
+  try {
+    await client.query(
+      "INSERT INTO resumenes_historicos (id_museo, anio, hechos) VALUES ($1, $2, $3)",
+      [id_museo, anio, hechos]
+    );
+    res.json({ mensaje: "Resumen histórico registrado exitosamente" });
+  } catch (err) {
+    console.error("Error al registrar resumen histórico:", err.message);
+    res.status(500).json({ error: "Error al registrar resumen histórico" });
+  } finally {
+    client.release();
+  }
+});
 
 //  Iniciar servidor
 app.listen(PORT, () => {
