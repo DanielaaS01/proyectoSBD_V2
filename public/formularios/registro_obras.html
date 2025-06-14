@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Obras</title>
+    <link rel="stylesheet" href="../css/registro_obras.css"> 
+</head>
+<body>
+    <h1>Registro de Obras</h1>
+    <!-- Selector de tipo de obra -->
+    <section class="selector-tipo">
+        <label for="tipo_obra">¿Qué tipo de obra desea registrar?</label>
+        <select id="tipo_obra">
+            <option value="">Seleccione una opción</option>
+            <option value="pintura">Registro de Pinturas</option>
+            <option value="escultura">Registro de Esculturas</option>
+        </select>
+    </section>
+
+    <!-- FORMULARIO PINTURA -->
+    <form id="form-pintura">
+        <input type="hidden" name="tipo_p" value="P">
+        <fieldset>
+            <legend>Datos Generales de la Pintura</legend>
+            <!-- Selección/Registro de Artista -->
+            <label for="id_artista_pintura">Artista:</label>
+            <select id="id_artista_pintura" name="id_artista" required onchange="toggleNuevoArtista('pintura')">
+                <option value="">Seleccione un artista</option>
+            </select>
+            <button type="button" id="btn-nuevo-artista-pintura" onclick="showNuevoArtista('pintura')">+ Nuevo Artista</button>
+            <div id="form-nuevo-artista-pintura" style="display:none; margin-top:1rem;">
+                <input type="text" id="nuevo_nombre_p" name="nuevo_nombre_p" placeholder="Nombre">
+                <input type="text" id="nuevo_apellido_p" name="nuevo_apellido_p" placeholder="Apellido">
+                <input type="text" id="nuevo_artistico_p" name="nuevo_artistico_p" placeholder="Nombre artístico">
+                <input type="text" id="nuevo_est_tec_p" name="nuevo_est_tec_p" placeholder="Estilo y Técnica">
+                <label for="nuevo_nac_p">Fecha de Nacimiento</label>
+                <input type="date" id="nuevo_nac_p" name="nuevo_nac_p">
+                <label for="nuevo_def_p">Fecha de Defunción (opcional)</label>
+                <input type="date" id="nuevo_def_p" name="nuevo_def_p">
+                <p id="mensaje-nuevo-artista-pintura"></p>
+            </div>
+
+            <!-- Resto de campos de pintura -->
+            <label for="nombre_pintura">Nombre de la pintura:</label>
+            <input type="text" id="nombre_pintura" name="nombre" required>
+            <label for="dimension_pintura">Dimensiones (Al x An):</label>
+            <input type="text" id="dimension_pintura" name="dimension" placeholder="e.g. 80x120 cm" required>
+            <label for="estilos_pintura">Estilos:</label>
+            <input type="text" id="estilos_pintura" name="estilos" required>
+            <label for="tecnica_pintura">Técnica / Material:</label>
+            <input type="text" id="tecnica_pintura" name="caract_mat_tec" required>
+            <label for="periodo_pintura">Fecha (año de creación):</label>
+            <input type="date" id="periodo_pintura" name="periodo" required>
+        </fieldset>
+
+        <!-- Ubicación en el Museo -->
+        <fieldset>
+            <legend>Ubicación en el Museo</legend>
+            <label for="id_museo_pintura">Museo:</label>
+            <select id="id_museo_pintura" name="id_museo" required>
+                <option value="">Seleccione un museo</option>
+            </select>
+            <label for="id_estructura_fis_pintura">Edificio / Piso:</label>
+            <select id="id_estructura_fis_pintura" name="id_estructura_fis" required disabled>
+                <option value="">Seleccione el museo primero</option>
+            </select>
+            <label for="id_sala_pintura">Sala:</label>
+            <select id="id_sala_pintura" name="id_sala" required disabled>
+                <option value="">Seleccione el edificio/piso primero</option>
+            </select>
+        </fieldset>
+
+        <button type="submit">Registrar Pintura</button>
+        <p id="mensaje-pintura"></p>
+    </form>
+
+    <!-- FORMULARIO ESCULTURA -->
+    <form id="form-escultura">
+        <input type="hidden" name="tipo_e" value="E">
+        <fieldset>
+            <legend>Datos Generales de la Escultura</legend>
+            <!-- Selección/Registro de Artista -->
+            <label for="id_artista_escultura">Artista:</label>
+            <select id="id_artista_escultura" name="id_artista" required onchange="toggleNuevoArtista('escultura')">
+                <option value="">Seleccione un artista</option>
+            </select>
+            <button type="button" id="btn-nuevo-artista-escultura" onclick="showNuevoArtista('escultura')">+ Nuevo Artista</button>
+            <div id="form-nuevo-artista-escultura" style="display:none; margin-top:1rem;">
+                <input type="text" id="nuevo_nombre_e" name="nuevo_nombre_e" placeholder="Nombre">
+                <input type="text" id="nuevo_apellido_e" name="nuevo_apellido_e" placeholder="Apellido">
+                <input type="text" id="nuevo_artistico_e" name="nuevo_artistico_e" placeholder="Nombre artístico">
+                <input type="text" id="nuevo_est_tec_e" name="nuevo_est_tec_e" placeholder="Estilo y Técnica">
+                <label for="nuevo_nac_e">Fecha de Nacimiento</label>
+                <input type="date" id="nuevo_nac_e" name="nuevo_nac_e">
+                <label for="nuevo_def_e">Fecha de Defunción (opcional)</label>
+                <input type="date" id="nuevo_def_e" name="nuevo_def_e">
+                <p id="mensaje-nuevo-artista-escultura"></p>
+            </div>
+
+            <!-- Resto de campos de escultura -->
+            <label for="nombre_escultura">Nombre de la escultura:</label>
+            <input type="text" id="nombre_escultura" name="nombre" required>
+            <label for="dimension_escultura">Dimensiones (Al x An x Prof):</label>
+            <input type="text" id="dimension_escultura" name="dimension" placeholder="e.g. 150x60x60 cm" required>
+            <label for="estilos_escultura">Estilos:</label>
+            <input type="text" id="estilos_escultura" name="estilos" required>
+            <label for="tecnica_escultura">Material / Técnica:</label>
+            <input type="text" id="tecnica_escultura" name="caract_mat_tec" required>
+            <label for="periodo_escultura">Fecha (año de creación):</label>
+            <input type="date" id="periodo_escultura" name="periodo" required>
+        </fieldset>
+
+        <!-- Ubicación en el Museo -->
+        <fieldset>
+            <legend>Ubicación en el Museo</legend>
+            <label for="id_museo_escultura">Museo:</label>
+            <select id="id_museo_escultura" name="id_museo" required>
+                <option value="">Seleccione un museo</option>
+            </select>
+            <label for="id_estructura_fis_escultura">Edificio / Piso:</label>
+            <select id="id_estructura_fis_escultura" name="id_estructura_fis" required disabled>
+                <option value="">Seleccione el museo primero</option>
+            </select>
+            <label for="id_sala_escultura">Sala:</label>
+            <select id="id_sala_escultura" name="id_sala" required disabled>
+                <option value="">Seleccione el edificio/piso primero</option>
+            </select>
+        </fieldset>
+
+        <button type="submit">Registrar Escultura</button>
+        <p id="mensaje-escultura"></p>
+    </form>
+
+    <script>
+        function toggleNuevoArtista(tipo) {
+            const sel = document.getElementById(`id_artista_${tipo}`);
+            const formDiv = document.getElementById(`form-nuevo-artista-${tipo}`);
+            const btn = document.getElementById(`btn-nuevo-artista-${tipo}`);
+            if (sel.value) {
+                // Oculta formulario nuevo artista
+                formDiv.style.display = 'none';
+                // Deshabilita botón
+                btn.disabled = true;
+            } else {
+                btn.disabled = false;
+            }
+        }
+        function showNuevoArtista(tipo) {
+            // Limpia selección existente
+            const sel = document.getElementById(`id_artista_${tipo}`);
+            sel.value = '';
+            // Muestra formulario de nuevo artista
+            document.getElementById(`form-nuevo-artista-${tipo}`).style.display = 'block';
+            // Deshabilita selector de artistas
+            sel.disabled = true;
+            // Asegura que el botón quede habilitado (en caso de toggle previo)
+            document.getElementById(`btn-nuevo-artista-${tipo}`).disabled = false;
+        }
+    </script>
+    <script src="../js/registro_obras.js"></script>
+</body>
+</html>

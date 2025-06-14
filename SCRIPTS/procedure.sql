@@ -235,9 +235,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-
 -- PROCEDURE PRINCIPAL PARA REGISTRAR EMPLEADO COMPLETO
 CREATE OR REPLACE PROCEDURE registrar_empleado_profesional(
     p_doc_identidad VARCHAR,
@@ -912,3 +909,20 @@ BEGIN
       AND (p_tipo IS NULL OR o.tipo = p_tipo);
 END;
 $$ LANGUAGE plpgsql;
+
+-- Obtener artistas
+CREATE OR REPLACE FUNCTION obtener_artistas()
+RETURNS TABLE(
+  id_artista       INTEGER,
+  nombre_artistico VARCHAR
+) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT a.id_artista,
+           a.nombre_artistico
+      FROM artistas a
+     WHERE a.nombre_artistico IS NOT NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+
