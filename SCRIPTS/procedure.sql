@@ -127,6 +127,39 @@ FOR EACH ROW
 EXECUTE FUNCTION fn_validar_formacion();
 
 
+-- Trigger function para validar la jerarquía de niveles
+CREATE OR REPLACE FUNCTION validar_nivel_jerarquia_organizacional()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_nivel_padre INTEGER;
+BEGIN
+    -- Solo validar si tiene padre
+    IF NEW.id_estructura_org_padre IS NOT NULL THEN
+        SELECT nivel INTO v_nivel_padre
+        FROM ESTRUCTURAS_ORGANIZACIONALES
+        WHERE id_museo = NEW.id_museo_padre AND id_estructura_org = NEW.id_estructura_org_padre;
+
+        IF v_nivel_padre IS NULL THEN
+            RAISE EXCEPTION 'El nivel especificado no existe.';
+        END IF;
+
+        IF NEW.nivel <> v_nivel_padre + 1 THEN
+            RAISE EXCEPTION 'El nivel debe ser exactamente uno más que el nivel del padre (%).', v_nivel_padre;
+        END IF;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Crear el trigger para inserciones y actualizaciones
+CREATE TRIGGER validar_nivel_jerarquia_organizacional
+BEFORE INSERT OR UPDATE ON ESTRUCTURAS_ORGANIZACIONALES
+FOR EACH ROW
+EXECUTE FUNCTION validar_nivel_jerarquia_organizacional();
+
+
+
 -- PROCEDURE PARA REGISTRAR EMPLEADOS
 
 CREATE OR REPLACE FUNCTION insertar_empleado(
@@ -569,6 +602,7 @@ $$ LANGUAGE plpgsql;
 
 
 -- HISTORICO EMPLEADOS 
+
 --Abrir historico de empleado
 CREATE OR REPLACE PROCEDURE registrar_historico_empleado(
     p_id_museo INTEGER,
@@ -621,7 +655,6 @@ BEGIN
         p_fecha_fin,
         UPPER(p_cargo)
     );
-
     RAISE NOTICE 'historico registrado correctamente.';
 END;
 $$;
@@ -629,10 +662,7 @@ $$;
 
 -- Cierre de historico de empleado
 CREATE OR REPLACE PROCEDURE cerrar_historico_empleado(
-    p_id_museo INTEGER,
-    p_id_estructura_org INTEGER,
     p_num_expediente INTEGER,
-    p_fecha_inicio DATE,
     p_fecha_fin DATE
 )
 LANGUAGE plpgsql
@@ -643,11 +673,7 @@ BEGIN
     -- 1. Verificar que existe el historico activo exacto
     SELECT fecha_inicio INTO v_fecha_inicio_actual
     FROM HISTORICOS_EMPLEADOS
-    WHERE id_museo = p_id_museo
-      AND id_estructura_org = p_id_estructura_org
-      AND num_expediente = p_num_expediente
-      AND fecha_inicio = p_fecha_inicio
-      AND fecha_fin IS NULL;
+    WHERE num_expediente = p_num_expediente AND fecha_fin IS NULL;
 
     IF NOT FOUND THEN
         RAISE EXCEPTION 'No se encontró un historico activo con los datos especificados.';
@@ -661,16 +687,11 @@ BEGIN
     -- 3. Actualizar el historico
     UPDATE HISTORICOS_EMPLEADOS
     SET fecha_fin = p_fecha_fin
-    WHERE id_museo = p_id_museo
-      AND id_estructura_org = p_id_estructura_org
-      AND num_expediente = p_num_expediente
-      AND fecha_inicio = p_fecha_inicio
-      AND fecha_fin IS NULL;
+    WHERE num_expediente = p_num_expediente AND fecha_fin IS NULL;
 
     RAISE NOTICE 'historico cerrado correctamente.';
 END;
 $$;
-
 
 ---ver historico empleados
 CREATE OR REPLACE FUNCTION ver_historico_empleado(p_num_expediente INTEGER)
@@ -701,68 +722,6 @@ AS $$
     WHERE h.num_expediente = p_num_expediente
     ORDER BY h.fecha_inicio DESC;
 $$;
-
----Eliminar un historico---
-CREATE OR REPLACE PROCEDURE eliminar_historico_empleado(
-    p_id_museo          INTEGER,
-    p_id_estructura_org INTEGER,
-    p_num_expediente    INTEGER,
-    p_fecha_inicio      DATE
-)
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    v_fecha_fin DATE;
-    v_min_fecha DATE;
-BEGIN
-    -- 1. Comprobar que el registro exista y capturar su fecha_fin
-    SELECT fecha_fin
-      INTO v_fecha_fin
-    FROM historicos_empleados
-    WHERE id_museo          = p_id_museo
-      AND id_estructura_org = p_id_estructura_org
-      AND num_expediente    = p_num_expediente
-      AND fecha_inicio      = p_fecha_inicio;
-    IF NOT FOUND THEN
-        RAISE EXCEPTION 'No se encontró el historico especificado.';
-    END IF;
-
-    -- 2. Validar que ya tenga fecha_fin (no eliminar activos)
-    IF v_fecha_fin IS NULL THEN
-        RAISE EXCEPTION 'No se puede eliminar un histórico con fecha_fin NULL (activo).';
-    END IF;
-
-    -- 3. Calcular la fecha_inicio más antigua de este empleado
-    SELECT MIN(fecha_inicio)
-      INTO v_min_fecha
-    FROM historicos_empleados
-    WHERE num_expediente = p_num_expediente;
-    
-    -- 4. Validar que no sea el primer histórico
-    IF p_fecha_inicio = v_min_fecha THEN
-        RAISE EXCEPTION 'No se puede eliminar el primer histórico del empleado.';
-    END IF;
-
-    -- 5. Si pasa todas las validaciones, borrar
-    DELETE FROM historicos_empleados
-     WHERE id_museo          = p_id_museo
-       AND id_estructura_org = p_id_estructura_org
-       AND num_expediente    = p_num_expediente
-       AND fecha_inicio      = p_fecha_inicio;
-
-    RAISE NOTICE 'historico eliminado correctamente.';
-END;
-$$;
-
-
---FUNCION OBTENER MUSEO 
-CREATE OR REPLACE FUNCTION obtener_museos()
-RETURNS TABLE(id_museo INTEGER, nombre VARCHAR)
-AS $$
-BEGIN
-  RETURN QUERY SELECT m.id_museo, m.nombre FROM museos m;
-END;
-$$ LANGUAGE plpgsql;
 
 
 -- funcion obtener informacion de una obra
@@ -977,50 +936,22 @@ $$;
 
 --actualizar estructura fisica
 CREATE OR REPLACE PROCEDURE actualizar_estructura_fisica(
-    p_id_museo INTEGER,
-    p_id_estructura_fis INTEGER,
     p_nombre VARCHAR,
-    p_tipo CHAR,
     p_descripcion VARCHAR,
     p_direccion VARCHAR,
-    p_id_museo_padre INTEGER,
-    p_id_padre INTEGER
 )
 LANGUAGE plpgsql
 AS $$
 BEGIN
     UPDATE ESTRUCTURAS_FISICAS
     SET nombre = p_nombre,
-        tipo = p_tipo,
         descripcion = p_descripcion,
         direccion = p_direccion,
-        id_museo_padre = p_id_museo_padre,
-        id_padre = p_id_padre
     WHERE id_museo = p_id_museo AND id_estructura_fis = p_id_estructura_fis;
 END;
 $$;
 
 
-CREATE OR REPLACE FUNCTION listar_estructuras_fisicas(
-    p_id_museo INTEGER
-) RETURNS TABLE (
-    id_estructura_fis INTEGER,
-    nombre VARCHAR,
-    tipo CHAR,
-    descripcion VARCHAR,
-    direccion VARCHAR,
-    id_museo_padre INTEGER,
-    id_padre INTEGER
-)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    RETURN QUERY
-    SELECT id_estructura_fis, nombre, tipo, descripcion, direccion, id_museo_padre, id_padre
-    FROM ESTRUCTURAS_FISICAS
-    WHERE id_museo = p_id_museo;
-END;
-$$;
 -- PROCEDURES PARA INSERTAR OBRAS CON ARTISTAS
 
 -- Tipo de retorno para las funciones de inserción
@@ -1148,5 +1079,46 @@ BEGIN
 
   -- 4) Retornar IDs
   RETURN ROW(v_id_obra, v_id_artista);
+END;
+$$;
+
+---MANTENIMIENTO DE ESTRUCTURA ORGANIZACIONAL
+
+-- Crear nueva estructura organizacional
+CREATE OR REPLACE PROCEDURE crear_estructura_organizacional(
+    p_id_museo INTEGER,
+    p_nombre VARCHAR,
+    p_tipo CHAR,
+    p_descripcion VARCHAR,
+    p_nivel INTEGER,
+    p_id_museo_padre INTEGER,
+    p_id_estructura_org_padre INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO ESTRUCTURAS_ORGANIZACIONALES(
+        id_museo, nombre, tipo, descripcion, nivel, id_museo_padre, id_estructura_org_padre
+    ) VALUES (
+        p_id_museo, p_nombre, p_tipo, p_descripcion, p_nivel, p_id_museo_padre, p_id_estructura_org_padre
+    );
+END;
+$$;
+
+-- Actualizar estructura organizacional
+CREATE OR REPLACE PROCEDURE actualizar_estructura_organizacional(
+    p_id_museo INTEGER,
+    p_id_estructura_org INTEGER,
+    p_nombre VARCHAR,
+    p_descripcion VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE ESTRUCTURAS_ORGANIZACIONALES
+    SET nombre = p_nombre,
+        tipo = p_tipo,
+        descripcion = p_descripcion
+    WHERE id_museo = p_id_museo AND id_estructura_org = p_id_estructura_org;
 END;
 $$;
