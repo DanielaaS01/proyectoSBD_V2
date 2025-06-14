@@ -1,3 +1,5 @@
+let museosFundacion = {};
+
 // Llenar museos dinámicamente
 document.addEventListener('DOMContentLoaded', async () => {
   const select = document.getElementById('id_museo');
@@ -9,9 +11,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       option.value = m.id_museo;
       option.textContent = m.nombre;
       select.appendChild(option);
+      // Guardar año de fundación (extraer año de fecha_fundacion)
+      if (m.fecha_fundacion) {
+        museosFundacion[m.id_museo] = new Date(m.fecha_fundacion).getFullYear();
+      }
     });
   } catch (err) {
     alert('No se pudieron cargar los museos');
+  }
+});
+
+// Cambiar el año mínimo cuando se seleccione un museo
+document.getElementById('id_museo').addEventListener('change', function () {
+  const anioInput = document.getElementById('anio');
+  const idMuseo = this.value;
+  if (museosFundacion[idMuseo]) {
+    anioInput.min = museosFundacion[idMuseo];
+    // Opcional: limpiar el valor si es menor al nuevo mínimo
+    if (anioInput.value && anioInput.value < museosFundacion[idMuseo]) {
+      anioInput.value = '';
+    }
+  } else {
+    anioInput.min = 1800; // valor por defecto
   }
 });
 

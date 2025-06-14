@@ -275,9 +275,8 @@ app.get("/asignaciones-empleado", async (req, res) => {
   }
 });
 
-// 13. Ruta: Registrar resumen histórico
+// 13. Ruta: Registrar resumen histórico del museo 
 app.post("/registrar-resumen-historico", async (req, res) => {
-  console.log("Datos recibidos:", req.body); // <-- Agrega esto
   const { id_museo, anio, hechos } = req.body;
   const client = await pool.connect();
   try {
