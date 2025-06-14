@@ -522,6 +522,17 @@ app.post("/escultura", async (req, res) => {
   }
 });
 
+//insertar resumen historico del museo
+app.post('/registrar-resumen-historico', async (req, res) => {
+  const { id_museo, anio, hechos } = req.body;
+  try {
+    await db.none('CALL registrar_resumen_historico_museo($1, $2, $3)', [id_museo, anio, hechos]);
+    res.json({ mensaje: 'Resumen registrado correctamente' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 //  Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en: http://localhost:${PORT}`);

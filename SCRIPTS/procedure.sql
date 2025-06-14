@@ -927,3 +927,97 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+-------RESUMEN HISTORICO DEL MUSEO
+--insertar resumen hsitorico
+CREATE OR REPLACE PROCEDURE registrar_resumen_historico_museo(
+  p_id_museo INTEGER,
+  p_anio INTEGER,
+  p_hechos TEXT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF p_anio < 1800 OR p_anio > EXTRACT(YEAR FROM CURRENT_DATE) THEN
+    RAISE EXCEPTION 'Año fuera de rango válido';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM museos WHERE id_museo = p_id_museo) THEN
+    RAISE EXCEPTION 'Museo no existe';
+  END IF;
+  IF EXISTS (SELECT 1 FROM resumenes_historicos_museo WHERE id_museo = p_id_museo AND anio = p_anio) THEN
+    RAISE EXCEPTION 'Ya existe un resumen para ese museo y año';
+  END IF;
+  INSERT INTO resumenes_historicos_museo(id_museo, anio, hechos)
+  VALUES (p_id_museo, p_anio, p_hechos);
+END;
+$$;
+
+
+------MANTENIMIENTO ESTRUCTURA FISICA----------
+
+--crear nueva estructura fisica
+CREATE OR REPLACE PROCEDURE crear_estructura_fisica(
+    p_id_museo INTEGER,
+    p_nombre VARCHAR,
+    p_tipo CHAR,
+    p_descripcion VARCHAR,
+    p_direccion VARCHAR,
+    p_id_museo_padre INTEGER,
+    p_id_padre INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO ESTRUCTURAS_FISICAS(
+        id_museo, nombre, tipo, descripcion, direccion, id_museo_padre, id_padre
+    ) VALUES (
+        p_id_museo, p_nombre, p_tipo, p_descripcion, p_direccion, p_id_museo_padre, p_id_padre
+    );
+END;
+$$;
+
+--actualizar estructura fisica
+CREATE OR REPLACE PROCEDURE actualizar_estructura_fisica(
+    p_id_museo INTEGER,
+    p_id_estructura_fis INTEGER,
+    p_nombre VARCHAR,
+    p_tipo CHAR,
+    p_descripcion VARCHAR,
+    p_direccion VARCHAR,
+    p_id_museo_padre INTEGER,
+    p_id_padre INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE ESTRUCTURAS_FISICAS
+    SET nombre = p_nombre,
+        tipo = p_tipo,
+        descripcion = p_descripcion,
+        direccion = p_direccion,
+        id_museo_padre = p_id_museo_padre,
+        id_padre = p_id_padre
+    WHERE id_museo = p_id_museo AND id_estructura_fis = p_id_estructura_fis;
+END;
+$$;
+
+
+CREATE OR REPLACE FUNCTION listar_estructuras_fisicas(
+    p_id_museo INTEGER
+) RETURNS TABLE (
+    id_estructura_fis INTEGER,
+    nombre VARCHAR,
+    tipo CHAR,
+    descripcion VARCHAR,
+    direccion VARCHAR,
+    id_museo_padre INTEGER,
+    id_padre INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT id_estructura_fis, nombre, tipo, descripcion, direccion, id_museo_padre, id_padre
+    FROM ESTRUCTURAS_FISICAS
+    WHERE id_museo = p_id_museo;
+END;
+$$;
