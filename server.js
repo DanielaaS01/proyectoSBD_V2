@@ -353,6 +353,21 @@ app.get("/artistas", async (req, res) => {
   }
 });
 
+// Ficha de artista (consulta por nombre_artistico)
+app.get("/ficha-artista", async (req, res) => {
+  const id_artista = req.query.id_artista;
+  if (!id_artista) return res.status(400).send("Falta el parámetro id_artista");
+  try {
+    const result = await pool.query("SELECT * FROM ficha_artista($1)", [
+      id_artista,
+    ]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando ficha artista:", err);
+    res.status(500).send("Error al obtener ficha del artista");
+  }
+});
+
 //Insertar Pintura y vincular artista (existente o nuevo)
 app.post("/pintura", async (req, res) => {
   const {
@@ -468,11 +483,15 @@ app.post("/escultura", async (req, res) => {
 });
 
 //insertar resumen historico del museo
-app.post('/registrar-resumen-historico', async (req, res) => {
+app.post("/registrar-resumen-historico", async (req, res) => {
   const { id_museo, anio, hechos } = req.body;
   try {
-    await db.none('CALL registrar_resumen_historico_museo($1, $2, $3)', [id_museo, anio, hechos]);
-    res.json({ mensaje: 'Resumen registrado correctamente' });
+    await db.none("CALL registrar_resumen_historico_museo($1, $2, $3)", [
+      id_museo,
+      anio,
+      hechos,
+    ]);
+    res.json({ mensaje: "Resumen registrado correctamente" });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

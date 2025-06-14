@@ -1150,3 +1150,44 @@ BEGIN
   RETURN ROW(v_id_obra, v_id_artista);
 END;
 $$;
+
+
+-- FUNCION: ficha_artista
+CREATE OR REPLACE FUNCTION ficha_artista(p_id_artista INTEGER)
+RETURNS TABLE (
+    id_artista INTEGER,
+    nombre_completo VARCHAR,
+    nombre_artistico VARCHAR,
+    fecha_nac DATE,
+    fecha_def DATE,
+    caract_est_tec VARCHAR,
+    id_obra INTEGER,
+    obra VARCHAR,
+    tipo_obra VARCHAR,
+    museo_exhibicion VARCHAR
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        a.id_artista,
+        (a.nombre || ' ' || a.apellido)::varchar    AS nombre_completo,
+        a.nombre_artistico,
+        a.fecha_nac,
+        a.fecha_def,
+        a.caract_est_tec,
+        o.id_obra,
+        o.nombre        AS obra,
+        (CASE o.tipo
+            WHEN 'E' THEN 'Escultura'
+            WHEN 'P' THEN 'Pintura'
+            ELSE 'Desconocido'
+        END)::varchar             AS tipo_obra,
+        m.nombre        AS museo_exhibicion
+    FROM ARTISTAS a
+    LEFT JOIN OBRAS_ARTISTAS oa ON a.id_artista = oa.id_artista
+    LEFT JOIN OBRAS          o  ON oa.id_obra    = o.id_obra
+    LEFT JOIN MUSEOS         m  ON o.id_museo   = m.id_museo
+    WHERE a.id_artista = p_id_artista;
+END;
+$$ LANGUAGE plpgsql;
+
