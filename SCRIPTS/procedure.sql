@@ -1021,3 +1021,132 @@ BEGIN
     WHERE id_museo = p_id_museo;
 END;
 $$;
+-- PROCEDURES PARA INSERTAR OBRAS CON ARTISTAS
+
+-- Tipo de retorno para las funciones de inserción
+CREATE TYPE obra_artista_result AS (
+  id_obra    INTEGER,
+  id_artista INTEGER
+);
+
+-- Funciones para insertar obras con artista
+CREATE OR REPLACE FUNCTION insertar_pintura_con_artista(
+  p_nombre            VARCHAR,
+  p_dimension         VARCHAR,
+  p_estilos           VARCHAR,
+  p_caract_mat_tec    VARCHAR,
+  p_periodo           DATE,
+  p_id_museo          INTEGER,
+  p_id_estructura_fis INTEGER,
+  p_id_sala           INTEGER,
+  p_id_artista        INTEGER DEFAULT NULL,
+  -- Campos para artista nuevo (si p_id_artista IS NULL)
+  p_nombre_art        VARCHAR DEFAULT NULL,
+  p_apellido_art      VARCHAR DEFAULT NULL,
+  p_nombre_artistico  VARCHAR DEFAULT NULL,
+  p_fecha_nac_art     DATE    DEFAULT NULL,
+  p_fecha_def_art     DATE    DEFAULT NULL,
+  p_caract_est_tec    VARCHAR DEFAULT NULL
+)
+RETURNS obra_artista_result
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id_artista INTEGER := p_id_artista;
+  v_id_obra    INTEGER;
+BEGIN
+  -- 1) Si no vino artista existente, insertamos uno nuevo
+  IF v_id_artista IS NULL AND p_nombre_art IS NOT NULL THEN
+    INSERT INTO ARTISTAS(
+      caract_est_tec, nombre, apellido,
+      nombre_artistico, fecha_nac, fecha_def
+    ) VALUES (
+      p_caract_est_tec, p_nombre_art, p_apellido_art,
+      p_nombre_artistico, p_fecha_nac_art, p_fecha_def_art
+    )
+    RETURNING id_artista INTO v_id_artista;
+  END IF;
+
+  -- 2) Insertar Pintura (tipo 'P')
+  INSERT INTO OBRAS(
+    nombre, dimension, tipo,
+    estilos, caract_mat_tec,
+    id_sala, id_estructura_fis,
+    id_museo, periodo
+  ) VALUES (
+    p_nombre, p_dimension, 'P',
+    p_estilos, p_caract_mat_tec,
+    p_id_sala, p_id_estructura_fis,
+    p_id_museo, p_periodo
+  )
+  RETURNING id_obra INTO v_id_obra;
+
+  -- 3) Vincular obra ↔ artista
+  INSERT INTO OBRAS_ARTISTAS(id_obra, id_artista)
+    VALUES (v_id_obra, v_id_artista);
+
+  -- 4) Devolver ambos IDs
+  RETURN ROW(v_id_obra, v_id_artista);
+END;
+$$;
+
+-- Función para insertar escultura con artista
+CREATE OR REPLACE FUNCTION insertar_escultura_con_artista(
+  p_nombre            VARCHAR,
+  p_dimension         VARCHAR,
+  p_estilos           VARCHAR,
+  p_caract_mat_tec    VARCHAR,
+  p_periodo           DATE,
+  p_id_museo          INTEGER,
+  p_id_estructura_fis INTEGER,
+  p_id_sala           INTEGER,
+  p_id_artista        INTEGER DEFAULT NULL,
+  -- Campos para artista nuevo
+  p_nombre_art        VARCHAR DEFAULT NULL,
+  p_apellido_art      VARCHAR DEFAULT NULL,
+  p_nombre_artistico  VARCHAR DEFAULT NULL,
+  p_fecha_nac_art     DATE    DEFAULT NULL,
+  p_fecha_def_art     DATE    DEFAULT NULL,
+  p_caract_est_tec    VARCHAR DEFAULT NULL
+)
+RETURNS obra_artista_result
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_id_artista INTEGER := p_id_artista;
+  v_id_obra    INTEGER;
+BEGIN
+  -- 1) Crear artista si no existe
+  IF v_id_artista IS NULL AND p_nombre_art IS NOT NULL THEN
+    INSERT INTO ARTISTAS(
+      caract_est_tec, nombre, apellido,
+      nombre_artistico, fecha_nac, fecha_def
+    ) VALUES (
+      p_caract_est_tec, p_nombre_art, p_apellido_art,
+      p_nombre_artistico, p_fecha_nac_art, p_fecha_def_art
+    )
+    RETURNING id_artista INTO v_id_artista;
+  END IF;
+
+  -- 2) Insertar Escultura (tipo 'E')
+  INSERT INTO OBRAS(
+    nombre, dimension, tipo,
+    estilos, caract_mat_tec,
+    id_sala, id_estructura_fis,
+    id_museo, periodo
+  ) VALUES (
+    p_nombre, p_dimension, 'E',
+    p_estilos, p_caract_mat_tec,
+    p_id_sala, p_id_estructura_fis,
+    p_id_museo, p_periodo
+  )
+  RETURNING id_obra INTO v_id_obra;
+
+  -- 3) Vincular obra ↔ artista
+  INSERT INTO OBRAS_ARTISTAS(id_obra, id_artista)
+    VALUES (v_id_obra, v_id_artista);
+
+  -- 4) Retornar IDs
+  RETURN ROW(v_id_obra, v_id_artista);
+END;
+$$;
