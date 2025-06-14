@@ -1,3 +1,5 @@
+----LUGARES GEOGRAFICOS-----
+BEGIN;
 -- PAISES
 INSERT INTO LUGARES_GEOGRAFICOS(nombre, tipo, id_lugar_padre) VALUES
 (UPPER('España'), 'P', NULL),              -- ID 1
@@ -25,8 +27,10 @@ INSERT INTO LUGARES_GEOGRAFICOS(nombre, tipo, id_lugar_padre) VALUES
 (UPPER('Lisboa'), 'C', 10),                     -- ID 17
 (UPPER('Oporto'), 'C', 11);                     -- ID 18
 
-----MUSEOS-----
+COMMIT;
 
+----MUSEOS-----
+BEGIN;
 INSERT INTO MUSEOS (nombre, mision_proposito, fecha_fundacion, id_lugar) VALUES
 -- MUSEO 1
 (UPPER('Museo Nacional Centro de Arte Reina Sofía'),
@@ -67,9 +71,11 @@ INSERT INTO MUSEOS (nombre, mision_proposito, fecha_fundacion, id_lugar) VALUES
 (UPPER('Museu Nacional Soares dos Reis'),
  UPPER('El Museu Nacional Soares dos Reis tiene como misión conservar, estudiar y difundir una de las colecciones de arte más importantes de Portugal, abarcando obras desde el siglo XVI hasta el XX. El museo busca ofrecer al público una visión integral del patrimonio artístico nacional, promoviendo la educación artística y el acceso a la cultura.'),
  DATE '1833-04-11', 18);
+COMMIT;
+
 
 ----HORARIOS----
-
+BEGIN;
  -- MUSEO 1
 INSERT INTO HORARIOS(id_museo, dia, hora_inicio, hora_fin) VALUES
 (1,1,'10:00','21:00'),
@@ -143,196 +149,625 @@ INSERT INTO HORARIOS(id_museo, dia, hora_inicio, hora_fin) VALUES
 (8,5,'10:00','18:00'),
 (8,6,'10:00','18:00'),
 (8,7,'10:00','18:00');
+COMMIT; 
 
 
+----ESTRUCTURAS FÍSICAS----
+BEGIN;
+-- MUSEO 1
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(1, 'EDIFICIO SABATINI', 'E', 'COLECCIÓN PERMANENTE Y ADMINISTRACIÓN', 'CALLE SANTA ISABEL, 52, 28012 MADRID');
 
--- ESTRUCTURAS FISICAS (Edificios y Pisos)
-INSERT INTO ESTRUCTURAS_FISICAS(id_museo, id_estructura_fis, nombre, tipo, descripcion, direccion)
-VALUES
--- MUSEO 1 - REINA SOFIA
-(1, 1, 'EDIFICIO SABATINI', 'E', 'COLECCIÓN PERMANENTE Y ADMINISTRACIÓN', 'CALLE SANTA ISABEL, 52, 28012 MADRID'),
-(1, 2, 'EDIFICIO NOUVEL', 'E', 'EXPOSICIONES TEMPORALES Y BIBLIOTECA', 'RONDA DE ATOCHA, 2, 28012 MADRID'),
-(1, 3, 'PALACIO DE VELÁZQUEZ', 'E', 'EXPOS TEMPORALES DE GRAN FORMATO', 'PARQUE DEL RETIRO, MADRID'),
-(1, 4, 'PALACIO DE CRISTAL', 'E', 'INSTALACIONES ARTÍSTICAS CONTEMPORÁNEAS', 'PARQUE DEL RETIRO, MADRID'),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(1, 'PISO 1 - EDIFICIO SABATINI', 'P', 1, 1);
 
--- MUSEO 2 - THYSSEN-BORNEMISZA
-(2, 5, 'PALACIO DE VILLAHERMOSA', 'E', 'COLECCIÓN PERMANENTE Y AMPLIACIÓN', 'PASEO DEL PRADO, 8, 28014 MADRID'),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(1, 'EDIFICIO NOUVEL', 'E', 'AUDITORIO, BIBLIOTECA Y EXPOSICIONES TEMPORALES', 'RONDA DE ATOCHA, 2, 28012 MADRID');
 
--- MUSEO 3 - GALLERIA NAZIONALE
-(3, 6, 'PALACIO DE BELLAS ARTES', 'E', 'OBRAS SIGLO XIX Y XX', 'VIALE DELLE BELLE ARTI, 131, ROMA'),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(1, 'PISO 1 - EDIFICIO NOUVEL', 'P', 1, 3);
 
--- MUSEO 4 - PINACOTECA DI BRERA
-(4, 7, 'PALAZZO BRERA', 'E', 'COLECCIÓN HISTÓRICA PRINCIPAL', 'VIA BRERA, 28, 20121 MILÁN'),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(1, 'PALACIO DE VELÁZQUEZ', 'E', 'EXPOSICIONES DE GRAN FORMATO', 'PARQUE DEL RETIRO, MADRID');
 
--- MUSEO 5 - RIJKSMUSEUM
-(5, 8, 'EDIFICIO PRINCIPAL', 'E', 'COLECCIÓN PERMANENTE', 'MUSEUMSTRAAT 1, 1071 XX ÁMSTERDAM'),
-(5, 9, 'PABELLÓN ASIÁTICO', 'E', 'COLECCIÓN DE ARTE ASIÁTICO', 'JARDÍN SUR DEL MUSEO'),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(1, 'PISO 1 - PALACIO DE VELÁZQUEZ', 'P', 1, 5);
 
--- MUSEO 6 - KUNSTMUSEUM
-(6, 10, 'KUNSTMUSEUM DEN HAAG', 'E', 'COLECCIÓN PERMANENTE Y TEMPORALES', 'STADHOUDERSLAAN 41, LA HAYA'),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(1, 'PALACIO DE CRISTAL', 'E', 'INSTALACIONES ARTÍSTICAS CONTEMPORÁNEAS', 'PARQUE DEL RETIRO, MADRID');
 
--- MUSEO 7 - MNAA
-(7, 11, 'PALÁCIO DE ALVOR-POMBAL', 'E', 'COLECCIÓN PERMANENTE', 'RUA DAS JANELAS VERDES, LISBOA'),
-
--- MUSEO 8 - SOARES DOS REIS
-(8, 12, 'PALÁCIO DOS CARRANCAS', 'E', 'SEDE DEL MUSEO', 'RUA DE DOM MANUEL II, OPORTO');
-
--- PISOS relacionados (con id_padre)
-
-INSERT INTO ESTRUCTURAS_FISICAS(id_museo, id_estructura_fis, nombre, tipo, descripcion, id_museo_padre, id_padre)
-VALUES
--- MUSEO 1 - REINA SOFÍA
-(1, 13, 'PLANTA 2 - SABATINI', 'P', 'COLECCIÓN PERMANENTE', 1, 1),
-(1, 14, 'PLANTA 4 - SABATINI', 'P', 'ESCULTURA CONTEMPORÁNEA', 1, 1),
-(1, 15, 'PLANTA 1 - NOUVEL', 'P', 'AUDITORIO Y EXPOSICIONES', 1, 2),
-(1, 16, 'PLANTA 2 - NOUVEL', 'P', 'DOCUMENTACIÓN Y CAFETERÍA', 1, 2),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(1, 'PISO 1 - PALACIO DE CRISTAL', 'P', 1, 7);
 
 -- MUSEO 2
-(2, 17, 'PLANTA 1 - VILLAHERMOSA', 'P', 'RENACIMIENTO Y BARROCO', 2, 5),
-(2, 18, 'PLANTA 2 - VILLAHERMOSA', 'P', 'ROMANTICISMO Y ARTE MODERNO', 2, 5),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(2, 'PALACIO DE VILLAHERMOSA', 'E', 'COLECCIÓN PERMANENTE', 'PASEO DEL PRADO, 8, 28014 MADRID');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(2, 'PISO 1 - PALACIO DE VILLAHERMOSA', 'P', 2, 9);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(2, 'AMPLIACIÓN CARMEN THYSSEN', 'E', 'EXPOSICIONES TEMPORALES', 'EDIFICIOS COLINDANTES');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(2, 'PISO 1 - AMPLIACIÓN CARMEN THYSSEN', 'P', 2, 11);
 
 -- MUSEO 3
-(3, 19, 'PLANTA BAJA', 'P', 'ARTE DEL SIGLO XIX', 3, 6),
-(3, 20, 'PLANTA ALTA', 'P', 'VANGUARDIAS Y CONTEMPORÁNEO', 3, 6),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(3, 'PALACIO DE BELLAS ARTES', 'E', 'SEDE PRINCIPAL Y EXPOSICIONES TEMPORALES', 'VIALE DELLE BELLE ARTI, 131, 00197 ROMA');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(3, 'PLANTA BAJA - PALACIO DE BELLAS ARTES', 'P', 3, 13);
 
 -- MUSEO 4
-(4, 21, 'PLANTA 1 - BRERA', 'P', 'RENACIMIENTO Y BARROCO', 4, 7),
-(4, 22, 'PLANTA 2 - BRERA', 'P', 'SIGLO XIX Y ESCULTURA MODERNA', 4, 7),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(4, 'PALAZZO BRERA', 'E', 'SEDE PRINCIPAL Y COLECCIÓN PERMANENTE', 'VIA BRERA, 28, 20121 MILÁN');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(4, 'PISO 1 - PALAZZO BRERA', 'P', 4, 15);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(4, 'PALAZZO CITTERIO', 'E', 'ARTE MODERNO Y CONTEMPORÁNEO', 'VIA BRERA, 12, 20121 MILÁN');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(4, 'PISO 1 - PALAZZO CITTERIO', 'P', 4, 17);
 
 -- MUSEO 5
-(5, 23, 'GALERÍA DE HONOR', 'P', 'SIGLO DE ORO NEERLANDÉS', 5, 8),
-(5, 24, 'GALERÍA DE ESCULTURA', 'P', 'ESCULTURA EUROPEA', 5, 8),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(5, 'EDIFICIO PRINCIPAL', 'E', 'COLECCIÓN PERMANENTE', 'MUSEUMSTRAAT 1, 1071 XX ÁMSTERDAM');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(5, 'PISO 1 - EDIFICIO PRINCIPAL', 'P', 5, 19);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(5, 'PABELLÓN ASIÁTICO', 'E', 'COLECCIÓN DE ARTE ASIÁTICO', 'JARDÍN SUR DEL RIJKSMUSEUM');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(5, 'PISO 1 - PABELLÓN ASIÁTICO', 'P', 5, 21);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(5, 'ALA PHILIPS', 'E', 'EXPOSICIONES TEMPORALES', 'RIJKSMUSEUM');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(5, 'PISO 1 - ALA PHILIPS', 'P', 5, 23);
 
 -- MUSEO 6
-(6, 25, 'ALA MONDRIAN', 'P', 'NEOPLASTICISMO', 6, 10),
-(6, 26, 'PLANTA 1', 'P', 'SIMBOLISMO Y REALISMO', 6, 10),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(6, 'KUNSTMUSEUM DEN HAAG', 'E', 'COLECCIÓN PERMANENTE', 'STADHOUDERSLAAN 41, LA HAYA');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(6, 'PISO 1 - KUNSTMUSEUM DEN HAAG', 'P', 6, 25);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(6, 'KM21', 'E', 'ARTE CONTEMPORÁNEO', 'STADHOUDERSLAAN 43, LA HAYA');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(6, 'PISO 1 - KM21', 'P', 6, 27);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(6, 'FOTOMUSEUM DEN HAAG', 'E', 'MUSEO DE FOTOGRAFÍA', 'STADHOUDERSLAAN 43, LA HAYA');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(6, 'PISO 1 - FOTOMUSEUM DEN HAAG', 'P', 6, 29);
 
 -- MUSEO 7
-(7, 27, 'PLANTA BAJA', 'P', 'ARTE PORTUGUÉS Y EUROPEO', 7, 11),
-(7, 28, 'PLANTA 1', 'P', 'ARTE COLONIAL Y RELIGIOSO', 7, 11),
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(7, 'PALÁCIO DE ALVOR-POMBAL', 'E', 'COLECCIÓN PRINCIPAL', 'RUA DAS JANELAS VERDES, LISBOA');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(7, 'PISO 1 - PALÁCIO DE ALVOR-POMBAL', 'P', 7, 31);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(7, 'ANEXO CONVENTO DE SANTO ALBERTO', 'E', 'EXPOSICIONES ADICIONALES', 'CONECTADO AL PRINCIPAL');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(7, 'PISO 1 - ANEXO CONVENTO DE SANTO ALBERTO', 'P', 7, 33);
 
 -- MUSEO 8
-(8, 29, 'PLANTA BAJA', 'P', 'PINTURA DEL SIGLO XIX', 8, 12),
-(8, 30, 'PLANTA 1', 'P', 'ESCULTURA MODERNA', 8, 12);
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion)
+VALUES 
+(8, 'PALÁCIO DOS CARRANCAS', 'E', 'COLECCIÓN PRINCIPAL', 'RUA DE DOM MANUEL II, 44, OPORTO');
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(8, 'PLANTA BAJA - PALÁCIO DOS CARRANCAS', 'P', 8, 35);
+--Para las obras--
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(1, 'PISO 2 - EDIFICIO SABATINI', 'P', 1, 1);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(1, 'PISO 4 - EDIFICIO SABATINI', 'P', 1, 1);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(2, 'PISO 2 - PALACIO DE VILLAHERMOSA', 'P', 2, 9);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(3, 'PISO 1 - PALACIO DE BELLAS ARTES', 'P', 3, 13);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(4, 'PISO 2 - PALAZZO BRERA', 'P', 4, 15);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(4, 'PISO 2 - PALAZZO CITTERIO', 'P', 4, 17);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(6, 'PISO 2 - KUNSTMUSEUM DEN HAAG', 'P', 6, 25);
+
+INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padre)
+VALUES 
+(8, 'PISO 1 - PALÁCIO DOS CARRANCAS', 'P', 8, 35);
+COMMIT;
+ 
+----SALAS DE EXPOSICIÓN-----
+BEGIN;
+
+INSERT INTO SALAS_EXP (id_museo, id_estructura_fis, nombre) VALUES
+-- Museo 1: Reina Sofía
+(1, 37, 'SALA 206'),
+(1, 37, 'SALA 201'),
+(1, 37, 'SALA 205'),
+(1, 38, 'SALA 401'),
+(1, 38, 'SALA 402'),
+
+-- Museo 2: Thyssen
+(2, 10, 'SALA 12'),
+(2, 10, 'SALA 13'),
+(2, 39, 'SALA 29'),
+(2, 39, 'SALA 30'),
+(2, 39, 'SALA 33'),
+(2, 39, 'SALA 31'),
+
+-- Museo 3: Galleria Nazionale
+(3, 14, 'SALA 2'),
+(3, 14, 'SALA 4'),
+(3, 40, 'SALA 8'),
+(3, 40, 'SALA 10'),
+(3, 40, 'SALA 14'),
+
+-- Museo 4: Pinacoteca di Brera
+(4, 16, 'SALA 15'),
+(4, 16, 'SALA 20'),
+(4, 16, 'SALA 7'),
+(4, 41, 'SALA 37'),
+(4, 41, 'SALA 29'),
+(4, 41, 'SALA 30'),
+
+-- Museo 6: Kunstmuseum
+(6, 26, 'SALA ARTE SIMBÓLICO'),
+(6, 26, 'SALA REALISMO'),
+(6, 43, 'SALA IMPRESIONISTAS'),
+
+-- Museo 7: MNAA
+(7, 32, 'SALA 1'),
+(7, 32, 'SALA 5'),
+(7, 32, 'SALA 10'),
+(7, 32, 'SALA 11'),
+
+-- Museo 8: Soares dos Reis
+(8, 36, 'SALA 3'),
+(8, 36, 'SALA 4'),
+(8, 36, 'SALA 5'),
+(8, 36, 'SALA DE ESCULTURA'),
+(8, 44, 'SALA DE ESCULTURA MODERNA');
+
+COMMIT;
 
 
--- ========================
--- MUSEO 1 - REINA SOFÍA
--- ========================
-INSERT INTO SALAS_EXP(id_museo, id_estructura_fis, id_sala, nombre, descripcion)
-VALUES
-(1, 13, 201, 'SALA 201.02', 'PINTURA AZUL'),
-(1, 13, 202, 'SALA 202', 'CUBISMO Y MUJERES'),
-(1, 13, 205, 'SALA 205.02', 'CUBISMO JUAN GRIS'),
-(1, 13, 206, 'SALA 206', 'PINTURA GUERNICA Y EXPRESIÓN'),
-(1, 13, 213, 'SALA 205.13', 'SURREALISMO INTERNACIONAL'),
-(1, 14, 401, 'SALA 401', 'RETRATO REALISTA'),
-(1, 14, 402, 'SALA 402', 'ESCULTURA MODERNA'),
-(1, 14, 403, 'SALA 403', 'ESCULTURA EXPRESIONISTA');
+----OBRAS DE ARTE-----
 
--- ========================
--- MUSEO 2 - THYSSEN
--- ========================
-INSERT INTO SALAS_EXP(id_museo, id_estructura_fis, id_sala, nombre, descripcion)
-VALUES
-(2, 17, 6, 'SALA 6', 'RENACIMIENTO'),
-(2, 17, 9, 'SALA 9', 'RENACIMIENTO VENECIANO'),
-(2, 17, 12, 'SALA 12', 'BARROCO ITALIANO'),
-(2, 17, 13, 'SALA 13', 'MANIERISMO ESPAÑOL'),
-(2, 18, 29, 'SALA 29', 'REALISMO HISTÓRICO'),
-(2, 18, 30, 'SALA 30', 'REALISMO AMERICANO'),
-(2, 18, 31, 'SALA 31', 'ESCULTURA VANGUARDISTA'),
-(2, 18, 32, 'SALA 32', 'IMAGINACIÓN SURREALISTA'),
-(2, 18, 33, 'SALA 33', 'ESCULTURA MODERNA'),
-(2, 18, 99, 'PATIO EXTERIOR', 'FIGURA RECLINADA');
+BEGIN;
 
--- ========================
--- MUSEO 3 - GALLERIA NAZIONALE
--- ========================
-INSERT INTO SALAS_EXP(id_museo, id_estructura_fis, id_sala, nombre, descripcion)
-VALUES
-(3, 19, 2, 'SALA 2', 'ROMANTICISMO'),
-(3, 19, 3, 'SALA 3', 'EL BESO'),
-(3, 19, 4, 'SALA 4', 'CLEOPATRA ESCULTURA'),
-(3, 19, 5, 'SALA 5', 'NINFA DORMIDA'),
-(3, 20, 8, 'SALA 8', 'SIMBOLISMO'),
-(3, 20, 9, 'SALA 9', 'SIMBOLISMO PREVIATI'),
-(3, 20, 10, 'SALA 10', 'SIMBOLISMO VENUS'),
-(3, 20, 13, 'SALA 13', 'FUTURISMO ESCULTURA'),
-(3, 20, 14, 'SALA 14', 'FUTURISMO BALANCEADO'),
-(3, 20, 15, 'SALA 15', 'METAFÍSICA ITALIANA');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('GUERNICA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 35, 37, 1, '1952-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('LA MUJER EN AZUL', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 36, 37, 1, '1881-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('EL ROSTRO DEL GRAN MASTURBADOR', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 37, 37, 1, '1908-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('CABEZA DE MUJER LLORANDO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 35, 37, 1, '1939-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('RETRATO DE RAMÓN GÓMEZ DE LA SERNA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 38, 38, 1, '1888-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('TORSO DE MUJER', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 39, 38, 1, '1991-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('SANTA CATALINA DE ALEJANDRÍA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 40, 10, 2, '1984-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('SAN JERÓNIMO PENITENTE', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 41, 10, 2, '1937-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('EL TESTAMENTO DE ISABEL LA CATÓLICA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 42, 39, 2, '1994-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('LA CASA JUNTO A LAS VÍAS DEL TREN', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 43, 39, 2, '1965-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('BUSTO DE HOMBRE JOVEN', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 44, 39, 2, '1988-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('CABEZA DE MUJER', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 45, 39, 2, '1900-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('AMOR SACRO Y AMOR PROFANO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 46, 14, 3, '1894-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('CLEOPATRA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 47, 14, 3, '1994-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('LAS DOS MADRES', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 48, 40, 3, '1977-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('EL ESPEJO DE VENUS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 49, 40, 3, '1990-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('COMPOSIZIONE', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 50, 40, 3, '1938-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('SCOMPOSIZIONE DINAMICA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 50, 40, 3, '1890-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('LA CENA DE EMAÚS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 51, 16, 4, '1928-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('LA DEPOSICIÓN DE LA CRUZ', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 52, 16, 4, '1973-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('VIRGEN CON EL NIÑO Y SANTOS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 53, 16, 4, '1931-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('EL BESO ROBADO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 54, 41, 4, '1979-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('FIGURA FEMENINA RECLINADA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 55, 41, 4, '1890-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('CABEZA DE MUJER JOVEN', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 56, 41, 4, '1898-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('BODEGÓN CON FLOREROS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 57, 26, 6, '1967-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('MUJER CON SOMBRERO ROJO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 58, 26, 6, '1968-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('EL PUERTO DE RÓTERDAM', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 59, 43, 6, '1989-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('RETRATO DE MUJER SENTADA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 59, 43, 6, '1978-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('SAN VICENTE Y LA CORTE DE LISBOA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 60, 32, 7, '1986-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('LA TENTACIÓN DE SAN ANTONIO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 61, 32, 7, '1981-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('VIRGEN CON EL NIÑO', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 62, 32, 7, '1912-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('SAN JUAN EVANGELISTA', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 63, 32, 7, '1920-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('RETRATO DE FRANCISCO DE LACERDA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 64, 36, 8, '1940-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('PAISAGEM COM PINHEIROS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 65, 36, 8, '1890-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('BARCOS NO DOURO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 66, 36, 8, '1897-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('BUSTO DE CAMILO CASTELO BRANCO', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 67, 36, 8, '1930-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('FIGURA SENTADA', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 68, 44, 8, '1926-01-01');
+INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
+VALUES ('RETRATO DE SENHORA COM LEQUE', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 67, 36, 8, '1888-01-01');
 
--- ========================
--- MUSEO 4 - BRERA
--- ========================
-INSERT INTO SALAS_EXP(id_museo, id_estructura_fis, id_sala, nombre, descripcion)
-VALUES
-(4, 21, 6, 'SALA 6', 'CRISTO MUERTO'),
-(4, 21, 7, 'SALA 7', 'VIRGEN CON NIÑO'),
-(4, 21, 15, 'SALA 15', 'CENA DE EMAÚS'),
-(4, 21, 19, 'SALA 19', 'MATRIMONIO VIRGEN'),
-(4, 21, 20, 'SALA 20', 'DEPOSICIÓN'),
-(4, 22, 27, 'SALA 27', 'MACCHIAIOLI'),
-(4, 22, 28, 'SALA 28', 'REALISMO'),
-(4, 22, 29, 'SALA 29', 'ESCULTURA IMPRESIONISTA'),
-(4, 22, 30, 'SALA 30', 'EXPRESIONISMO ESCULTÓRICO'),
-(4, 22, 32, 'SALA 32', 'NEOCLÁSICO FRANCÉS'),
-(4, 22, 37, 'SALA 37', 'EL BESO ROBADO');
--- ========================
--- MUSEO 5 - RIJKSMUSEUM
--- ========================
-INSERT INTO SALAS_EXP(id_museo, id_estructura_fis, id_sala, nombre, descripcion)
-VALUES
-(5, 23, 23, 'SALA 2.3', 'GALERÍA DE HONOR - BARROCO NEERLANDÉS'),
-(5, 23, 24, 'SALA 2.4', 'SÍNDICOS DEL GREMIO'),
-(5, 23, 25, 'SALA 2.5', 'LA NOVIA JUDÍA'),
-(5, 23, 26, 'SALA 2.6', 'AUTORRETRATO SOMBRERO'),
-(5, 23, 27, 'SALA 2.7', 'MUJER CON PERLA ROJA'),
-(5, 24, 31, 'ESCULTURA 1', 'BUSTO GUILLERMO I'),
-(5, 24, 32, 'ESCULTURA 2', 'CABEZA DE ANCIANO'),
-(5, 24, 33, 'ESCULTURA 3', 'FIGURA JUSTICIA');
+COMMIT;
 
--- ========================
--- MUSEO 6 - KUNSTMUSEUM
--- ========================
-INSERT INTO SALAS_EXP(id_museo, id_estructura_fis, id_sala, nombre, descripcion)
-VALUES
-(6, 25, 1, 'SALA MONDRIAN 1', 'COMPOSICIÓN NEOPLASTICISTA'),
-(6, 25, 2, 'SALA MONDRIAN 2', 'VICTORY BOOGIE WOOGIE'),
-(6, 26, 3, 'SALA IMPRESIONISTAS', 'PUERTO Y RETRATO'),
-(6, 26, 4, 'SALA REALISMO', 'MUJER SOMBRERO ROJO'),
-(6, 26, 5, 'SALA SIMBOLISMO', 'BODEGÓN FLOREROS'),
-(6, 26, 6, 'SALA ESCULTORES', 'AUTORRETRATO'),
-(6, 26, 7, 'JARDÍN DE ESCULTURAS', 'FIGURAS FEMENINAS'),
-(6, 26, 8, 'PATIO CENTRAL', 'FIGURA EN MOVIMIENTO');
 
--- ========================
--- MUSEO 7 - MNAA
--- ========================
-INSERT INTO SALAS_EXP(id_museo, id_estructura_fis, id_sala, nombre, descripcion)
-VALUES
-(7, 27, 1, 'SALA 1', 'SAN VICENTE'),
-(7, 27, 5, 'SALA 5', 'TENTACIÓN DE SAN ANTONIO'),
-(7, 27, 6, 'SALA 6', 'RETRATO DE DAMA'),
-(7, 27, 7, 'SALA 7', 'SAN JERÓNIMO'),
-(7, 27, 8, 'SALA 8', 'DESCENDIMIENTO'),
-(7, 27, 10, 'SALA 10', 'VIRGEN CON NIÑO'),
-(7, 27, 11, 'SALA 11', 'SAN JUAN EVANGELISTA'),
-(7, 28, 12, 'SALA 12', 'BAJORRELIEVE ANUNCIACIÓN'),
-(7, 28, 13, 'SALA ASIA-PORTUGUÉS', 'BIOMBO NAMBAN'),
-(7, 28, 14, 'SALA GOA-BRASIL', 'TRÍPTICO DEL ROSARIO'),
-(7, 28, 15, 'SALA INDIA PORTUGUESA', 'CRISTO DE MARFIL');
+--ARTISTAS--
+BEGIN;
 
--- ========================
--- MUSEO 8 - SOARES DOS REIS
--- ========================
-INSERT INTO SALAS_EXP(id_museo, id_estructura_fis, id_sala, nombre, descripcion)
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'PABLO', 'PICASSO', 'PICASSO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'PABLO', 'PICASSO', 'PICASSO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'SALVADOR', 'DALÍ', 'DALÍ', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'PABLO', 'PICASSO', 'PICASSO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'JOSÉ', 'GUTIÉRREZ', 'GÓMEZ DE LA SERNA', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'DESCONOCIDO', '', '', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'FERNANDO', 'YÁÑEZ', 'YÁÑEZ DE LA ALMEDINA', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'EL', 'GRECO', 'EL GRECO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'FRANCISCO', 'PRADILLA', 'PRADILLA', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'EDWARD', 'HOPPER', 'HOPPER', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'AUGUSTE', 'RODIN', 'RODIN', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'CAMILLE', 'CLAUDEL', 'CLAUDEL', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'TIZIANO', 'VECELLIO', 'TIZIANO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'GUIDO', 'RENI', 'RENI', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'GIOVANNI', 'SEGANTINI', 'SEGANTINI', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'EDWARD', 'BURNE-JONES', 'BURNE-JONES', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'GIACOMO', 'BALLA', 'BALLA', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'UMBERTO', 'BOCCIONI', 'BOCCIONI', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'CARAVAGGIO', '', 'CARAVAGGIO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'PETER', 'RUBENS', 'RUBENS', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'RAFAEL', 'SANZIO', 'RAFAEL', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'FRANCESCO', 'HAYEZ', 'HAYEZ', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'GIORGIO', 'MORANDI', 'MORANDI', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'AMÉDÉE', 'MODIGLIANI', 'MODIGLIANI', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'JAN', 'TOOROP', 'TOOROP', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'THÉO', 'VAN RYSSELBERGHE', 'RYSSELBERGHE', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'JOHAN', 'BARTHOLD', 'JONGKIND', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'ISAAC', 'ISRAËLS', 'ISRAËLS', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'NUNO', 'GONÇALVES', 'GONÇALVES', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'HIERONYMUS', 'BOSCH', 'EL BOSCO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'JOSÉ', 'FERREIRA', 'FERREIRA', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'ANTÓNIO', 'TEIXEIRA', 'TEIXEIRA', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'COLUMBANO', 'BORDALO', 'PINHEIRO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'SILVA', 'PORTO', 'PORTO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'ANTÓNIO', 'CARNEIRO', 'CARNEIRO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'ANTÓNIO', 'TEIXEIRA', 'TEIXEIRA', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'JOAQUIM', 'MACHADO', 'MACHADO', '1880-01-01', '1950-01-01');
+INSERT INTO ARTISTAS (caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def)
+VALUES ('ARTISTA DESTACADO EN ESTILO CLÁSICO O MODERNO', 'ANTÓNIO', 'TEIXEIRA', 'TEIXEIRA', '1880-01-01', '1950-01-01');
+
+COMMIT;
+
+
+--OBRAS_ARTISTAS--
+
+BEGIN;
+
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (1, 1);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (2, 2);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (3, 3);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (4, 4);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (5, 5);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (6, 6);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (7, 7);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (8, 8);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (9, 9);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (10, 10);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (11, 11);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (12, 12);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (13, 13);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (14, 14);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (15, 15);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (16, 16);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (17, 17);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (18, 18);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (19, 19);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (20, 20);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (21, 21);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (22, 22);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (23, 23);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (24, 24);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (25, 25);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (26, 26);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (27, 27);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (28, 28);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (29, 29);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (30, 30);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (31, 31);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (32, 32);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (33, 33);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (34, 34);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (35, 35);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (36, 36);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (37, 37);
+INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista) VALUES (38, 38);
+
+COMMIT;
+
+-- ESTRUCTURAS ORGANIZACIONALES --
+BEGIN;
+
+-- Dirección de Colecciones (nivel 1) por museo
+INSERT INTO ESTRUCTURAS_ORGANIZACIONALES (id_museo, nombre, tipo, descripcion, nivel)
+VALUES 
+(1, 'DIRECCIÓN DE COLECCIONES', 'D', 'GESTIÓN Y CURADURÍA DE COLECCIONES', 1),
+(2, 'DIRECCIÓN DE COLECCIONES', 'D', 'GESTIÓN Y CURADURÍA DE COLECCIONES', 1),
+(3, 'DIRECCIÓN DE COLECCIONES', 'D', 'GESTIÓN Y CURADURÍA DE COLECCIONES', 1),
+(4, 'DIRECCIÓN DE COLECCIONES', 'D', 'GESTIÓN Y CURADURÍA DE COLECCIONES', 1),
+(5, 'DIRECCIÓN DE COLECCIONES', 'D', 'GESTIÓN Y CURADURÍA DE COLECCIONES', 1),
+(6, 'DIRECCIÓN DE COLECCIONES', 'D', 'GESTIÓN Y CURADURÍA DE COLECCIONES', 1),
+(7, 'DIRECCIÓN DE COLECCIONES', 'D', 'GESTIÓN Y CURADURÍA DE COLECCIONES', 1),
+(8, 'DIRECCIÓN DE COLECCIONES', 'D', 'GESTIÓN Y CURADURÍA DE COLECCIONES', 1);
+
+COMMIT;
+
+--COLECCIONES--
+BEGIN;
+
+-- Museo 1: Reina Sofía
+INSERT INTO COLECCIONES (id_museo, id_estructura_org, nombre_coleccion, descripcion_caracteristicas, palabra_clave, orden_recorrido)
 VALUES
-(8, 29, 3, 'SALA 3', 'RETRATO FRANCISCO LACERDA'),
-(8, 29, 4, 'SALA 4', 'PAISAJE CON PINHEIROS'),
-(8, 29, 5, 'SALA 5', 'BARCOS EN EL DOURO'),
-(8, 29, 6, 'SALA 6', 'MUJER CON XALE ROJO'),
-(8, 29, 7, 'SALA 6B', 'DAMA CON GUANTES'),
-(8, 29, 8, 'SALA 6C', 'FIGURA EN EL CAMPO'),
-(8, 29, 9, 'SALA CENTRAL', 'O DESTERRADO'),
-(8, 30, 10, 'SALA ESCULTURA MODERNA', 'MENINA CON GATO');
+(1, 1, 'VANGUARDIAS HISTÓRICAS', 'OBRAS EMBLEMÁTICAS DE LAS VANGUARDIAS EUROPEAS DEL SIGLO XX', 'VANGUARDIAS', '1'),
+(1, 1, 'SURREALISMO Y VANGUARDIAS INTERNACIONALES', 'OBRAS DESTACADAS DEL MOVIMIENTO SURREALISTA', 'SURREALISMO', '2'),
+(1, 1, 'ARTE CONTEMPORÁNEO Y ESCULTURA', 'OBRAS ESCULTÓRICAS Y PICTÓRICAS DE TENDENCIAS ACTUALES', 'CONTEMPORÁNEO', '3');
+
+-- Museo 2: Thyssen-Bornemisza
+INSERT INTO COLECCIONES (id_museo, id_estructura_org, nombre_coleccion, descripcion_caracteristicas, palabra_clave, orden_recorrido)
+VALUES
+(2, 2, 'RENACIMIENTO Y BARROCO', 'PINTURA RELIGIOSA Y CLÁSICA EUROPEA DE LOS SIGLOS XV AL XVII', 'RENACIMIENTO', '1'),
+(2, 2, 'ROMANTICISMO Y REALISMO', 'OBRAS DEL SIGLO XIX CON TEMÁTICA SOCIAL Y POLÍTICA', 'ROMANTICISMO', '2'),
+(2, 2, 'ESCULTURA CLÁSICA Y MODERNA', 'OBRAS ESCULTÓRICAS REPRESENTATIVAS DE DIVERSOS ESTILOS', 'ESCULTURA', '3');
+
+-- Museo 3: La Galleria Nazionale
+INSERT INTO COLECCIONES (id_museo, id_estructura_org, nombre_coleccion, descripcion_caracteristicas, palabra_clave, orden_recorrido)
+VALUES
+(3, 3, 'ARTE DEL SIGLO XIX', 'OBRAS NEOCLÁSICAS Y ROMÁNTICAS ITALIANAS', 'NEOCLÁSICO', '1'),
+(3, 3, 'REALISMO Y SIMBOLISMO ITALIANO', 'OBRAS CON CARGA SOCIAL Y SIMBÓLICA', 'SIMBOLISMO', '2'),
+(3, 3, 'ARTE MODERNO Y VANGUARDIAS', 'PINTURA MODERNA E INNOVADORA DEL SIGLO XX', 'VANGUARDIA', '3');
+
+-- Museo 4: Pinacoteca di Brera
+INSERT INTO COLECCIONES (id_museo, id_estructura_org, nombre_coleccion, descripcion_caracteristicas, palabra_clave, orden_recorrido)
+VALUES
+(4, 4, 'RENACIMIENTO ITALIANO', 'PINTURA RELIGIOSA RENACENTISTA', 'RENACIMIENTO', '1'),
+(4, 4, 'MANIERISMO Y BARROCO', 'OBRAS CON INTENSIDAD EMOCIONAL Y DRAMÁTICA', 'BARROCO', '2'),
+(4, 4, 'SIGLO XIX Y PRINCIPIOS DEL XX', 'OBRAS CON TEMAS MODERNOS Y POSTROMÁNTICOS', 'SIGLO XIX', '3');
+
+-- Museo 6: Kunstmuseum Den Haag
+INSERT INTO COLECCIONES (id_museo, id_estructura_org, nombre_coleccion, descripcion_caracteristicas, palabra_clave, orden_recorrido)
+VALUES
+(6, 6, 'ARTE MODERNO Y VANGUARDIAS', 'OBRAS DE PINTORES INFLUYENTES DEL SIGLO XX', 'MODERNO', '1'),
+(6, 6, 'ARTE NEERLANDÉS DEL SIGLO XIX', 'REALISMO Y ROMANTICISMO HOLANDÉS', 'SIGLO XIX', '2');
+
+-- Museo 7: MNAA
+INSERT INTO COLECCIONES (id_museo, id_estructura_org, nombre_coleccion, descripcion_caracteristicas, palabra_clave, orden_recorrido)
+VALUES
+(7, 7, 'PINTURA PORTUGUESA Y EUROPEA DEL RENACIMIENTO Y BARROCO', 'OBRAS CLAVES DEL PATRIMONIO RELIGIOSO Y CLÁSICO', 'BARROCO', '1'),
+(7, 7, 'ESCULTURA RELIGIOSA Y CLÁSICA', 'ESCULTURAS DE TEMÁTICA SACRA', 'ESCULTURA', '2');
+
+-- Museo 8: Museu Nacional Soares dos Reis
+INSERT INTO COLECCIONES (id_museo, id_estructura_org, nombre_coleccion, descripcion_caracteristicas, palabra_clave, orden_recorrido)
+VALUES
+(8, 8, 'PINTURA PORTUGUESA DEL SIGLO XIX Y XX', 'PAISAJES Y RETRATOS DE PINTORES PORTUGUESES', 'PINTURA', '1'),
+(8, 8, 'ESCULTURA CLÁSICA PORTUGUESA', 'ESCULTURAS DE GRANDES MAESTROS PORTUGUESES', 'ESCULTURA', '2');
+
+COMMIT;
+
+
+-- COLECCIONES_SALAS --
+BEGIN;
+
+-- Museo 1: Reina Sofía
+INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 1, 37, 35); -- SALA 206
+INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 1, 37, 36); -- SALA 201
+INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 2, 37, 37); -- SALA 205
+INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 2, 37, 35); -- SALA 206
+INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 3, 38, 38); -- SALA 401
+INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 3, 38, 39); -- SALA 402
+
+-- Museo 2: Thyssen-Bornemisza
+INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 4, 10, 40); -- SALA 12
+INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 4, 10, 41); -- SALA 13
+INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 5, 39, 42); -- SALA 29
+INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 5, 39, 43); -- SALA 30
+INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 6, 39, 44); -- SALA 33
+INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 6, 39, 45); -- SALA 31
+
+-- Museo 3: La Galleria Nazionale
+INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 7, 14, 46); -- SALA 2
+INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 7, 14, 47); -- SALA 4
+INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 8, 40, 48); -- SALA 8
+INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 8, 40, 49); -- SALA 10
+INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 9, 40, 50); -- SALA 14
+
+-- Museo 4: Pinacoteca di Brera
+INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 10, 16, 51); -- SALA 15
+INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 11, 16, 52); -- SALA 20
+INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 11, 16, 53); -- SALA 7
+INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 10, 41, 54); -- SALA 37
+INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 12, 41, 55); -- SALA 29
+INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 12, 41, 56); -- SALA 30
+
+-- Museo 6: Kunstmuseum Den Haag
+INSERT INTO COLECCIONES_SALAS VALUES (6, 6, 13, 43, 59); -- SALA IMPRESIONISTAS
+INSERT INTO COLECCIONES_SALAS VALUES (6, 6, 13, 26, 57); -- SALA ARTE SIMBÓLICO
+INSERT INTO COLECCIONES_SALAS VALUES (6, 6, 14, 26, 58); -- SALA REALISMO
+INSERT INTO COLECCIONES_SALAS VALUES (6, 6, 14, 43, 59); -- SALA IMPRESIONISTAS
+
+-- Museo 7: MNAA
+INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 15, 32, 60); -- SALA 1
+INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 15, 32, 61); -- SALA 5
+INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 16, 32, 62); -- SALA 10
+INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 16, 32, 63); -- SALA 11
+
+-- Museo 8: Soares dos Reis
+INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 17, 36, 64); -- SALA 3
+INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 17, 36, 65); -- SALA 4
+INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 17, 36, 66); -- SALA 5
+INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 18, 36, 67); -- SALA ESCULTURA
+INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 18, 44, 68); -- SALA ESCULTURA MODERNA
+
+COMMIT;
+
+-- INFO EMPLEADOS (REVISAR PQ ESTA EN INGLES xd)--
+BEGIN;
+INSERT INTO IDIOMAS (lengua) VALUES ('PORTUGUÉS');
+INSERT INTO IDIOMAS (lengua) VALUES ('FRANCÉS');
+INSERT INTO IDIOMAS (lengua) VALUES ('ALEMÁN');
+INSERT INTO IDIOMAS (lengua) VALUES ('CATALÁN');
+INSERT INTO IDIOMAS (lengua) VALUES ('ESPAÑOL');
+INSERT INTO IDIOMAS (lengua) VALUES ('INGLÉS');
+INSERT INTO FORMACIONES_PROFESIONALES (num_expediente, nombre_titulo, anio, descripcion_especialidad) VALUES (1, 'ENGINEER, MANUFACTURING SYSTEMS', 1996, 'DE-ENGINEERED 5THGENERATION ABILITY');
+INSERT INTO FORMACIONES_PROFESIONALES (num_expediente, nombre_titulo, anio, descripcion_especialidad) VALUES (2, 'BUILDING SERVICES ENGINEER', 1997, 'OPEN-SOURCE HIGH-LEVEL STRUCTURE');
+INSERT INTO FORMACIONES_PROFESIONALES (num_expediente, nombre_titulo, anio, descripcion_especialidad) VALUES (3, 'ACCOMMODATION MANAGER', 1996, 'SYNERGIZED ECO-CENTRIC THROUGHPUT');
+INSERT INTO FORMACIONES_PROFESIONALES (num_expediente, nombre_titulo, anio, descripcion_especialidad) VALUES (4, 'RESEARCH SCIENTIST (MATHS)', 2006, 'PROGRAMMABLE MULTI-STATE STANDARDIZATION');
+INSERT INTO FORMACIONES_PROFESIONALES (num_expediente, nombre_titulo, anio, descripcion_especialidad) VALUES (5, 'HEALTH AND SAFETY INSPECTOR', 2003, 'INNOVATIVE RADICAL ANALYZER');
+INSERT INTO FORMACIONES_PROFESIONALES (num_expediente, nombre_titulo, anio, descripcion_especialidad) VALUES (6, 'CAMERA OPERATOR', 2009, 'FUNDAMENTAL DYNAMIC CAPABILITY');
+INSERT INTO FORMACIONES_PROFESIONALES (num_expediente, nombre_titulo, anio, descripcion_especialidad) VALUES (7, 'RUNNER, BROADCASTING/FILM/VIDEO', 2014, 'SECURED MULTI-STATE ARCHITECTURE');
+INSERT INTO FORMACIONES_PROFESIONALES (num_expediente, nombre_titulo, anio, descripcion_especialidad) VALUES (8, 'LECTURER, HIGHER EDUCATION', 2004, 'STAND-ALONE NEEDS-BASED ATTITUDE');
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (1, 5);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (2, 6);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (3, 6);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (3, 1);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (4, 2);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (4, 6);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (5, 4);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (5, 6);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (5, 3);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (6, 2);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (6, 3);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (7, 6);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (7, 4);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (8, 6);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (8, 4);
+INSERT INTO IDIOMAS_EMPLEADOS (num_expediente, id_idioma) VALUES (8, 1);
+INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo) VALUES (1, 1, 1, '2019-01-13', NULL, 'A');
+INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo) VALUES (2, 2, 2, '2015-08-07', NULL, 'A');
+INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo) VALUES (3, 3, 3, '2022-01-19', NULL, 'D');
+INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo) VALUES (4, 4, 4, '2019-10-01', NULL, 'R');
+INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo) VALUES (5, 5, 5, '2016-07-16', NULL, 'A');
+INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo) VALUES (6, 6, 6, '2016-04-30', NULL, 'R');
+INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo) VALUES (7, 7, 7, '2016-07-15', NULL, 'D');
+INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo) VALUES (8, 8, 8, '2022-12-27', NULL, 'R');
+COMMIT;
