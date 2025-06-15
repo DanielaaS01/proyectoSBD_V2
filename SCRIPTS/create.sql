@@ -48,7 +48,7 @@ CREATE TABLE ENTRADAS(
     id_museo INTEGER NOT NULL,
     numero_ticket INTEGER DEFAULT nextval('seq_num_ticket')  NOT NULL,
     fecha_hora_emision TIMESTAMP NOT NULL,
-    monto NUMERIC(4,2) NOT NULL,
+    monto NUMERIC NOT NULL,
     tipo CHAR(1) NOT NULL   
 );
 
@@ -142,7 +142,7 @@ CREATE TABLE EVENTOS(
     titulo VARCHAR(100) NOT NULL,
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
-    precio_persona NUMERIC(5,2),
+    precio_persona NUMERIC,
     institucion_educativa VARCHAR(100),
     cantidad_persona INTEGER,
     id_estructura_fis INTEGER,
@@ -172,7 +172,7 @@ CREATE TABLE TIPOS_TICKETS(
     id_museo INTEGER NOT NULL,
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE,
-    precio NUMERIC(4,2) NOT NULL,
+    precio NUMERIC NOT NULL,
     tipo CHAR(1) NOT NULL   
 );
 
@@ -320,7 +320,7 @@ CREATE TABLE COLECCIONES(
     nombre_coleccion VARCHAR(400) NOT NULL,
     descripcion_caracteristicas VARCHAR(400) NOT NULL,
     palabra_clave VARCHAR(100) NOT NULL,
-    orden_recorrido VARCHAR(200) NOT NULL
+    orden_recorrido INTEGER NOT NULL
 );
 
 ALTER TABLE COLECCIONES
@@ -354,7 +354,7 @@ CREATE TABLE HISTORICOS_MOVIMIENTOS (
     tipo_llegada CHAR(1) NOT NULL,
     destacada BOOLEAN NOT NULL DEFAULT FALSE,
     orden_recomendado INTEGER,
-    valor_monetario NUMERIC(10,2),
+    valor_monetario NUMERIC,
     id_estructura_fis INTEGER NOT NULL,
     id_sala INTEGER NOT NULL,
     id_estructura_org INTEGER NOT NULL,
