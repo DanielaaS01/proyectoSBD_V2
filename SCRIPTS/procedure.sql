@@ -696,10 +696,9 @@ $$;
 ---ver historico empleados
 CREATE OR REPLACE FUNCTION ver_historico_empleado(p_num_expediente INTEGER)
 RETURNS TABLE (
-    id_museo INTEGER,
-    nombre_museo VARCHAR,
-    id_estructura_org INTEGER,
-    nombre_estructura VARCHAR,
+    empleado VARCHAR,
+    museo VARCHAR,
+    departamento VARCHAR,
     cargo CHAR,
     fecha_inicio DATE,
     fecha_fin DATE
@@ -707,22 +706,27 @@ RETURNS TABLE (
 LANGUAGE sql
 AS $$
     SELECT 
-        h.id_museo,
-        m.nombre AS nombre_museo,
-        h.id_estructura_org,
-        eo.nombre AS nombre_estructura,
+        TRIM(
+            ep.primer_nombre || ' ' ||
+            COALESCE(ep.segundo_nombre || ' ', '') ||
+            ep.primer_apellido || ' ' ||
+            ep.segundo_apellido
+        ) AS empleado,
+        m.nombre AS museo,
+        eo.nombre AS departamento,
         h.cargo,
         h.fecha_inicio,
         h.fecha_fin
     FROM HISTORICOS_EMPLEADOS h
+    JOIN EMPLEADOS_PROFESIONALES ep
+        ON h.num_expediente = ep.num_expediente
     JOIN ESTRUCTURAS_ORGANIZACIONALES eo 
         ON h.id_museo = eo.id_museo AND h.id_estructura_org = eo.id_estructura_org
     JOIN MUSEOS m 
         ON h.id_museo = m.id_museo
     WHERE h.num_expediente = p_num_expediente
-    ORDER BY h.fecha_inicio DESC;
+    ORDER BY h.fecha_inicio;
 $$;
-
 
 -- funcion obtener informacion de una obra
 CREATE OR REPLACE FUNCTION obtener_detalle_obra(p_id_obra INTEGER)
@@ -1162,3 +1166,195 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+-------EVENTOS DEL MUSEO------
+
+CREATE OR REPLACE PROCEDURE registrar_evento(
+    p_id_museo INTEGER,
+    p_titulo VARCHAR,
+    p_fecha_inicio DATE,
+    p_fecha_fin DATE,
+    p_precio_persona NUMERIC(5,2),
+    p_institucion_educativa VARCHAR,
+    p_cantidad_persona INTEGER,
+    p_id_estructura_fis INTEGER,
+    p_id_sala INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Validar existencia del museo
+    IF NOT EXISTS (SELECT 1 FROM museos WHERE id_museo = p_id_museo) THEN
+        RAISE EXCEPTION 'El museo especificado no existe.';
+    END IF;
+
+    -- Validar existencia de la sala si se especifica
+    IF p_id_estructura_fis IS NOT NULL AND p_id_sala IS NOT NULL THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM salas_exp
+            WHERE id_museo = p_id_museo
+              AND id_estructura_fis = p_id_estructura_fis
+              AND id_sala = p_id_sala
+        ) THEN
+            RAISE EXCEPTION 'La sala especificada no existe para el museo.';
+        END IF;
+    END IF;
+
+    -- Validar fechas
+    IF p_fecha_fin < p_fecha_inicio THEN
+        RAISE EXCEPTION 'La fecha de fin no puede ser menor que la fecha de inicio.';
+    END IF;
+
+    -- Insertar el evento
+    INSERT INTO eventos(
+        id_museo, titulo, fecha_inicio, fecha_fin, precio_persona,
+        institucion_educativa, cantidad_persona, id_estructura_fis, id_sala
+    ) VALUES (
+        p_id_museo, p_titulo, p_fecha_inicio, p_fecha_fin, p_precio_persona,
+        p_institucion_educativa, p_cantidad_persona, p_id_estructura_fis, p_id_sala
+    );
+END;
+$$;
+
+---CERRAR UN EVENTO
+-- Esta función cierra un evento abierto en el museo especificado.
+CREATE OR REPLACE PROCEDURE cerrar_evento(
+    p_id_museo INTEGER,
+    p_id_evento INTEGER,
+    p_fecha_fin DATE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_fecha_inicio DATE;
+BEGIN
+    -- Obtener la fecha de inicio del evento abierto
+    SELECT fecha_inicio INTO v_fecha_inicio
+    FROM eventos
+    WHERE id_museo = p_id_museo
+      AND id_evento = p_id_evento
+      AND fecha_fin IS NULL;
+
+    IF NOT FOUND THEN
+        RAISE NOTICE 'No se encontró un evento abierto con esos datos.';
+        RETURN;
+    END IF;
+
+    -- Validar que la fecha de cierre sea posterior o igual a la de inicio
+    IF p_fecha_fin < v_fecha_inicio THEN
+        RAISE EXCEPTION 'La fecha de fin no puede ser menor que la fecha de inicio del evento.';
+    END IF;
+
+    -- Actualizar el evento
+    UPDATE eventos
+    SET fecha_fin = p_fecha_fin
+    WHERE id_museo = p_id_museo
+      AND id_evento = p_id_evento
+      AND fecha_fin IS NULL;
+
+    RAISE NOTICE 'Evento cerrado correctamente.';
+END;
+$$;
+
+
+
+-- Generar múltiples entradas para un museo y tipo
+CREATE OR REPLACE PROCEDURE generar_entradas(
+    p_id_museo INTEGER,
+    p_tipo CHAR,
+    p_cantidad INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_precio NUMERIC(4,2);
+    i INTEGER;
+BEGIN
+    -- Validar tipo
+    IF p_tipo NOT IN ('G', 'R') THEN
+        RAISE EXCEPTION 'Tipo de entrada inválido. Solo G o R.';
+    END IF;
+
+    -- Validar cantidad
+    IF p_cantidad < 1 THEN
+        RAISE EXCEPTION 'La cantidad debe ser mayor o igual a 1.';
+    END IF;
+
+    -- Buscar precio vigente para el tipo y museo
+    SELECT precio INTO v_precio
+    FROM tipos_tickets
+    WHERE id_museo = p_id_museo
+      AND tipo = p_tipo
+      AND (fecha_fin IS NULL OR fecha_fin >= CURRENT_DATE)
+      AND fecha_inicio <= CURRENT_DATE
+    ORDER BY fecha_inicio DESC
+    LIMIT 1;
+
+    IF v_precio IS NULL THEN
+        RAISE EXCEPTION 'No hay precio vigente para ese tipo de entrada en el museo.';
+    END IF;
+
+    -- Insertar entradas
+    FOR i IN 1..p_cantidad LOOP
+        INSERT INTO entradas(id_museo, fecha_hora_emision, monto, tipo)
+        VALUES (p_id_museo, CURRENT_TIMESTAMP, v_precio, p_tipo);
+    END LOOP;
+END;
+$$;
+
+-- Calcular ingresos por entradas por museo (opcionalmente por rango de fechas)
+CREATE OR REPLACE FUNCTION calcular_ingresos_museo(
+    p_id_museo INTEGER,
+    p_fecha_inicio DATE DEFAULT NULL,
+    p_fecha_fin DATE DEFAULT NULL
+)
+RETURNS NUMERIC(12,2) AS $$
+DECLARE
+    v_total NUMERIC(12,2);
+BEGIN
+    SELECT SUM(monto) INTO v_total
+    FROM entradas
+    WHERE id_museo = p_id_museo
+      AND (p_fecha_inicio IS NULL OR fecha_hora_emision::DATE >= p_fecha_inicio)
+      AND (p_fecha_fin IS NULL OR fecha_hora_emision::DATE <= p_fecha_fin);
+
+    RETURN COALESCE(v_total, 0);
+END;
+$$ LANGUAGE plpgsql;
+
+---CONSULTA PARA OBTENER LOS INGRESOS DE TODOS LOS MUSEOS A LA VEZ
+/*
+  SELECT 
+      m.nombre AS museo,
+      COALESCE(SUM(e.monto), 0) AS total_ingresos
+  FROM 
+      museos m
+  LEFT JOIN 
+      entradas e ON m.id_museo = e.id_museo
+  GROUP BY 
+      m.nombre
+  ORDER BY 
+      total_ingresos DESC;
+*/
+
+
+CREATE OR REPLACE FUNCTION ranking_museos()
+RETURNS TABLE (
+    museo VARCHAR,
+    total_entradas BIGINT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        m.nombre AS museo,
+        COUNT(e.numero_ticket) AS total_entradas
+    FROM 
+        museos m
+    LEFT JOIN 
+        entradas e ON m.id_museo = e.id_museo
+    GROUP BY 
+        m.nombre
+    ORDER BY 
+        total_entradas DESC, m.nombre;
+END;
+$$ LANGUAGE plpgsql;
