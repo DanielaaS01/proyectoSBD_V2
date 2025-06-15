@@ -997,3 +997,122 @@ INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
 VALUES ('Laura', 'Blanco', 'ESP111222', 'V');
 
 COMMIT;
+
+
+-- HISTORICOS MOVIMIENTOS --
+BEGIN;
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(1, 1, '1992-07-26', 'A', TRUE, 1, 99999999.99, 37, 1, 1, 1, 1, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(1, 2, '1992-07-26', 'A', TRUE, 2, 10000000.00, 37, 2, 1, 1, 1, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(1, 3, '1992-07-26', 'A', TRUE, 1, 20000000.00, 37, 3, 1, 2, 1, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(1, 4, '1994-05-12', 'C', TRUE, 2, 100000000.00, 37, 1, 1, 2, 1, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(1, 5, '1993-02-10', 'A', TRUE, 1, 600000.00, 38, 4, 1, 3, 1, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(1, 6, '1995-11-20', 'C', TRUE, 2, 850000.00, 38, 5, 1, 3, 1, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(2, 7, '1993-10-08', 'A', TRUE, 1, 110000000.00, 10, 6, 2, 4, 2, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(2, 8, '1993-10-08', 'A', FALSE, NULL, 8000000.00, 10, 7, 2, 4, 2, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(2, 9, '1993-10-08', 'A', FALSE, NULL, 15000000.00, 39, 8, 2, 5, 2, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(2, 10, '1993-10-08', 'A', TRUE, 1, 35000000.00, 39, 9, 2, 5, 2, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(2, 11, '1993-10-08', 'A', FALSE, NULL, 4000000.00, 39, 10, 2, 6, 2, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(2, 12, '1993-10-08', 'A', TRUE, 1, 6000000.00, 39, 11, 2, 6, 2, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(3, 13, '1915-05-15', 'A', TRUE, 1, 18000000.00, 14, 12, 3, 7, 3, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(3, 14, '1915-05-15', 'A', FALSE, NULL, 8000000.00, 14, 13, 3, 7, 3, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(3, 15, '1915-05-15', 'A', TRUE, 1, 12000000.00, 40, 14, 3, 8, 3, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(3, 16, '1915-05-15', 'A', TRUE, 2, 16000000.00, 40, 15, 3, 8, 3, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(3, 17, '1915-05-15', 'A', FALSE, NULL, 10000000.00, 40, 16, 3, 9, 3, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(3, 18, '1915-05-15', 'A', FALSE, NULL, 11000000.00, 40, 16, 3, 9, 3, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(4, 19, '1859-01-01', 'A', TRUE, 1, 90000000.00, 41, 20, 4, 10, 4, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(4, 20, '1809-08-15', 'A', TRUE, 2, 100000000.00, 16, 17, 4, 10, 4, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(4, 21, '1809-08-15', 'A', FALSE, NULL, 25000000.00, 16, 18, 4, 11, 4, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(4, 22, '1809-08-15', 'A', FALSE, NULL, 35000000.00, 16, 19, 4, 11, 4, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(4, 23, '1903-01-01', 'A', FALSE, NULL, 4000000.00, 41, 21, 4, 12, 4, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(4, 24, '1903-01-01', 'A', FALSE, NULL, 5000000.00, 41, 22, 4, 12, 4, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(6, 25, '1935-05-29', 'A', FALSE, NULL, 5000000.00, 43, 25, 6, 13, 6, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(6, 26, '1935-05-29', 'A', FALSE, NULL, 3000000.00, 26, 23, 6, 13, 6, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(6, 27, '1935-05-29', 'A', FALSE, NULL, 4000000.00, 26, 24, 6, 14, 6, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(6, 28, '1935-05-29', 'A', FALSE, NULL, 4500000.00, 43, 25, 6, 14, 6, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(7, 29, '1884-05-11', 'A', TRUE, 1, 99999999.99, 32, 26, 7, 15, 7, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(7, 30, '1884-05-11', 'A', TRUE, 2, 90000000.00, 32, 27, 7, 15, 7, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(7, 31, '1884-05-11', 'A', TRUE, 1, 2000000.00, 32, 28, 7, 16, 7, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(7, 32, '1884-05-11', 'A', FALSE, NULL, 1200000.00, 32, 29, 7, 16, 7, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(8, 33, '1942-01-01', 'A', TRUE, 1, 2000000.00, 36, 30, 8, 17, 8, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(8, 34, '1942-01-01', 'A', TRUE, 2, 1500000.00, 36, 31, 8, 17, 8, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(8, 35, '1942-01-01', 'A', FALSE, NULL, 800000.00, 36, 32, 8, 17, 8, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(8, 36, '1942-01-01', 'A', FALSE, NULL, 600000.00, 36, 33, 8, 18, 8, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(8, 37, '1942-01-01', 'A', FALSE, NULL, 750000.00, 44, 34, 8, 18, 8, NULL, NULL);
+
+INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegada, destacada, orden_recomendado, valor_monetario, id_estructura_fis, id_sala, id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin) VALUES
+(8, 38, '1942-01-01', 'A', FALSE, NULL, 1000000.00, 36, 33, 8, 18, 8, NULL, NULL);
+COMMIT;

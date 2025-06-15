@@ -15,6 +15,7 @@
             --color-gris-medio: #e0e0e0;
             --color-texto: #333333;
             --color-texto-claro: #666666;
+            --color-verde-oscuro: #3A5A40;
             --color-exito: #4CAF50;
             --color-error: #F44336;
             --color-advertencia: #FF9800;
@@ -498,15 +499,20 @@
         }
         
         .badge-acquired {
+            background-color: rgba(8, 146, 33, 0.1);
+            color: var(--color-verde-oscuro);
+        }
+        
+        .badge-donated {
             background-color: rgba(0, 47, 95, 0.1);
             color: var(--color-azul-oscuro);
         }
         
-        .badge-donated {
+        .badge-acquisition {
             background-color: rgba(212, 175, 55, 0.1);
             color: var(--color-mostaza-oscuro);
         }
-        
+
         .artist-card {
             display: flex;
             align-items: center;

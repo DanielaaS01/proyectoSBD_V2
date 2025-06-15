@@ -782,7 +782,7 @@ BEGIN
     -- 2. Buscar la fecha de adquisición real (recursivo hacia atrás)
     v_fecha_adquisicion := v_fecha_inicio_actual;
     v_metodo_adquisicion := (
-        SELECT CASE hm.tipo_llegada WHEN 'C' THEN 'Compra' WHEN 'D' THEN 'Donación' ELSE 'Desconocido' END
+        SELECT CASE hm.tipo_llegada WHEN 'C' THEN 'Compra' WHEN 'D' THEN 'Donación' WHEN 'A' THEN 'Adquisición' ELSE 'Desconocido' END
         FROM historicos_movimientos hm
         WHERE hm.id_obra = p_id_obra AND hm.id_museo = v_id_museo AND hm.fecha_inicio = v_fecha_inicio_actual
         LIMIT 1
@@ -814,7 +814,7 @@ BEGIN
         ELSE
             v_fecha_adquisicion := v_fecha_inicio_anterior;
             v_metodo_adquisicion := (
-                SELECT CASE hm.tipo_llegada WHEN 'C' THEN 'Compra' WHEN 'D' THEN 'Donación' ELSE 'Desconocido' END
+                SELECT CASE hm.tipo_llegada WHEN 'C' THEN 'Compra' WHEN 'D' THEN 'Donación' WHEN 'A' THEN 'Adquisición' ELSE 'Desconocido' END
                 FROM historicos_movimientos hm
                 WHERE hm.id_obra = p_id_obra AND hm.id_museo = v_id_museo AND hm.fecha_inicio = v_fecha_inicio_anterior
                 LIMIT 1
