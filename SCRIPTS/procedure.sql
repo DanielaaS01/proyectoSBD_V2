@@ -938,7 +938,7 @@ $$;
 CREATE OR REPLACE PROCEDURE actualizar_estructura_fisica(
     p_nombre VARCHAR,
     p_descripcion VARCHAR,
-    p_direccion VARCHAR,
+    p_direccion VARCHAR
 )
 LANGUAGE plpgsql
 AS $$
@@ -946,7 +946,7 @@ BEGIN
     UPDATE ESTRUCTURAS_FISICAS
     SET nombre = p_nombre,
         descripcion = p_descripcion,
-        direccion = p_direccion,
+        direccion = p_direccion
     WHERE id_museo = p_id_museo AND id_estructura_fis = p_id_estructura_fis;
 END;
 $$;

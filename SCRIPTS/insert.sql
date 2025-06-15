@@ -151,7 +151,7 @@ INSERT INTO HORARIOS(id_museo, dia, hora_inicio, hora_fin) VALUES
 (8,7,'10:00','18:00');
 COMMIT; 
 
---ENTRADAS--
+--ENTRADAS-- arreglarrr
 INSERT INTO ENTRADAS(id_museo,fecha_hora_emision,monto,tipo)
 VALUES
 --museo 1
@@ -459,49 +459,49 @@ VALUES ('LAS DOS MADRES', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
 VALUES ('EL ESPEJO DE VENUS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 15, 40, 3, '1990-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('COMPOSIZIONE', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 50, 40, 3, '1938-01-01');
+VALUES ('COMPOSIZIONE', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 16, 40, 3, '1938-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('SCOMPOSIZIONE DINAMICA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 50, 40, 3, '1890-01-01');
+VALUES ('SCOMPOSIZIONE DINAMICA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 16, 40, 3, '1890-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('LA CENA DE EMAÚS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 51, 16, 4, '1928-01-01');
+VALUES ('LA CENA DE EMAÚS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 17, 16, 4, '1928-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('LA DEPOSICIÓN DE LA CRUZ', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 52, 16, 4, '1973-01-01');
+VALUES ('LA DEPOSICIÓN DE LA CRUZ', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 18, 16, 4, '1973-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('VIRGEN CON EL NIÑO Y SANTOS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 53, 16, 4, '1931-01-01');
+VALUES ('VIRGEN CON EL NIÑO Y SANTOS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 19, 16, 4, '1931-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('EL BESO ROBADO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 54, 41, 4, '1979-01-01');
+VALUES ('EL BESO ROBADO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 20, 41, 4, '1979-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('FIGURA FEMENINA RECLINADA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 55, 41, 4, '1890-01-01');
+VALUES ('FIGURA FEMENINA RECLINADA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 21, 41, 4, '1890-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('CABEZA DE MUJER JOVEN', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 56, 41, 4, '1898-01-01');
+VALUES ('CABEZA DE MUJER JOVEN', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 22, 41, 4, '1898-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('BODEGÓN CON FLOREROS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 57, 26, 6, '1967-01-01');
+VALUES ('BODEGÓN CON FLOREROS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 23, 26, 6, '1967-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('MUJER CON SOMBRERO ROJO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 58, 26, 6, '1968-01-01');
+VALUES ('MUJER CON SOMBRERO ROJO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 24, 26, 6, '1968-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('EL PUERTO DE RÓTERDAM', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 59, 43, 6, '1989-01-01');
+VALUES ('EL PUERTO DE RÓTERDAM', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 25, 43, 6, '1989-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('RETRATO DE MUJER SENTADA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 59, 43, 6, '1978-01-01');
+VALUES ('RETRATO DE MUJER SENTADA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 25, 43, 6, '1978-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('SAN VICENTE Y LA CORTE DE LISBOA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 60, 32, 7, '1986-01-01');
+VALUES ('SAN VICENTE Y LA CORTE DE LISBOA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 26, 32, 7, '1986-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('LA TENTACIÓN DE SAN ANTONIO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 61, 32, 7, '1981-01-01');
+VALUES ('LA TENTACIÓN DE SAN ANTONIO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 27, 32, 7, '1981-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('VIRGEN CON EL NIÑO', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 62, 32, 7, '1912-01-01');
+VALUES ('VIRGEN CON EL NIÑO', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 28, 32, 7, '1912-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('SAN JUAN EVANGELISTA', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 63, 32, 7, '1920-01-01');
+VALUES ('SAN JUAN EVANGELISTA', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 29, 32, 7, '1920-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('RETRATO DE FRANCISCO DE LACERDA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 64, 36, 8, '1940-01-01');
+VALUES ('RETRATO DE FRANCISCO DE LACERDA', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 30, 36, 8, '1940-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('PAISAGEM COM PINHEIROS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 65, 36, 8, '1890-01-01');
+VALUES ('PAISAGEM COM PINHEIROS', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 31, 36, 8, '1890-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('BARCOS NO DOURO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 66, 36, 8, '1897-01-01');
+VALUES ('BARCOS NO DOURO', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 32, 36, 8, '1897-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('BUSTO DE CAMILO CASTELO BRANCO', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 67, 36, 8, '1930-01-01');
+VALUES ('BUSTO DE CAMILO CASTELO BRANCO', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 33, 36, 8, '1930-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('FIGURA SENTADA', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 68, 44, 8, '1926-01-01');
+VALUES ('FIGURA SENTADA', '100x80 CM', 'E', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 34, 44, 8, '1926-01-01');
 INSERT INTO OBRAS (nombre, dimension, tipo, estilos, caract_mat_tec, id_sala, id_estructura_fis, id_museo, periodo)
-VALUES ('RETRATO DE SENHORA COM LEQUE', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 67, 36, 8, '1888-01-01');
+VALUES ('RETRATO DE SENHORA COM LEQUE', '100x80 CM', 'P', 'MODERNISMO', 'ÓLEO SOBRE LIENZO', 33, 36, 8, '1888-01-01');
 
 COMMIT;
 
@@ -722,8 +722,8 @@ VALUES
 -- Museo 6: Kunstmuseum Den Haag
 INSERT INTO COLECCIONES (id_museo, id_estructura_org, nombre_coleccion, descripcion_caracteristicas, palabra_clave, orden_recorrido)
 VALUES
-(6, 6, 'ARTE NEERLANDÉS DEL SIGLO XIX', 'REALISMO Y ROMANTICISMO HOLANDÉS', 'SIGLO XIX', 1);
-(6, 6, 'ARTE MODERNO Y VANGUARDIAS', 'OBRAS DE PINTORES INFLUYENTES DEL SIGLO XX', 'MODERNO', 2),
+(6, 6, 'ARTE NEERLANDÉS DEL SIGLO XIX', 'REALISMO Y ROMANTICISMO HOLANDÉS', 'SIGLO XIX', 1),
+(6, 6, 'ARTE MODERNO Y VANGUARDIAS', 'OBRAS DE PINTORES INFLUYENTES DEL SIGLO XX', 'MODERNO', 2);
 
 -- Museo 7: MNAA
 INSERT INTO COLECCIONES (id_museo, id_estructura_org, nombre_coleccion, descripcion_caracteristicas, palabra_clave, orden_recorrido)
@@ -922,37 +922,38 @@ COMMIT;
 
 
 --COLECCIONES_SALAS--
+
 BEGIN;
 -- Datos para el Museo 1
 INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 1, 37, 1,1); -- SALA 206
 INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 1, 37, 2,2); -- SALA 201
-INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 2, 37, 1,3); -- SALA 205
-INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 2, 37, 2,1); -- SALA 206
-INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 3, 38, 1,4); -- SALA 401
-INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 3, 38, 2,5); -- SALA 402
+INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 2, 37, 3,1); -- SALA 205
+INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 2, 37, 1,2); -- SALA 206
+INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 3, 38, 4,1); -- SALA 401
+INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 3, 38, 5,2); -- SALA 402
 
 -- Datos para el Museo 2
-INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 4, 10, 1,6); -- SALA 12
-INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 5, 39, 1,9); -- SALA 30
-INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 6, 39, 1,11); -- SALA 31
+INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 4, 10, 6,1); -- SALA 12
+INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 5, 39, 9,1); -- SALA 30
+INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 6, 39, 11,1); -- SALA 31
 
 -- Datos para el Museo 3
-INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 7, 14, 1,12); -- SALA 2
-INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 8, 40, 1,14); -- SALA 8
-INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 8, 40, 2,15); -- SALA 10
+INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 7, 14, 12,1); -- SALA 2
+INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 8, 40, 14,1); -- SALA 8
+INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 8, 40, 15,2); -- SALA 10
 
 -- Datos para el Museo 4
-INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 10, 16, 2,17); -- SALA 15
-INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 10, 41, 1,20); -- SALA 37
+INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 10, 16, 17,2); -- SALA 15
+INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 10, 41, 20,1); -- SALA 37
 
 -- Datos para el Museo 7
-INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 15, 32, 1,26); -- SALA 1
-INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 15, 32, 2,27); -- SALA 5
-INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 16, 32, 1,28); -- SALA 10
+INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 15, 32, 26,1); -- SALA 1
+INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 15, 32, 27,2); -- SALA 5
+INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 16, 32, 28,1); -- SALA 10
 
 -- Datos para el Museo 8
-INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 17, 36, 1,30); -- SALA 3
-INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 17, 36, 2,31); -- SALA 4
+INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 17, 36, 30,1); -- SALA 3
+INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 17, 36, 31,2); -- SALA 4
 COMMIT;
 
 
