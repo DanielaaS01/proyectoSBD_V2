@@ -68,6 +68,27 @@
             <select id="id_sala_pintura" name="id_sala" required disabled>
                 <option value="">Seleccione el edificio/piso primero</option>
             </select>
+            <!-- Selección de Colección -->
+            <label for="id_coleccion_pintura">Colección:</label>
+            <select id="id_coleccion_pintura" name="id_coleccion" required disabled>
+                <option value="">Seleccione el museo primero</option>
+            </select>
+
+            <!-- Mostrar orden de recorrido de la colección -->
+            <label>Orden de Recorrido:</label>
+            <div id="orden_coleccion_pintura" class="info-panel">
+                Seleccione una colección para ver el orden.
+            </div>
+            <!-- Selección de empleado responsable -->
+            <label for="num_expediente_pintura">Empleado Responsable:</label>
+            <select id="num_expediente_pintura" name="num_expediente" required>
+                <option value="">Seleccione un empleado</option>
+            </select>
+
+            <!-- Definir la posición en el recorrido -->
+            <label for="nuevo_orden_pintura">Posición en el recorrido:</label>
+            <input type="number" id="nuevo_orden_pintura" name="nuevo_orden" min="1" required disabled>
+        
         </fieldset>
 
         <button type="submit">Registrar Pintura</button>
@@ -125,6 +146,27 @@
             <select id="id_sala_escultura" name="id_sala" required disabled>
                 <option value="">Seleccione el edificio/piso primero</option>
             </select>
+            <!-- Selección de Colección -->
+            <label for="id_coleccion_escultura">Colección:</label>
+            <select id="id_coleccion_escultura" name="id_coleccion" required disabled>
+                <option value="">Seleccione el museo primero</option>
+            </select>
+
+            <!-- Mostrar orden de recorrido de la colección -->
+            <label>Orden de Recorrido:</label>
+            <div id="orden_coleccion_escultura" class="info-panel">
+                Seleccione una colección para ver el orden.
+            </div>
+
+            <!-- Selección de empleado responsable -->
+            <label for="num_expediente_escultura">Empleado Responsable:</label>
+            <select id="num_expediente_escultura" name="num_expediente" required>
+                <option value="">Seleccione un empleado</option>
+            </select>
+
+            <!-- Definir la posición en el recorrido -->
+            <label for="nuevo_orden_escultura">Posición en el recorrido:</label>
+            <input type="number" id="nuevo_orden_escultura" name="nuevo_orden" min="1" required disabled>
         </fieldset>
 
         <button type="submit">Registrar Escultura</button>

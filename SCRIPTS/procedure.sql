@@ -1358,3 +1358,36 @@ BEGIN
         total_entradas DESC, m.nombre;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Obtener colecciones por museo
+CREATE OR REPLACE FUNCTION obtener_colecciones_por_museo(
+  p_museo_id INTEGER
+)
+RETURNS TABLE(
+  id_coleccion      INTEGER,
+  nombre            TEXT,
+  orden_recorrido   TEXT
+)
+LANGUAGE sql
+AS $$
+  SELECT
+    c.id_coleccion,
+    c.nombre_coleccion,
+    c.orden_recorrido
+  FROM colecciones c
+  WHERE c.id_museo = p_museo_id
+$$;
+
+-- Obtener empleados profesionales
+CREATE OR REPLACE FUNCTION obtener_empleados_profesionales()
+RETURNS TABLE(
+  num_expediente    INTEGER,
+  nombre_completo   TEXT
+)
+LANGUAGE sql
+AS $$
+  SELECT
+    e.num_expediente,
+    e.primer_nombre || ' ' || e.primer_apellido AS nombre_completo
+  FROM empleados_profesionales e
+$$;

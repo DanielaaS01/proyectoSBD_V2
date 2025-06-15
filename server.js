@@ -368,6 +368,38 @@ app.get("/ficha-artista", async (req, res) => {
   }
 });
 
+// Obtener colecciones por museo
+app.get("/colecciones", async (req, res) => {
+  const museoId = req.query.museoId;
+  if (!museoId) {
+    return res.status(400).json({ error: "Falta el parámetro museoId" });
+  }
+  try {
+    const result = await pool.query(
+      `SELECT * FROM obtener_colecciones_por_museo($1)`,
+      [museoId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando colecciones:", err.message);
+    res.status(500).json({ error: "Error al obtener colecciones" });
+  }
+});
+
+// Obtener empleados profesionales (responsables)
+app.get("/empleados_profesionales", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT * FROM obtener_empleados_profesionales()`,
+      []
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando empleados profesionales:", err.message);
+    res.status(500).json({ error: "Error al obtener empleados profesionales" });
+  }
+});
+
 //Insertar Pintura y vincular artista (existente o nuevo)
 app.post("/pintura", async (req, res) => {
   const {

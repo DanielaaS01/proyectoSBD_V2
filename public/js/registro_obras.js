@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cargarMuseos(`id_museo_${tipo}`);
     cargarArtistas(`id_artista_${tipo}`);
+    cargarEmpleados(`num_expediente_${tipo}`);
 
     // Deshabilitar campos de nuevo artista por defecto
     nuevoDiv.querySelectorAll("input, textarea").forEach((el) => {
@@ -50,6 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
         limpiarSelect(`id_estructura_fis_${tipo}`);
         limpiarSelect(`id_sala_${tipo}`);
         cargarEstructuras(e.target.value, `id_estructura_fis_${tipo}`);
+        limpiarSelect(`id_coleccion_${tipo}`);
+        document.getElementById(`orden_coleccion_${tipo}`).textContent =
+          "Seleccione una colección para ver el orden.";
+        document.getElementById(`nuevo_orden_${tipo}`).disabled = true;
+        cargarColecciones(
+          e.target.value,
+          `id_coleccion_${tipo}`,
+          `orden_coleccion_${tipo}`
+        );
       });
     document
       .getElementById(`id_estructura_fis_${tipo}`)
@@ -60,6 +70,20 @@ document.addEventListener("DOMContentLoaded", () => {
           `id_estructura_fis_${tipo}`,
           `id_sala_${tipo}`
         );
+      });
+    // Al cambiar colección -> mostrar orden y habilitar nuevo orden
+    document
+      .getElementById(`id_coleccion_${tipo}`)
+      .addEventListener("change", (e) => {
+        const sel = e.target;
+        const orden = sel.selectedOptions[0]?.dataset?.orden_recorrido || "";
+        const panel = document.getElementById(`orden_coleccion_${tipo}`);
+        panel.textContent = orden.split(",").join(" → ");
+        const input = document.getElementById(`nuevo_orden_${tipo}`);
+        const count = orden ? orden.split(",").length : 0;
+        input.disabled = false;
+        input.min = 1;
+        input.max = count + 1;
       });
   });
 
@@ -83,6 +107,9 @@ document.addEventListener("DOMContentLoaded", () => {
         id_museo: parseInt(f.id_museo.value, 10),
         id_estructura_fis: parseInt(f.id_estructura_fis.value, 10),
         id_sala: parseInt(f.id_sala.value, 10),
+        id_coleccion: parseInt(f.id_coleccion.value, 10),
+        num_expediente: parseInt(f.num_expediente.value, 10),
+        nuevo_orden: parseInt(f.nuevo_orden.value, 10),
       };
 
       // 2) Validar artista existente o nuevo
@@ -183,6 +210,23 @@ async function cargarArtistas(selectId) {
   }
 }
 
+async function cargarEmpleados(selectId) {
+  try {
+    const res = await fetch("/empleados_profesionales");
+    const empleados = await res.json();
+    const sel = document.getElementById(selectId);
+    empleados.forEach((emp) => {
+      const opt = document.createElement("option");
+      opt.value = emp.num_expediente;
+      opt.textContent = emp.nombre_completo;
+      sel.appendChild(opt);
+    });
+  } catch (err) {
+    console.error("Error empleados:", err);
+    alert("No se pudieron cargar empleados profesionales");
+  }
+}
+
 async function cargarEstructuras(idMuseo, selectId) {
   try {
     const res = await fetch(`/estructuras-fisicas?id_museo=${idMuseo}`);
@@ -198,6 +242,27 @@ async function cargarEstructuras(idMuseo, selectId) {
   } catch (err) {
     console.error(err);
     alert("No se pudieron cargar estructuras");
+  }
+}
+
+// Carga colecciones filtradas por museo
+async function cargarColecciones(museoId, selectId, ordenPanelId) {
+  try {
+    const res = await fetch(`/colecciones?museoId=${museoId}`);
+    const colecciones = await res.json();
+    const sel = document.getElementById(selectId);
+    sel.disabled = false;
+    colecciones.forEach((col) => {
+      const opt = document.createElement("option");
+      opt.value = col.id_coleccion;
+      opt.textContent = col.nombre;
+      // Guardar orden_recorrido en data attribute
+      opt.dataset.orden_recorrido = col.orden_recorrido;
+      sel.appendChild(opt);
+    });
+  } catch (err) {
+    console.error("Error colecciones:", err);
+    alert("No se pudieron cargar colecciones");
   }
 }
 
