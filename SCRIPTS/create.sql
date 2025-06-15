@@ -334,7 +334,8 @@ CREATE TABLE COLECCIONES_SALAS(
     id_estructura_org INTEGER NOT NULL,
     id_coleccion INTEGER NOT NULL,
     id_estructura_fis INTEGER NOT NULL,
-    id_sala INTEGER NOT NULL
+    id_sala INTEGER NOT NULL,
+    orden_recorrido INTEGER NOT NULL
 );
 
 ALTER TABLE COLECCIONES_SALAS
@@ -352,7 +353,7 @@ CREATE TABLE HISTORICOS_MOVIMIENTOS (
     fecha_inicio DATE NOT NULL,
     tipo_llegada CHAR(1) NOT NULL,
     destacada BOOLEAN NOT NULL DEFAULT FALSE,
-    orden_recomendado VARCHAR(200),
+    orden_recomendado INTEGER,
     valor_monetario NUMERIC(10,2),
     id_estructura_fis INTEGER NOT NULL,
     id_sala INTEGER NOT NULL,
@@ -365,7 +366,7 @@ CREATE TABLE HISTORICOS_MOVIMIENTOS (
 
 ALTER TABLE HISTORICOS_MOVIMIENTOS
 ADD CONSTRAINT pk_historicos_movimientos PRIMARY KEY (id_museo, id_obra, id_cat_museo),
-ADD CONSTRAINT check_tipo_llegada CHECK (tipo_llegada IN ('C','D')), -- 'C'=Compra, 'D'=Donación
+ADD CONSTRAINT check_tipo_llegada CHECK (tipo_llegada IN ('C','D','A')), -- 'C'=Compra, 'D'=Donación
 ADD CONSTRAINT fk_historico_mov_obra FOREIGN KEY (id_obra) REFERENCES OBRAS(id_obra),
 ADD CONSTRAINT fk_historico_mov_museo_actual FOREIGN KEY (id_museo) REFERENCES MUSEOS(id_museo),
 ADD CONSTRAINT fk_historico_mov_museo_origen FOREIGN KEY (id_museo_origen) REFERENCES MUSEOS(id_museo),
