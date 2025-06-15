@@ -529,6 +529,27 @@ app.post("/registrar-resumen-historico", async (req, res) => {
   }
 });
 
+// ...existing code...
+
+// Ruta: Obtener registros de movilidad de una obra
+app.get("/obras/:id/movilidad", async (req, res) => {
+  const idObra = parseInt(req.params.id, 10);
+  if (isNaN(idObra)) {
+    return res.status(400).json({ error: "ID de obra inválido" });
+  }
+  try {
+    const result = await pool.query(
+      "SELECT * FROM obtener_movilidad_obra($1)",
+      [idObra]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando movilidad de la obra:", err);
+    res.status(500).json({ error: "Error al obtener registros de movilidad" });
+  }
+});
+// ...existing code...
+
 //  Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en: http://localhost:${PORT}`);

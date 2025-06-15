@@ -217,6 +217,97 @@ async function mostrarDetalleObra(obraId) {
     }
 
     // Imagen (placeholder siempre)
+
+    // --- NUEVO: Cargar registros de movilidad ---
+    const movilidadContainer = document.getElementById("movilidadContainer");
+    limpiarNodo(movilidadContainer);
+
+    try {
+      const resMov = await fetch(`/obras/${obraId}/movilidad`);
+      if (!resMov.ok) throw new Error("No se pudo cargar la movilidad");
+      const registros = await resMov.json();
+
+      if (!registros.length) {
+        movilidadContainer.innerHTML = `<div class="no-results">No hay registros de movilidad para esta obra.</div>`;
+      } else {
+        registros.forEach((reg, idx) => {
+          // Formatear fechas
+          const llegada = reg.fecha_llegada
+            ? new Date(reg.fecha_llegada).toLocaleDateString("es-ES")
+            : "-";
+          const salida = reg.fecha_salida
+            ? new Date(reg.fecha_salida).toLocaleDateString("es-ES")
+            : null;
+
+          // Etiquetas
+          let badges = "";
+          if (idx === 0 && !salida) {
+            badges += `<span class="movilidad-badge badge-actual">Actualmente está aquí</span>`;
+          }
+          if (reg.destacada) {
+            badges += `<span class="movilidad-badge badge-destacada">Obra destacada</span>`;
+          }
+          if (reg.tipo_llegada === "DONACION" && reg.museo_donante) {
+            badges += `<span class="movilidad-badge badge-donacion">Donada por: ${reg.museo_donante}</span>`;
+          }
+
+          // Valor monetario
+          let valor = "";
+          if (reg.valor_monetario) {
+            valor = `<div class="movilidad-valor">Valor: $${Number(reg.valor_monetario).toLocaleString("es-ES", {minimumFractionDigits:2})}</div>`;
+          }
+
+          // Ubicación
+          let ubicacion = `
+          <div class="movilidad-info-row">
+            <div class="movilidad-info-item"><span class="movilidad-label">Sala:</span> ${reg.sala || "-"}</div>
+            <div class="movilidad-info-item"><span class="movilidad-label">Piso:</span> ${reg.piso || "-"}</div>
+            <div class="movilidad-info-item"><span class="movilidad-label">Edificio:</span> ${reg.edificio || "-"}</div>
+          </div>
+        `;
+
+          // Responsable
+          let responsable = "";
+          if (reg.responsable_nombre || reg.responsable_apellido) {
+            responsable = `<div class="movilidad-info-item"><span class="movilidad-label">Empleado Responsable:</span> ${reg.responsable_nombre || ""} ${reg.responsable_apellido || ""}</div>`;
+          }
+
+          // Colección y estructura org
+          let coleccion = reg.nombre_coleccion
+            ? `<div class="movilidad-info-item"><span class="movilidad-label">Colección:</span> ${reg.nombre_coleccion}</div>`
+            : "";
+          let estructuraOrg = reg.nombre_estructura_org
+            ? `<div class="movilidad-info-item"><span class="movilidad-label">Unidad Org. Responsable:</span> ${reg.nombre_estructura_org}</div>`
+            : "";
+
+          // Renderizar tarjeta
+          const card = document.createElement("div");
+          card.className = "movilidad-card" + (idx === 0 && !salida ? " activa" : "");
+          card.innerHTML = `
+          <div class="movilidad-header">
+            <span class="movilidad-museo">${reg.nombre_museo}</span>
+            ${badges}
+          </div>
+          <div class="movilidad-info-row">
+            <div class="movilidad-info-item"><span class="movilidad-label">Fecha de llegada:</span> ${llegada}</div>
+            <div class="movilidad-info-item"><span class="movilidad-label">Fecha de salida:</span> ${salida || "—"}</div>
+          </div>
+          ${ubicacion}
+          <div class="movilidad-info-row">
+            ${coleccion}
+            ${estructuraOrg}
+            ${responsable}
+          </div>
+          ${valor}
+        `;
+          movilidadContainer.appendChild(card);
+        });
+      }
+    } catch (e) {
+      movilidadContainer.innerHTML = `<div class="no-results">No se pudo cargar el historial de movilidad.</div>`;
+    }
+
+    // ...resto del código...
   } catch (e) {
     mostrarNotificacion("Error al cargar detalle de la obra", "error");
   }
@@ -256,87 +347,165 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Botón para exportar a PDF
-  document
-    .getElementById("exportPDF")
-    .addEventListener("click", async function () {
-      const detailPanel = document.getElementById("artworkDetail");
-      if (!detailPanel || detailPanel.style.display === "none") {
-        mostrarNotificacion("Seleccione una obra para exportar", "error");
-        return;
-      }
-      mostrarNotificacion("Generando PDF...", "success");
-      await new Promise((r) => setTimeout(r, 300));
+document
+  .getElementById("exportPDF")
+  .addEventListener("click", async function () {
+    const detailPanel = document.getElementById("artworkDetail");
+    if (!detailPanel || detailPanel.style.display === "none") {
+      mostrarNotificacion("Seleccione una obra para exportar", "error");
+      return;
+    }
+    mostrarNotificacion("Generando PDF...", "success");
+    await new Promise((r) => setTimeout(r, 300));
 
-      // Oculta los botones dentro del panel de detalles
-      const btnPDF = detailPanel.querySelector("#exportPDF");
-      const btnPrint = detailPanel.querySelector("#printReport");
-      if (btnPDF) btnPDF.classList.add("oculto-para-pdf");
-      if (btnPrint) btnPrint.classList.add("oculto-para-pdf");
+    // Oculta los botones dentro del panel de detalles
+    const btnPDF = detailPanel.querySelector("#exportPDF");
+    const btnPrint = detailPanel.querySelector("#printReport");
+    if (btnPDF) btnPDF.classList.add("oculto-para-pdf");
+    if (btnPrint) btnPrint.classList.add("oculto-para-pdf");
 
-      // Espera a que el DOM se actualice
-      await new Promise((r) => setTimeout(r, 200));
+    // Espera a que el DOM se actualice
+    await new Promise((r) => setTimeout(r, 200));
 
-      // Fecha y hora actual
-      const fecha = new Date();
-      const fechaStr = fecha.toLocaleDateString("es-ES");
-      const horaStr = fecha.toLocaleTimeString("es-ES", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-
-      html2canvas(detailPanel, { scale: 2 }).then((canvas) => {
-        // Vuelve a mostrar los botones después de capturar
-        if (btnPDF) btnPDF.classList.remove("oculto-para-pdf");
-        if (btnPrint) btnPrint.classList.remove("oculto-para-pdf");
-
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new window.jspdf.jsPDF({
-          orientation: "landscape",
-          unit: "pt",
-          format: [400, 576],
-        });
-
-        const pageWidth = pdf.internal.pageSize.getWidth();
-
-        // Colores de la paleta
-        const colorMostaza = "#D4AF37";
-        const colorAzulOscuro = "#002F5F";
-        const colorTexto = "#333333";
-        const colorBeigeClaro = "#FAF9F0";
-
-        // Fondo superior
-        pdf.setFillColor(colorBeigeClaro);
-        pdf.rect(0, 0, pageWidth, 80, "F");
-
-        // Responsable y fecha
-        pdf.setFont("helvetica", "normal");
-        pdf.setFontSize(8);
-        pdf.setTextColor(colorTexto);
-        pdf.text(
-          "Generación de reporte por grupo especializado: grupo 4",
-          40,
-          40
-        );
-        pdf.text(
-          `Fecha de generación: ${fechaStr} ${horaStr}`,
-          pageWidth - 40,
-          40,
-          { align: "right" }
-        );
-
-        // Línea separadora mostaza
-        pdf.setDrawColor(colorMostaza);
-        pdf.setLineWidth(2);
-        pdf.line(40, 50, pageWidth - 40, 50);
-
-        // Imagen del panel de detalles
-        const imgWidth = pageWidth - 80;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        pdf.addImage(imgData, "PNG", 40, 60, imgWidth, imgHeight);
-
-        pdf.save("detalle_obra.pdf");
-      });
+    // Fecha y hora actual
+    const fecha = new Date();
+    const fechaStr = fecha.toLocaleDateString("es-ES");
+    const horaStr = fecha.toLocaleTimeString("es-ES", {
+      hour: "2-digit",
+      minute: "2-digit",
     });
+
+    html2canvas(detailPanel, { scale: 2 }).then((canvas) => {
+      // Vuelve a mostrar los botones después de capturar
+      if (btnPDF) btnPDF.classList.remove("oculto-para-pdf");
+      if (btnPrint) btnPrint.classList.remove("oculto-para-pdf");
+
+      const pdf = new window.jspdf.jsPDF({
+        orientation: "landscape",
+        unit: "pt",
+        format: [576, 430], // ancho x alto (landscape)
+      });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      // Encabezado
+      const headerHeight = 60;
+      const marginX = 40;
+      const marginY = 20;
+
+      // Colores de la paleta
+      const colorMostaza = "#D4AF37";
+      const colorAzulOscuro = "#002F5F";
+      const colorTexto = "#333333";
+      const colorBeigeClaro = "#FAF9F0";
+
+      // Medidas de la imagen
+      const imgWidth = pageWidth - marginX * 2;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // Cantidad de páginas necesarias
+      const usableHeight = pageHeight - headerHeight - marginY * 2;
+      const usableHeightOther = pageHeight - marginY * 2;
+      const totalPages = Math.ceil(imgHeight / usableHeight);
+
+      for (let page = 0; page < totalPages; page++) {
+        if (page > 0) pdf.addPage();
+
+        let offsetY, sourceY, sourceHeight, pageImgHeight;
+
+        if (page === 0) {
+          // Solo la primera página lleva encabezado
+          // Fondo superior
+          pdf.setFillColor(colorBeigeClaro);
+          pdf.rect(0, 0, pageWidth, headerHeight, "F");
+
+          // Responsable y fecha
+          pdf.setFont("helvetica", "bold");
+          pdf.setFontSize(13);
+          pdf.setTextColor(colorAzulOscuro);
+          pdf.text(
+            "Reporte de Detalle de Obra",
+            marginX,
+            marginY + 8
+          );
+
+          pdf.setFont("helvetica", "normal");
+          pdf.setFontSize(8);
+          pdf.setTextColor(colorTexto);
+          pdf.text(
+            "Generación de reporte por grupo especializado: grupo 4",
+            marginX,
+            marginY + 20
+          );
+          pdf.text(
+            `Fecha de generación: ${fechaStr} ${horaStr}`,
+            pageWidth - marginX,
+            marginY + 20,
+            { align: "right" }
+          );
+
+          // Línea separadora mostaza
+          pdf.setDrawColor(colorMostaza);
+          pdf.setLineWidth(2);
+          pdf.line(marginX, marginY + 30, pageWidth - marginX, marginY + 30);
+
+          offsetY = headerHeight + marginY-20;
+          sourceY = 0;
+          sourceHeight = Math.floor(
+            Math.min(
+              usableHeight * (canvas.height / imgHeight),
+              canvas.height
+            )
+          );
+          pageImgHeight = (sourceHeight * imgWidth) / canvas.width;
+        } else {
+          // Páginas siguientes: sin encabezado
+          offsetY = marginY-5;
+          sourceY = Math.floor(
+            usableHeight * (canvas.height / imgHeight) +
+            (page - 1) * usableHeightOther * (canvas.height / imgHeight)
+          );
+          sourceHeight = Math.floor(
+            Math.min(
+              usableHeightOther * (canvas.height / imgHeight),
+              canvas.height - sourceY
+            )
+          );
+          pageImgHeight = (sourceHeight * imgWidth) / canvas.width;
+        }
+
+        // Crear canvas temporal para la página
+        const pageCanvas = document.createElement("canvas");
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = sourceHeight;
+        const ctx = pageCanvas.getContext("2d");
+        ctx.drawImage(
+          canvas,
+          0,
+          sourceY,
+          canvas.width,
+          sourceHeight,
+          0,
+          0,
+          canvas.width,
+          sourceHeight
+        );
+        const pageImgData = pageCanvas.toDataURL("image/png");
+
+        pdf.addImage(
+          pageImgData,
+          "PNG",
+          marginX,
+          offsetY,
+          imgWidth,
+          pageImgHeight
+        );
+      }
+
+      pdf.save("detalle_obra.pdf");
+    });
+  });
 
   // Filtros
   document

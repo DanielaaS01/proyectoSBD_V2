@@ -1391,3 +1391,61 @@ AS $$
     e.primer_nombre || ' ' || e.primer_apellido AS nombre_completo
   FROM empleados_profesionales e
 $$;
+
+
+--OBTENER MOVILIDAD DE CADA OBRA--
+SELECT * FROM obtener_movilidad_obra(1);
+CREATE OR REPLACE FUNCTION obtener_movilidad_obra(p_id_obra INTEGER)
+RETURNS TABLE (
+    nombre_museo VARCHAR,
+    fecha_llegada DATE,
+    sala VARCHAR,
+    piso VARCHAR,
+    edificio VARCHAR,
+    fecha_salida DATE,
+    destacada BOOLEAN,
+    valor_monetario NUMERIC,
+    tipo_llegada VARCHAR,
+    museo_donante VARCHAR,
+    nombre_coleccion VARCHAR,
+    num_expediente INTEGER,
+    responsable_nombre VARCHAR,
+    responsable_apellido VARCHAR,
+    nombre_estructura_org VARCHAR
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        m.nombre AS nombre_museo,
+        h.fecha_inicio AS fecha_llegada,
+        se.nombre AS sala,
+        piso.nombre AS piso,
+        edificio.nombre AS edificio,
+        h.fecha_fin AS fecha_salida,
+        h.destacada,
+        h.valor_monetario,
+        CASE 
+            WHEN h.tipo_llegada = 'A' THEN 'ADQUISICION'
+            WHEN h.tipo_llegada = 'C' THEN 'COMPRA'
+            WHEN h.tipo_llegada = 'D' THEN 'DONACION'
+            ELSE 'OTRO'
+        END::VARCHAR AS tipo_llegada,
+        m2.nombre AS museo_donante,
+        c.nombre_coleccion,
+        e.num_expediente,
+        e.primer_nombre,
+        e.primer_apellido,
+        eo.nombre AS nombre_estructura_org
+    FROM HISTORICOS_MOVIMIENTOS h
+    JOIN MUSEOS m ON m.id_museo = h.id_museo
+    LEFT JOIN MUSEOS m2 ON m2.id_museo = h.id_museo_origen
+    JOIN SALAS_EXP se ON se.id_museo = h.id_museo AND se.id_estructura_fis = h.id_estructura_fis AND se.id_sala = h.id_sala
+    JOIN ESTRUCTURAS_FISICAS piso ON piso.id_museo = se.id_museo AND piso.id_estructura_fis = se.id_estructura_fis AND piso.tipo = 'P'
+    LEFT JOIN ESTRUCTURAS_FISICAS edificio ON edificio.id_museo = piso.id_museo_padre AND edificio.id_estructura_fis = piso.id_padre AND edificio.tipo = 'E'
+    JOIN COLECCIONES c ON c.id_museo = h.id_museo AND c.id_estructura_org = h.id_estructura_org AND c.id_coleccion = h.id_coleccion
+    JOIN EMPLEADOS_PROFESIONALES e ON e.num_expediente = h.num_expediente
+    JOIN ESTRUCTURAS_ORGANIZACIONALES eo ON eo.id_museo = h.id_museo AND eo.id_estructura_org = h.id_estructura_org
+    WHERE h.id_obra = p_id_obra
+    ORDER BY h.fecha_inicio DESC;
+END;
+$$ LANGUAGE plpgsql;

@@ -1,4 +1,4 @@
-  /* Importación de fuentes */
+/* Importación de fuentes */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
         /* Variables de colores */
@@ -637,6 +637,133 @@
         
         .notification-close:hover {
             opacity: 1;
+        }
+        
+        /* Badge OBRA DESTACADA */
+        .destacada-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(90deg, var(--color-mostaza) 60%, var(--color-mostaza-claro) 100%);
+            color: var(--color-azul-oscuro);
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 20px;
+            padding: 0.3rem 1.1rem 0.3rem 0.8rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 8px rgba(212,175,55,0.10);
+            letter-spacing: 1px;
+            animation: fadeIn 0.7s;
+            gap: 0.5rem;
+        }
+        .destacada-icon {
+            width: 22px;
+            height: 22px;
+            fill: var(--color-azul-oscuro);
+            margin-right: 0.4rem;
+        }
+        
+        /* Registros de movilidad */
+        .movilidad-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .movilidad-card {
+            background: linear-gradient(120deg, var(--color-beige-claro) 80%, var(--color-gris-claro) 100%);
+            border-left: 6px solid var(--color-mostaza);
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,47,95,0.06);
+            padding: 1.3rem 1.5rem;
+            position: relative;
+            transition: box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .movilidad-card.activa {
+            border-left-color: var(--color-verde-oscuro);
+            box-shadow: 0 6px 24px rgba(58,90,64,0.13);
+        }
+
+        .movilidad-header {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .movilidad-museo {
+            font-weight: 600;
+            color: var(--color-azul-medio);
+            font-size: 1.1rem;
+        }
+
+        .movilidad-label {
+            font-size: 0.93rem;
+            color: var(--color-texto-claro);
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+
+        .movilidad-info-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .movilidad-info-item {
+            min-width: 180px;
+            margin-bottom: 0.2rem;
+        }
+
+        .movilidad-badge {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .badge-actual {
+            background-color: rgba(8,146,33,0.13);
+            color: var(--color-verde-oscuro);
+            border: 1.5px solid var(--color-verde-oscuro);
+        }
+
+        .badge-destacada {
+            background-color: rgba(255, 210, 61, 0.274);
+            color: var(--color-mostaza-oscuro);
+            border: 1.5px solid var(--color-mostaza-oscuro);
+        }
+
+        .badge-donacion {
+            background-color: rgba(0,47,95,0.10);
+            color: var(--color-azul-oscuro);
+            border: 1.5px solid var(--color-azul-oscuro);
+        }
+
+        .movilidad-valor {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--color-mostaza-oscuro);
+            margin-top: 0.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .movilidad-info-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .movilidad-card {
+                padding: 1rem;
+            }
         }
         
         /* Estilos responsivos */

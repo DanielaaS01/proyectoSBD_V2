@@ -77,7 +77,16 @@
                 
                 <div id="artworkDetail" style="display: none;">
                     <div class="detail-header">
-                        <h3 id="detailTitle" class="detail-title">Nombre de la Obra</h3>
+                        <div>
+                            <h3 id="detailTitle" class="detail-title">Nombre de la Obra</h3>
+                            <!-- Etiqueta OBRA DESTACADA -->
+                            <div id="destacadaBadge" class="destacada-badge" style="display:none;">
+                                <svg class="destacada-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                </svg>
+                                OBRA DESTACADA
+                            </div>
+                        </div>
                         <div class="detail-actions">
                             <button id="printReport" class="action-btn" title="Imprimir reporte">
                                 <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -175,6 +184,19 @@
                                 </div>
                                 <div id="badgeAdquisicion" class="acquisition-badge">
                                     <!-- El badge se cargará dinámicamente aquí -->
+                                </div>
+                            </div>
+                            
+                            <!-- NUEVA SECCIÓN: Registros de movilidad de la obra -->
+                            <div class="info-section">
+                                <h4 class="info-title">
+                                    <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M16 13h-1V9c0-2.21-1.79-4-4-4s-4 1.79-4 4v4H6c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-5c0-1.1-.9-2-2-2zm-6-4c0-1.1.9-2 2-2s2 .9 2 2v4H10V9zm6 11H6v-5h10v5zm2-7H4v-2c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v2z"/>
+                                    </svg>
+                                    Registros de movilidad de la obra
+                                </h4>
+                                <div id="movilidadContainer" class="movilidad-list">
+                                    <!-- Los registros de movilidad se cargarán dinámicamente aquí -->
                                 </div>
                             </div>
                         </div>
