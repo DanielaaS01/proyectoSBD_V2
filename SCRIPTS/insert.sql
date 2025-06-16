@@ -924,36 +924,108 @@ COMMIT;
 --COLECCIONES_SALAS--
 
 BEGIN;
--- Datos para el Museo 1
-INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 1, 37, 1,1); -- SALA 206
-INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 1, 37, 2,2); -- SALA 201
-INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 2, 37, 3,1); -- SALA 205
-INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 2, 37, 1,2); -- SALA 206
-INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 3, 38, 4,1); -- SALA 401
-INSERT INTO COLECCIONES_SALAS VALUES (1, 1, 3, 38, 5,2); -- SALA 402
+--- Museo 1: Museo Nacional Centro de Arte Reina Sofía (id_museo = 1) ---
 
--- Datos para el Museo 2
-INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 4, 10, 6,1); -- SALA 12
-INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 5, 39, 9,1); -- SALA 30
-INSERT INTO COLECCIONES_SALAS VALUES (2, 2, 6, 39, 11,1); -- SALA 31
+-- Colección 1: VANGUARDIAS HISTÓRICAS (id_coleccion = 1, id_estructura_org = 1)
+-- Obras: Guernica (Sala 206), La mujer en azul (Sala 201.02), Cabeza de mujer llorando (Sala 206)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (1, 1, 1, 37, 1, 2); -- Sala 206
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (1, 1, 1, 37, 2, 1); -- Sala 201 (para 201.02)
 
--- Datos para el Museo 3
-INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 7, 14, 12,1); -- SALA 2
-INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 8, 40, 14,1); -- SALA 8
-INSERT INTO COLECCIONES_SALAS VALUES (3, 3, 8, 40, 15,2); -- SALA 10
+-- Colección 2: SURREALISMO Y VANGUARDIAS INTERNACIONALES (id_coleccion = 2, id_estructura_org = 1)
+-- Obras: El rostro del gran masturbador (Sala 205.13)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (1, 1, 2, 37, 3, 2); -- Sala 205 (para 205.13)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (1, 1, 2, 37, 1, 1); -- Sala 206
 
--- Datos para el Museo 4
-INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 10, 16, 17,2); -- SALA 15
-INSERT INTO COLECCIONES_SALAS VALUES (4, 4, 10, 41, 20,1); -- SALA 37
+-- Colección 3: ARTE CONTEMPORÁNEO Y ESCULTURA (id_coleccion = 3, id_estructura_org = 1)
+-- Obras: Retrato de Ramón Gómez de la Serna (Sala 401), Torso de mujer (Sala 402)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (1, 1, 3, 38, 4, 1); -- Sala 401
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (1, 1, 3, 38, 5, 2); -- Sala 402
 
--- Datos para el Museo 7
-INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 15, 32, 26,1); -- SALA 1
-INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 15, 32, 27,2); -- SALA 5
-INSERT INTO COLECCIONES_SALAS VALUES (7, 7, 16, 32, 28,1); -- SALA 10
+--- Museo 2: Museo Nacional Thyssen-Bornemisza (id_museo = 2) ---
 
--- Datos para el Museo 8
-INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 17, 36, 30,1); -- SALA 3
-INSERT INTO COLECCIONES_SALAS VALUES (8, 8, 17, 36, 31,2); -- SALA 4
+-- Colección 1: RENACIMIENTO Y BARROCO (id_coleccion = 4, id_estructura_org = 2)
+-- Obras: Santa Catalina de Alejandría (Sala 12), San Jerónimo penitente (Sala 13)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (2, 2, 4, 10, 6, 1); -- Sala 12
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (2, 2, 4, 10, 7, 2); -- Sala 13
+
+-- Colección 2: ROMANTICISMO Y REALISMO (id_coleccion = 5, id_estructura_org = 2)
+-- Obras: El testamento de Isabel la Católica (Sala 29), La casa junto a las vías del tren (Sala 30)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (2, 2, 5, 39, 8, 1); -- Sala 29
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (2, 2, 5, 39, 9, 2); -- Sala 30
+
+-- Colección 4: ESCULTURA CLÁSICA Y MODERNA (id_coleccion = 6, id_estructura_org = 2)
+-- Obras: Busto de hombre joven (Sala 33), Cabeza de mujer (Sala 31)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (2, 2, 6, 39, 10, 2); -- Sala 33
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (2, 2, 6, 39, 11, 1); -- Sala 31
+
+--- Museo 3: La Galleria Nazionale (id_museo = 3) ---
+
+-- Colección 1: ARTE DEL SIGLO XIX (NEOCLASICISMO Y ROMANTICISMO) (id_coleccion = 7, id_estructura_org = 3)
+-- Obras: Amor sacro y amor profano (Sala 2), Cleopatra (Sala 4)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (3, 3, 7, 14, 12, 1); -- Sala 2
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (3, 3, 7, 14, 13, 2); -- Sala 4
+
+-- Colección 2: REALISMO Y SIMBOLISMO ITALIANO (id_coleccion = 8, id_estructura_org = 3)
+-- Obras: Las dos madres (Sala 8), El espejo de Venus (Sala 10)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (3, 3, 8, 40, 14, 1); -- Sala 8
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (3, 3, 8, 40, 15, 2); -- Sala 10
+
+-- Colección 3: ARTE MODERNO Y VANGUARDIAS (id_coleccion = 9, id_estructura_org = 3)
+-- Obras: Composizione (Sala 14), Scomposizione dinamica (Sala 14)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (3, 3, 9, 40, 16, 1); -- Sala 14
+
+--- Museo 4: Pinacoteca di Brera (id_museo = 4) ---
+
+-- Colección 1: RENACIMIENTO ITALIANO (id_coleccion = 10, id_estructura_org = 4)
+-- Obras: El beso robado (Sala 37), La cena de Emaús (Sala 15), Virgen con el niño y santos (Sala 7)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (4, 4, 10, 41, 20, 1); -- Sala 37
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (4, 4, 10, 16, 17, 2); -- Sala 15
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (4, 4, 10, 16, 19, 3); -- Sala 7
+
+-- Colección 2: MANIERISMO Y BARROCO (id_coleccion = 11, id_estructura_org = 4)
+-- Obras: La deposición de la cruz (Sala 20)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (4, 4, 11, 16, 18, 1); -- Sala 20
+
+-- Colección 3: SIGLO XIX Y PRINCIPIOS DEL XX (id_coleccion = 12, id_estructura_org = 4)
+-- Obras: Figura femenina reclinada (Sala 29), Cabeza de mujer joven (Sala 30)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (4, 4, 12, 41, 21, 1); -- Sala 29
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (4, 4, 12, 41, 22, 2); -- Sala 30
+
+--- Museo 6: Kunstmuseum Den Haag (id_museo = 6) ---
+
+-- Colección 1: ARTE MODERNO Y VANGUARDIAS (id_coleccion = 14, id_estructura_org = 6)
+-- Obras: El puerto de Róterdam (Sala Impresionistas), Retrato de mujer sentada (Sala Impresionistas)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (6, 6, 14, 43, 25, 1); -- Sala Impresionistas
+
+-- Colección 2: ARTE NEERLANDÉS DEL SIGLO XIX (id_coleccion = 13, id_estructura_org = 6)
+-- Obras: Bodegón con floreros (Sala Arte Simbólico), Mujer con sombrero rojo (Sala Realismo)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (6, 6, 13, 26, 23, 1); -- Sala Arte Simbólico
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (6, 6, 13, 26, 24, 2); -- Sala Realismo
+
+--- Museo 7: Museu Nacional de Arte Antiga (MNAA) (id_museo = 7) ---
+
+-- Colección 1: PINTURA PORTUGUESA Y EUROPEA DEL RENACIMIENTO Y BARROCO (id_coleccion = 15, id_estructura_org = 7)
+-- Obras: San Vicente y la Corte de Lisboa (Sala 1), La tentación de San Antonio (Sala 5)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (7, 7, 15, 32, 26, 1); -- Sala 1
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (7, 7, 15, 32, 27, 2); -- Sala 5
+
+-- Colección 2: ESCULTURA RELIGIOSA Y CLÁSICA (id_coleccion = 16, id_estructura_org = 7)
+-- Obras: Virgen con el niño (Sala 10), San Juan Evangelista (Sala 11)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (7, 7, 16, 32, 28, 1); -- Sala 10
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (7, 7, 16, 32, 29, 2); -- Sala 11
+
+--- Museo 8: Museu Nacional Soares dos Reis (id_museo = 8) ---
+
+-- Colección 1: PINTURA PORTUGUESA DEL SIGLO XIX Y XX (id_coleccion = 17, id_estructura_org = 8)
+-- Obras: Retrato de Francisco de Lacerda (Sala 3), Paisagem com Pinheiros (Sala 4), Barcos no Douro (Sala 5)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (8, 8, 17, 36, 30, 1); -- Sala 3
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (8, 8, 17, 36, 31, 2); -- Sala 4
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (8, 8, 17, 36, 32, 3); -- Sala 5
+
+-- Colección 2: ESCULTURA CLÁSICA PORTUGUESA (id_coleccion = 18, id_estructura_org = 8)
+-- Obras: Busto de Camilo Castelo Branco (Sala de escultura), Retrato de Senhora com Leque (Sala de escultura), Figura Sentada (Sala de escultura moderna)
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (8, 8, 18, 36, 33, 1); -- Sala de escultura
+INSERT INTO COLECCIONES_SALAS (id_museo, id_estructura_org, id_coleccion, id_estructura_fis, id_sala, orden_recorrido) VALUES (8, 8, 18, 44, 34, 2); -- Sala de escultura moderna
 COMMIT;
 
 

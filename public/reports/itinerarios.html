@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Itinerario de Museo</title>
+    <link rel="stylesheet" href="../css/itinerarios.css"> 
+</head>
+<body>
+    <div class="container">
+        <main class="main-content">
+            <h1 class="page-title">Generador de Itinerarios</h1>
+            
+            <section class="card">
+                <div class="form-group">
+                    <label for="museum">Seleccione un museo:</label>
+                    <select id="museum">
+                        <option value="museo-nacional">Museo Nacional de Arte</option>
+                        <option value="museo-moderno">Museo de Arte Moderno</option>
+                        <option value="museo-contemporaneo">Museo de Arte Contemporáneo</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tipo de itinerario:</label>
+                    <div class="itinerary-type-selector">
+                        <div class="type-option selected" data-type="artworks">
+                        <svg class="icono-svg" id="Capa_1" enable-background="new 0 0 512.019 512.019" viewBox="0 0 512.019 512.019" xmlns="http://www.w3.org/2000/svg"><g><g><g><path d="m67.7 355.367h376.618v99.907h-376.618z" fill="#9da5be"/></g></g><g><g><path d="m212.047 397.936h-79.352v57.338h246.629v-57.338h-79.539z" fill="#f9f5f3"/></g></g><g><g><path d="m350.759 141.191-17.973 25.678c-5.258 7.513-8.079 16.461-8.079 25.631v15.855c0 5.168-2.299 10.059-6.249 13.392-15.987 13.49-36.474 21.663-58.051 21.663-49.358 0-90.451-42.012-90.451-90.451v-11.768c22.019-3.034 30.533-18.036 33.647-31.581 2.316-10.031 13.245-14.064 22.179-12.018 17.268 3.883 34.576-9.602 34.576-28.227 0 18.625 17.308 32.11 34.576 28.227 8.913-2.086 19.873 2.026 22.169 12.018 3.123 13.545 11.627 28.547 33.656 31.581z" fill="#f4ecea"/></g></g><g><g><path d="m389.435 310.485s-12.165 31.103-25.341 44.878h-207.403c-13.175-13.744-25.311-44.878-25.311-44.878l61.643-17.426c7.776-2.615 13.605-9.123 15.331-17.138l9.442-43.599c12.756 7.037 27.289 11.089 42.611 11.089 15.132 0 29.725-4.012 42.611-11.079l9.442 43.589c1.737 8.015 7.556 14.523 15.331 17.138z" fill="#e4d5ce"/></g></g><g><g><path d="m65.099 455.274c-14.866 0-26.917 12.051-26.917 26.917v19.827h435.656v-19.827c0-14.866-12.051-26.917-26.917-26.917z" fill="#9da5be"/></g></g><g><g><path d="m260.358 27.423v41.942c0 18.246-16.769 32.23-34.576 28.227-8.943-2.016-19.853 1.936-22.179 12.018-3.114 13.545-11.628 28.547-33.647 31.581-23.007 3.174-45.256-19.414-41.293-47.961 5.031-36.282 41.293-39.566 41.293-39.566h32.489c2.473 0 4.811-1.125 6.354-3.058l13.81-17.297c2.97-3.72 7.472-5.886 12.232-5.886z" fill="#f4ecea"/></g></g><g><g><path d="m260.356 27.423s14.866-22.109 45.654-16.489c40.893 7.465 44.745 42.729 44.745 42.729s36.26 3.289 41.294 39.572c3.96 28.545-18.282 51.13-41.294 47.957-22.021-3.037-30.531-18.035-33.65-31.581-2.321-10.081-13.234-14.033-22.173-12.021-17.806 4.009-34.576-9.974-34.576-28.226z" fill="#f4ecea"/></g></g><g><path d="m249.179 401.759c2.066 5.045 8.036 7.49 13.06 5.41 5.033-2.084 7.494-8.027 5.41-13.06-2.085-5.035-8.031-7.487-13.06-5.41-5.028 2.076-7.502 8.036-5.41 13.06z"/><path d="m454.319 446.02v-90.653c0-5.523-4.478-10-10-10h-60.758c8.606-14.545 14.82-30.301 15.188-31.24 1.027-2.627.897-5.566-.358-8.093-1.256-2.526-3.52-4.405-6.234-5.172l-61.375-17.351c-4.311-1.527-7.577-5.229-8.547-9.708l-7.921-36.568c3.668-2.373 7.209-4.988 10.594-7.844 6.229-5.255 9.801-12.922 9.801-21.035v-15.856c0-7.155 2.169-14.035 6.271-19.896l14.788-21.128c11.451-.173 22.616-5.007 31.374-13.772 11.815-11.825 17.214-28.535 14.812-45.843-4.141-29.85-26.786-42.842-42.818-46.852-4.579-15.646-18.933-37.998-51.33-43.912-27.91-5.097-45.102 8.811-52.118 16.326h-20.847c-7.845 0-15.152 3.516-20.047 9.647l-13.249 16.594h-31.589c-.301 0-.602.014-.902.041-15.279 1.384-45.455 13.228-50.296 48.15-2.403 17.31 2.996 34.02 14.813 45.847 7.48 7.487 16.716 12.1 26.384 13.399v1.858c0 34.794 18.785 66.136 46.554 84.232l-7.932 36.623c-.963 4.471-4.228 8.168-8.545 9.697l-61.374 17.351c-2.713.767-4.976 2.644-6.232 5.167-1.256 2.524-1.388 5.46-.365 8.087.367.939 6.564 16.706 15.161 31.25h-69.522c-5.523 0-10 4.477-10 10v90.653c-16.823 3.436-29.519 18.349-29.519 36.172v19.827c0 5.523 4.477 10 10 10h435.656c5.522 0 10-4.477 10-10v-19.827c.001-17.822-12.695-32.735-29.518-36.171zm-150.105-425.249c13.759 2.512 24.052 8.886 30.591 18.946 2.626 4.039 4.14 7.934 4.995 10.751-1.134 1.089-2.616 1.692-4.193 1.692h-12.794c-5.522 0-10 4.477-10 10s4.478 10 10 10h12.794c6.96 0 13.503-2.71 18.426-7.632l.093-.093c8.131 2.028 25.051 8.779 28.019 30.173 1.533 11.049-1.802 21.604-9.15 28.958-5.912 5.917-13.544 8.892-20.867 7.718-13.115-2.102-21.792-8.791-25.276-23.918-2.711-11.786-13.338-19.444-25.129-20.22-2.923-.207-5.872-.002-8.705.632-11.521 2.484-22.658-6.636-22.658-18.414v-38.418c3.987-4.308 15.041-13.61 33.854-10.175zm-165.645 73.832c3.659-26.389 28.569-30.502 31.945-30.939h31.932c5.545 0 10.709-2.485 14.169-6.819l13.81-17.297c1.078-1.351 2.688-2.125 4.417-2.125h15.515v31.94c0 14.391-12.734 19.671-24.927 18.012-13.255-1.837-28.062 4.777-31.572 19.994-3.02 13.136-11.727 22.05-25.268 23.916-7.347 1.015-14.955-1.799-20.87-7.718-7.35-7.357-10.686-17.912-9.151-28.964zm41.387 58.356v-3.716c17.641-5.271 29.334-19.738 33.391-37.386 1.105-4.792 7.13-5.149 10.997-4.362 11.059 2.253 22.444-.496 31.353-7.624 1.688-1.35 3.241-2.825 4.659-4.399 1.421 1.576 2.976 3.052 4.666 4.404 9.058 7.245 20.676 9.974 31.907 7.506 4.063-.876 9.434.222 10.506 4.773 3.548 15.09 12.709 28.329 27.098 34.78l-9.938 14.199c-6.468 9.24-9.887 20.086-9.887 31.365v15.855c0 2.207-.983 4.302-2.698 5.749-14.331 12.093-32.784 19.306-51.602 19.306-43.05.001-80.452-37.377-80.452-80.45zm15.787 149.722c.157-.044.313-.093.467-.145 3.253-1.094 6.266-2.689 8.974-4.669l15.781 15.781c7.069 7.069 16.467 10.961 26.463 10.961h14.217c5.522 0 10-4.477 10-10s-4.478-10-10-10h-14.215c-4.654 0-9.03-1.812-12.321-5.104l-17.96-17.96c.385-1.147.722-2.314.979-3.509l6.792-31.361c11.288 4.4 23.367 6.735 35.488 6.735 12.1 0 24.213-2.356 35.484-6.743l6.795 31.37c2.469 11.396 10.867 20.783 21.917 24.499.154.052.311.1.467.145l50.684 14.328c-4.143 9.018-10.175 20.725-16.218 28.353h-198.292c-6.027-7.607-12.054-19.325-16.192-28.351zm-118.043 62.686h356.619v79.907h-44.995v-47.338c0-5.523-4.478-10-10-10h-79.539c-5.522 0-10 4.477-10 10s4.478 10 10 10h69.539v37.338h-226.629v-37.338h69.352c5.523 0 10-4.477 10-10s-4.477-10-10-10h-79.352c-5.523 0-10 4.477-10 10v47.338h-44.995zm386.138 126.652h-415.657v-9.827c0-9.328 7.589-16.917 16.917-16.917h381.822c9.328 0 16.918 7.589 16.918 16.917z"/><path d="m249.112 178.543h19.008c5.522 0 10-4.477 10-10s-4.478-10-10-10h-4.336l7.17-18.25c2.02-5.141-.511-10.945-5.651-12.964s-10.944.511-12.964 5.651l-12.535 31.907c-1.209 3.079-.818 6.556 1.044 9.289 1.864 2.732 4.957 4.367 8.264 4.367z"/></g></g></svg>
+
+                            <h3>Obras Destacadas</h3>
+                            <p>Recorrido por las obras más importantes del museo</p>
+                        </div>
+                        <div class="type-option" data-type="collections">
+                            <svg version="1.1" class="icono-svg" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512.001 512.001" style="enable-background:new 0 0 512.001 512.001;" xml:space="preserve"><polygon style="fill:#999999;" points="6.236,169.288 255.499,62.982 256,236.621 6.236,342.713 "/><g><path style="fill:#FFDC64;" d="M173.498,136.379l54.353-23.088c0.806-0.342,1.699,0.249,1.699,1.125v40.946 c0,0.49-0.293,0.933-0.744,1.125l-54.353,23.088c-0.806,0.342-1.699-0.249-1.699-1.125v-40.947 C172.754,137.013,173.046,136.57,173.498,136.379z"/><path style="fill:#FFDC64;" d="M173.498,203.788l54.353-23.088c0.806-0.342,1.699,0.249,1.699,1.125v32.373 c0,0.49-0.293,0.933-0.744,1.125l-54.353,23.088c-0.806,0.342-1.699-0.249-1.699-1.125v-32.373 C172.754,204.421,173.046,203.979,173.498,203.788z"/></g><path style="fill:#707487;" d="M37.163,194.29l104.469-44.375c2.201-0.935,4.642,0.681,4.642,3.072v95.152 c0,1.358-0.823,2.581-2.081,3.092l-104.47,42.433c-2.194,0.891-4.593-0.724-4.593-3.092v-93.21 C35.13,196.022,35.93,194.813,37.163,194.29z"/><path style="fill:#535370;" d="M35.13,290.571c0,2.369,2.399,3.984,4.593,3.092l104.469-42.433c1.258-0.511,2.081-1.733,2.081-3.092 v-49.221L35.13,246.128V290.571z"/><polygon style="fill:#B3B3B3;" points="256,236.621 255.499,62.982 505.764,168.822 505.764,342.713 "/><path style="fill:#FFDC64;" d="M427.511,275.213v-96.41c0-1.527,1.559-2.558,2.964-1.962l44.72,18.996 c0.787,0.334,1.298,1.107,1.298,1.962v96.41c0,1.527-1.559,2.558-2.964,1.962l-44.72-18.996 C428.022,276.84,427.511,276.068,427.511,275.213z"/><path style="fill:#A0D755;" d="M288.772,216.629v-97.551c0-1.151,1.175-1.928,2.233-1.478l113.665,48.281 c0.593,0.252,0.978,0.834,0.978,1.478v97.551c0,1.151-1.175,1.928-2.233,1.478l-113.665-48.281 C289.158,217.855,288.772,217.274,288.772,216.629z"/><path style="fill:#4AA9FF;" d="M404.672,165.881l-64.811-27.53v101.04l63.556,26.996c1.059,0.45,2.233-0.327,2.233-1.478v-97.551 C405.649,166.715,405.264,166.134,404.672,165.881z"/><polygon style="fill:#E6E6E6;" points="6.236,342.713 256,236.621 505.764,342.713 256,448.804 "/><polygon style="fill:#FFDC64;" points="202.192,343.044 202.51,302.448 256,325.17 256.313,365.648 "/><polygon style="fill:#FC5D4C;" points="256,325.17 309.49,302.448 309.267,342.488 256.313,365.648 "/><polygon style="fill:#4AA9FF;" points="202.51,302.448 256,279.727 309.49,302.448 256,325.17 "/><path d="M507.422,162.367L258.965,56.831c-0.691-0.297-1.436-0.494-2.214-0.571c-0.102-0.01-0.204-0.01-0.307-0.015 c-0.147-0.009-0.294-0.022-0.444-0.022c-0.15,0-0.296,0.014-0.444,0.022c-0.102,0.006-0.204,0.005-0.307,0.015 c-0.779,0.077-1.524,0.275-2.214,0.571L4.578,162.367C1.802,163.547,0,166.272,0,169.287v173.425c0,0.341,0.031,0.674,0.074,1.002 c0.011,0.078,0.022,0.155,0.035,0.233c0.052,0.317,0.119,0.63,0.211,0.931c0.003,0.009,0.004,0.018,0.007,0.027 c0.097,0.321,0.221,0.629,0.358,0.929c0.027,0.06,0.057,0.118,0.085,0.177c0.134,0.275,0.282,0.54,0.447,0.795 c0.015,0.022,0.027,0.046,0.042,0.069c0.178,0.268,0.377,0.52,0.586,0.762c0.052,0.059,0.105,0.116,0.158,0.174 c0.198,0.214,0.406,0.418,0.627,0.607c0.027,0.023,0.051,0.049,0.079,0.071c0.25,0.209,0.517,0.396,0.793,0.57 c0.059,0.037,0.119,0.073,0.179,0.109c0.304,0.18,0.617,0.346,0.945,0.482L253.059,455.18c0.94,0.399,1.94,0.598,2.94,0.598 c1,0,2-0.199,2.94-0.598l248.431-105.526c0.329-0.137,0.643-0.303,0.946-0.483c0.06-0.036,0.12-0.072,0.179-0.109 c0.276-0.174,0.542-0.362,0.793-0.57c0.028-0.023,0.052-0.049,0.08-0.072c0.221-0.189,0.428-0.393,0.627-0.607 c0.053-0.058,0.107-0.115,0.158-0.174c0.21-0.242,0.408-0.494,0.586-0.762c0.015-0.022,0.027-0.046,0.042-0.069 c0.165-0.255,0.313-0.52,0.447-0.795c0.029-0.059,0.058-0.116,0.085-0.176c0.137-0.301,0.261-0.609,0.358-0.929 c0.003-0.01,0.005-0.019,0.008-0.029c0.09-0.302,0.157-0.614,0.21-0.929c0.013-0.077,0.025-0.154,0.036-0.233 c0.044-0.329,0.074-0.662,0.074-1.002V169.287C512,166.272,510.198,163.547,507.422,162.367z M256,440.091L26.75,342.712 L256,245.334l229.25,97.378L256,440.091z M496.963,331.35l-233.445-99.159v-31.176c0-4.152-3.366-7.518-7.518-7.518l0,0 c-4.152,0-7.518,3.366-7.518,7.518v31.176L15.037,331.35V174.262l233.445-99.16v82.144c0,4.152,3.366,7.518,7.518,7.518l0,0 c4.152,0,7.518-3.366,7.518-7.518V75.102l233.445,99.16L496.963,331.35L496.963,331.35z"/><path d="M31.432,301.02c1.259,0.848,2.725,1.281,4.199,1.281c0.955,0,1.917-0.182,2.828-0.552l110.141-44.736 c2.835-1.151,4.689-3.906,4.689-6.966V148.699c0-2.523-1.266-4.878-3.369-6.27c-2.104-1.391-4.765-1.638-7.088-0.65L32.691,188.564 c-2.777,1.179-4.578,3.904-4.578,6.92v99.3C28.113,297.285,29.357,299.624,31.432,301.02z M43.15,200.46l95.104-40.397v84.924 L43.15,283.616V200.46z"/><path d="M169.106,185.81c1.249,0.826,2.695,1.248,4.15,1.248c0.995,0,1.995-0.197,2.939-0.598l55.794-23.7 c2.777-1.179,4.578-3.904,4.578-6.92v-42.513c0-2.523-1.266-4.878-3.369-6.27c-2.104-1.392-4.766-1.637-7.088-0.65l-55.794,23.699 c-2.777,1.18-4.578,3.905-4.578,6.92v42.513C165.737,182.062,167.003,184.417,169.106,185.81z M180.773,142.001l40.757-17.312 v26.175l-40.757,17.312V142.001z"/><path d="M169.106,244.644c1.249,0.826,2.695,1.248,4.15,1.248c0.995,0,1.995-0.197,2.939-0.598l55.794-23.7 c2.777-1.179,4.578-3.904,4.578-6.92v-33.939c0-2.523-1.266-4.878-3.369-6.27c-2.104-1.392-4.766-1.637-7.088-0.65l-55.794,23.7 c-2.777,1.179-4.578,3.904-4.578,6.92v33.939C165.737,240.897,167.003,243.252,169.106,244.644z M180.773,209.41l40.757-17.312 v17.602l-40.757,17.312V209.41z"/><path d="M286.334,224.28l115.874,49.22c0.943,0.4,1.943,0.598,2.939,0.598c1.455,0,2.901-0.422,4.15-1.248 c2.104-1.392,3.369-3.747,3.369-6.27v-99.952c0-3.016-1.802-5.741-4.578-6.92l-115.874-49.22c-2.323-0.986-4.985-0.742-7.088,0.65 c-2.104,1.392-3.369,3.747-3.369,6.27v99.952C281.755,220.377,283.558,223.101,286.334,224.28z M296.792,128.771l100.837,42.832 v83.614l-100.837-42.832V128.771z"/><path d="M425.072,283.212l47.979,20.38c0.943,0.401,1.943,0.598,2.939,0.598c1.455,0,2.901-0.422,4.15-1.248 c2.104-1.392,3.369-3.747,3.369-6.27V196.72c0-3.016-1.802-5.741-4.578-6.92l-47.979-20.38c-2.322-0.986-4.985-0.743-7.088,0.65 c-2.104,1.392-3.369,3.747-3.369,6.27v99.952C420.494,279.308,422.296,282.033,425.072,283.212z M435.53,187.702l32.942,13.992 v83.614l-32.942-13.992V187.702z"/><path d="M312.224,296.099c-0.059-0.037-0.119-0.073-0.179-0.109c-0.304-0.18-0.616-0.346-0.946-0.483l-52.159-22.155 c-1.88-0.797-4-0.797-5.879,0l-52.159,22.155c-0.329,0.137-0.643,0.303-0.945,0.482c-0.06,0.036-0.12,0.072-0.179,0.109 c-0.276,0.175-0.543,0.362-0.793,0.57c-0.027,0.023-0.052,0.048-0.079,0.071c-0.222,0.189-0.429,0.394-0.627,0.607 c-0.053,0.058-0.107,0.115-0.158,0.174c-0.21,0.242-0.408,0.494-0.586,0.762c-0.015,0.022-0.027,0.046-0.042,0.069 c-0.165,0.254-0.313,0.52-0.447,0.795c-0.029,0.059-0.058,0.117-0.085,0.177c-0.137,0.301-0.261,0.609-0.358,0.929 c-0.002,0.009-0.004,0.018-0.007,0.027c-0.091,0.303-0.157,0.615-0.211,0.931c-0.013,0.077-0.025,0.154-0.035,0.233 c-0.044,0.329-0.074,0.662-0.074,1.002v40.265c0,3.016,1.802,5.741,4.578,6.92l52.184,22.166c0.691,0.297,1.434,0.494,2.212,0.571 c0.251,0.025,0.501,0.038,0.753,0.038c0.252,0,0.502-0.013,0.753-0.038c0.779-0.077,1.523-0.275,2.212-0.571l52.183-22.166 c2.777-1.179,4.578-3.904,4.578-6.92v-40.265c0-0.341-0.031-0.674-0.074-1.002c-0.011-0.078-0.023-0.155-0.036-0.233 c-0.052-0.317-0.119-0.628-0.21-0.929c-0.003-0.01-0.005-0.019-0.008-0.029c-0.097-0.321-0.221-0.629-0.358-0.929 c-0.027-0.06-0.056-0.117-0.085-0.176c-0.134-0.275-0.282-0.54-0.447-0.795c-0.015-0.022-0.027-0.046-0.042-0.069 c-0.178-0.268-0.377-0.52-0.586-0.762c-0.052-0.06-0.105-0.116-0.158-0.174c-0.197-0.214-0.405-0.417-0.627-0.607 c-0.027-0.023-0.052-0.049-0.08-0.072C312.766,296.461,312.5,296.274,312.224,296.099z M256,288.441l32.978,14.008L256,316.457 l-32.978-14.008L256,288.441z M211.309,313.811l37.172,15.79v23.928l-37.172-15.79L211.309,313.811L211.309,313.811z M263.518,353.527V329.6l37.172-15.79v23.927L263.518,353.527z"/></svg>
+                            <h3>Colecciones</h3>
+                            <p>Recorrido organizado por colecciones del museo</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button id="generateBtn" class="btn">Generar Itinerario</button>
+                </div>
+            </section>
+            
+            <!-- Itinerario de Obras Destacadas -->
+            <article id="artworksItinerary" class="itinerary-container">
+                <div class="itinerary-toolbar">
+                    <div class="toolbar-actions">
+                        
+                        <div class="action-btn" id="pdfArtworksBtn" title="Descargar como PDF">
+                            <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"/>
+                                </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <header class="itinerary-header">
+                    <div class="itinerary-title">
+                        <h2>Itinerario de Obras Destacadas</h2>
+                    </div>
+                    <div class="museum-info">
+                        <div class="museum-badge" id="artworksMuseumBadge">Museo Nacional de Arte</div>
+                    </div>
+                </header>
+                
+                <div class="itinerary-content">
+                    <h3 class="section-title">Recorrido Recomendado</h3>
+                    <div class="section-divider"></div>
+                    <p class="section-description">Sigue este camino para descubrir las obras maestras del museo:</p>
+                    
+                    <div class="journey-path" id="artworksList"><div class="artwork-stop">
+                    <div class="stop-marker">1</div>
+                    <div class="artwork-card">
+                        <div class="artwork-header">
+                            <h3 class="artwork-title">La Noche Estrellada</h3>
+                            <div class="artwork-artist">por Vincent van Gogh</div>
+                            <div class="artwork-type-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 4v12H4V4h16m0-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path>
+                            <path d="M8.5 11.5l2.5 3 3.5-4.5 4.5 6H5z"></path>
+                        </svg>
+                    </div>
+                        </div>
+                        <div class="artwork-details">
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path>
+                                </svg>
+                                <span class="location-text">Sala 3</span>
+                            </div>
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
+                                </svg>
+                                <span class="location-text">Planta 1</span>
+                            </div>
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"></path>
+                                </svg>
+                                <span class="location-text">Edificio Principal</span>
+                            </div>
+                            <div class="artwork-type-badge badge-painting">
+                                Pintura
+                            </div>
+                        </div>
+                    </div>
+                </div><div class="artwork-stop">
+                    <div class="stop-marker">2</div>
+                    <div class="artwork-card">
+                        <div class="artwork-header">
+                            <h3 class="artwork-title">El Grito</h3>
+                            <div class="artwork-artist">por Edvard Munch</div>
+                            <div class="artwork-type-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 4v12H4V4h16m0-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path>
+                            <path d="M8.5 11.5l2.5 3 3.5-4.5 4.5 6H5z"></path>
+                        </svg>
+                    </div>
+                        </div>
+                        <div class="artwork-details">
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path>
+                                </svg>
+                                <span class="location-text">Sala 5</span>
+                            </div>
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
+                                </svg>
+                                <span class="location-text">Planta 1</span>
+                            </div>
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"></path>
+                                </svg>
+                                <span class="location-text">Edificio Principal</span>
+                            </div>
+                            <div class="artwork-type-badge badge-painting">
+                                Pintura
+                            </div>
+                        </div>
+                    </div>
+                </div><div class="artwork-stop">
+                    <div class="stop-marker">3</div>
+                    <div class="artwork-card">
+                        <div class="artwork-header">
+                            <h3 class="artwork-title">Guernica</h3>
+                            <div class="artwork-artist">por Pablo Picasso</div>
+                            <div class="artwork-type-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 4v12H4V4h16m0-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path>
+                            <path d="M8.5 11.5l2.5 3 3.5-4.5 4.5 6H5z"></path>
+                        </svg>
+                    </div>
+                        </div>
+                        <div class="artwork-details">
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path>
+                                </svg>
+                                <span class="location-text">Sala 7</span>
+                            </div>
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
+                                </svg>
+                                <span class="location-text">Planta 2</span>
+                            </div>
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"></path>
+                                </svg>
+                                <span class="location-text">Edificio Principal</span>
+                            </div>
+                            <div class="artwork-type-badge badge-painting">
+                                Pintura
+                            </div>
+                        </div>
+                    </div>
+                </div><div class="artwork-stop">
+                    <div class="stop-marker">4</div>
+                    <div class="artwork-card">
+                        <div class="artwork-header">
+                            <h3 class="artwork-title">El Pensador</h3>
+                            <div class="artwork-artist">por Auguste Rodin</div>
+                            <div class="artwork-type-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0-5c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 10c-2.33 0-7 1.17-7 3.5V19h14v-1.5c0-2.33-4.67-3.5-7-3.5zm0-2c2.76 0 8 1.31 8 4v3H4v-3c0-2.69 5.24-4 8-4z"></path>
+                        </svg>
+                    </div>
+                        </div>
+                        <div class="artwork-details">
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path>
+                                </svg>
+                                <span class="location-text">Sala 8</span>
+                            </div>
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
+                                </svg>
+                                <span class="location-text">Planta 2</span>
+                            </div>
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"></path>
+                                </svg>
+                                <span class="location-text">Edificio Principal</span>
+                            </div>
+                            <div class="artwork-type-badge badge-sculpture">
+                                Escultura
+                            </div>
+                        </div>
+                    </div>
+                </div><div class="artwork-stop">
+                    <div class="stop-marker">5</div>
+                    <div class="artwork-card">
+                        <div class="artwork-header">
+                            <h3 class="artwork-title">David</h3>
+                            <div class="artwork-artist">por Miguel Ángel</div>
+                            <div class="artwork-type-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0-5c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 10c-2.33 0-7 1.17-7 3.5V19h14v-1.5c0-2.33-4.67-3.5-7-3.5zm0-2c2.76 0 8 1.31 8 4v3H4v-3c0-2.69 5.24-4 8-4z"></path>
+                        </svg>
+                    </div>
+                        </div>
+                        <div class="artwork-details">
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path>
+                                </svg>
+                                <span class="location-text">Sala 10</span>
+                            </div>
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
+                                </svg>
+                                <span class="location-text">Planta 3</span>
+                            </div>
+                            <div class="location-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"></path>
+                                </svg>
+                                <span class="location-text">Edificio Principal</span>
+                            </div>
+                            <div class="artwork-type-badge badge-sculpture">
+                                Escultura
+                            </div>
+                        </div>
+                    </div>
+                </div></div>
+                </div>
+            </article>
+            
+            <!-- Itinerario de Colecciones -->
+            <article id="collectionsItinerary" class="itinerary-container">
+                <div class="itinerary-toolbar">
+                    <div class="toolbar-actions">
+                        <div class="action-btn" id="printCollectionsBtn" title="Imprimir itinerario">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 8h-2V5H7v3H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zM8 5h8v3H8V5zm8 12v2H8v-4h8v2zm2-2v-2H6v2H4v-4c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v4h-2z"></path>
+                                <circle cx="18" cy="11.5" r="1"></circle>
+                            </svg>
+                        </div>
+                        <div class="action-btn" id="pdfCollectionsBtn" title="Descargar como PDF">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm12 6V9c0-.55-.45-1-1-1h-2v5h2c.55 0 1-.45 1-1zm-2-3h1v1h-1V9zm0 2h1v1h-1v-1z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <header class="itinerary-header">
+                    <div class="itinerary-title">
+                        <h2>Itinerario de Colecciones</h2>
+                    </div>
+                    <div class="museum-info">
+                        <div class="museum-badge" id="collectionsMuseumBadge">Museo Nacional de Arte</div>
+                    </div>
+                </header>
+                
+                <div class="itinerary-content">
+                    <h3 class="section-title">Mapa de Colecciones</h3>
+                    <div class="section-divider"></div>
+                    <p class="section-description">Explora las colecciones del museo siguiendo este recorrido:</p>
+                    
+                    <div class="collections-map" id="collectionsList">
+                        <!-- Los items se generarán dinámicamente -->
+                    </div>
+                </div>
+            </article>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="../js/itinerarios.js"></script>
+</body>
+</html>

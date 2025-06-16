@@ -1449,3 +1449,83 @@ BEGIN
     ORDER BY h.fecha_inicio DESC;
 END;
 $$ LANGUAGE plpgsql;
+
+
+--ITINERARIO OBRAS DESTACADAS--
+
+CREATE OR REPLACE FUNCTION generar_itinerario_obras_destacadas(p_id_museo INTEGER)
+RETURNS TABLE (
+    nombre_obra VARCHAR,
+    tipo_obra VARCHAR,
+    artistas VARCHAR,
+    sala VARCHAR,
+    piso VARCHAR,
+    edificio VARCHAR,
+    orden_recomendado INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        o.nombre::VARCHAR AS nombre_obra,
+        (CASE o.tipo WHEN 'P' THEN 'Pintura' WHEN 'E' THEN 'Escultura' END)::VARCHAR AS tipo_obra,
+        (
+            SELECT string_agg((COALESCE(a.nombre, '') || ' ' || COALESCE(a.apellido, '')), ', ')::VARCHAR
+            FROM OBRAS_ARTISTAS oa
+            JOIN ARTISTAS a ON oa.id_artista = a.id_artista
+            WHERE oa.id_obra = o.id_obra
+        ) AS artistas,
+        se.nombre::VARCHAR AS sala,
+        ef_piso.nombre::VARCHAR AS piso,
+        ef_edif.nombre::VARCHAR AS edificio,
+        hm.orden_recomendado
+    FROM HISTORICOS_MOVIMIENTOS hm
+    JOIN OBRAS o ON hm.id_obra = o.id_obra
+    JOIN SALAS_EXP se ON hm.id_museo = se.id_museo AND hm.id_estructura_fis = se.id_estructura_fis AND hm.id_sala = se.id_sala
+    JOIN ESTRUCTURAS_FISICAS ef_piso ON se.id_museo = ef_piso.id_museo AND se.id_estructura_fis = ef_piso.id_estructura_fis
+    LEFT JOIN ESTRUCTURAS_FISICAS ef_edif ON ef_piso.id_museo_padre = ef_edif.id_museo AND ef_piso.id_padre = ef_edif.id_estructura_fis
+    WHERE hm.id_museo = p_id_museo
+      AND hm.destacada = TRUE
+      AND hm.fecha_fin IS NULL
+    ORDER BY hm.orden_recomendado;
+END;
+$$ LANGUAGE plpgsql;
+
+
+--ITINERARIOS DE COLECCIONES--
+CREATE OR REPLACE FUNCTION generar_itinerario_colecciones(p_id_museo INTEGER)
+RETURNS TABLE (
+    nombre_coleccion VARCHAR,
+    orden_coleccion INTEGER,
+    nombre_sala VARCHAR,
+    nombre_piso VARCHAR,
+    nombre_edificio VARCHAR,
+    orden_sala INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        c.nombre_coleccion::VARCHAR,
+        c.orden_recorrido AS orden_coleccion,
+        se.nombre::VARCHAR AS nombre_sala,
+        piso.nombre::VARCHAR AS nombre_piso,
+        edif.nombre::VARCHAR AS nombre_edificio,
+        cs.orden_recorrido AS orden_sala
+    FROM COLECCIONES c
+    JOIN COLECCIONES_SALAS cs
+      ON c.id_museo = cs.id_museo
+     AND c.id_estructura_org = cs.id_estructura_org
+     AND c.id_coleccion = cs.id_coleccion
+    JOIN SALAS_EXP se
+      ON cs.id_museo = se.id_museo
+     AND cs.id_estructura_fis = se.id_estructura_fis
+     AND cs.id_sala = se.id_sala
+    JOIN ESTRUCTURAS_FISICAS piso
+      ON se.id_museo = piso.id_museo
+     AND se.id_estructura_fis = piso.id_estructura_fis
+    LEFT JOIN ESTRUCTURAS_FISICAS edif
+      ON piso.id_museo_padre = edif.id_museo
+     AND piso.id_padre = edif.id_estructura_fis
+    WHERE c.id_museo = p_id_museo
+    ORDER BY c.orden_recorrido, cs.orden_recorrido;
+END;
+$$ LANGUAGE plpgsql;

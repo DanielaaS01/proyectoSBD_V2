@@ -550,6 +550,46 @@ app.get("/obras/:id/movilidad", async (req, res) => {
 });
 // ...existing code...
 
+// ...existing code...
+
+// Ruta: Itinerario de obras destacadas por museo
+app.get("/itinerario/obras-destacadas", async (req, res) => {
+  const idMuseo = parseInt(req.query.id_museo, 10);
+  if (isNaN(idMuseo)) {
+    return res.status(400).json({ error: "Parámetro id_museo inválido" });
+  }
+  try {
+    const result = await pool.query(
+      "SELECT * FROM generar_itinerario_obras_destacadas($1)",
+      [idMuseo]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando itinerario de obras destacadas:", err);
+    res.status(500).json({ error: "Error al obtener itinerario de obras destacadas" });
+  }
+});
+
+// Ruta: Itinerario de colecciones por museo
+app.get("/itinerario/colecciones", async (req, res) => {
+  const idMuseo = parseInt(req.query.id_museo, 10);
+  if (isNaN(idMuseo)) {
+    return res.status(400).json({ error: "Parámetro id_museo inválido" });
+  }
+  try {
+    const result = await pool.query(
+      "SELECT * FROM generar_itinerario_colecciones($1)",
+      [idMuseo]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando itinerario de colecciones:", err);
+    res.status(500).json({ error: "Error al obtener itinerario de colecciones" });
+  }
+});
+
+// ...existing code...
+
 //  Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en: http://localhost:${PORT}`);
