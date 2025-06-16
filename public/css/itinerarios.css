@@ -69,10 +69,6 @@
         /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
     }
     
-    .card:hover {
-        /* Sin animación */
-    }
-    
     .form-group {
         margin-bottom: 1.5rem;
     }
@@ -332,9 +328,9 @@
         /* transition: transform 0.3s ease; */
     }
     
-    .artwork-stop:hover {
+   /* .artwork-stop:hover {*/
         /* transform: translateX(10px); */
-    }
+    /*}*/
     
     .artwork-stop:last-child {
         margin-bottom: 0;
@@ -368,9 +364,9 @@
         border: 1px solid #e5e5e5; /* Borde sutil para mejor definición */
     }
     
-    .artwork-card:hover {
+    /*.artwork-card:hover {*/
         /* box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2); */ /* Sombra más pronunciada al hover */
-    }
+    /*}*/
     
     .artwork-header {
         padding: 1.5rem;
@@ -486,9 +482,9 @@
         /* transition: transform 0.3s ease; */
     }
     
-    .collection-node:hover {
+    /*.collection-node:hover {*/
         /* transform: translateX(10px); */
-    }
+    /*}*/
     
     .collection-node:last-child {
         margin-bottom: 0;
@@ -552,10 +548,10 @@
         border: 1px solid #e0e0e0; /* Borde sutil para mejor definición */
     }
     
-    .room-card:hover {
+   /* .room-card:hover {*/
         /* transform: translateY(-5px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); */
-    }
+    /*}*/
     
     .room-name {
         font-weight: 500;
