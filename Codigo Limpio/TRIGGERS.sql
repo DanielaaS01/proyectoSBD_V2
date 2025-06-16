@@ -87,3 +87,24 @@ FOR EACH ROW
 EXECUTE FUNCTION validar_nivel_jerarquia_organizacional();
 
 
+--Trigger para validar que las entradas esten dentro del horario del museo
+CREATE OR REPLACE FUNCTION validar_tipo_ticket_valido()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM TIPOS_TICKETS
+        WHERE id_museo = NEW.id_museo
+          AND tipo = NEW.tipo
+          AND NEW.fecha_hora_emision::DATE >= fecha_inicio
+          AND (fecha_fin IS NULL OR NEW.fecha_hora_emision::DATE <= fecha_fin)
+    ) THEN
+        RAISE EXCEPTION 'El tipo de ticket no está habilitado para esa fecha en este museo.';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_validar_tipo_ticket
+BEFORE INSERT OR UPDATE ON ENTRADAS
+FOR EACH ROW
+EXECUTE FUNCTION validar_tipo_ticket_valido();

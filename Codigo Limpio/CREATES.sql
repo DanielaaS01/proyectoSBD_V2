@@ -53,6 +53,23 @@ ADD CONSTRAINT check_hora_inicio_fin CHECK (hora_inicio < hora_fin); -- La hora 
 
 
                                                         --4--                                
+---------------------------------------------------| TIPOS_TICKETS |------------------------------------------------------------------------
+CREATE TABLE TIPOS_TICKETS(
+    id_museo INTEGER NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE,
+    precio NUMERIC NOT NULL,
+    tipo CHAR(1) NOT NULL   
+);
+
+ALTER TABLE TIPOS_TICKETS
+ADD CONSTRAINT pk_tipos_tickets PRIMARY KEY (id_museo, fecha_inicio),
+ADD CONSTRAINT fk_tipo_ticket_museo FOREIGN KEY (id_museo) REFERENCES MUSEOS(id_museo),
+ADD CONSTRAINT check_tipo_ticket CHECK (tipo IN ('G', 'R', 'E')),  -- G: General, R: Reducida, E: Exonerada
+ADD CONSTRAINT check_ticket_fechas CHECK (fecha_fin >= fecha_inicio);
+
+
+                                                        --5--                                
 -----------------------------------------------------| ENTRADAS |------------------------------------------------------------- 
 CREATE SEQUENCE seq_num_ticket START 1;
 CREATE TABLE ENTRADAS(
@@ -70,7 +87,7 @@ ADD CONSTRAINT fk_entrada_museo FOREIGN KEY (id_museo) REFERENCES MUSEOS(id_muse
 ADD CONSTRAINT check_monto CHECK (monto > 0); -- El monto no puede ser negativo
 
 
-                                                        --5--                                
+                                                        --6--                                
 -----------------------------------------------| ESTRUCTURAS_FISICAS |--------------------------------------------------------
 CREATE SEQUENCE seq_id_estructura_fis START WITH 1;
 CREATE TABLE ESTRUCTURAS_FISICAS(
@@ -91,7 +108,7 @@ ADD CONSTRAINT fk_estructura_fisica_padre FOREIGN KEY (id_museo_padre, id_padre)
 ADD CONSTRAINT fk_estructuras_museo FOREIGN KEY (id_museo) REFERENCES MUSEOS(id_museo);
 
 
-                                                        --6--                                
+                                                        --7--                                
 ----------------------------------------------------| SALAS_EXP |-------------------------------------------------------------
 CREATE SEQUENCE seq_id_salas_exp START WITH 1;
 CREATE TABLE SALAS_EXP (
@@ -107,7 +124,7 @@ ADD CONSTRAINT pk_salas_exp PRIMARY KEY (id_museo, id_estructura_fis, id_sala),
 ADD CONSTRAINT fk_salas_estructura_fisica FOREIGN KEY (id_museo, id_estructura_fis) REFERENCES ESTRUCTURAS_FISICAS(id_museo, id_estructura_fis);
 
 
-                                                        --7--                                
+                                                        --8--                                
 ------------------------------------------------| HISTORICOS_CIERRES |-------------------------------------------------------------
 CREATE TABLE HISTORICOS_CIERRES (
     id_museo INTEGER NOT NULL,
@@ -123,7 +140,7 @@ ADD CONSTRAINT fk_cierres_sala FOREIGN KEY (id_museo, id_estructura_fis, id_sala
 ADD CONSTRAINT check_fechas_cierre CHECK (fecha_fin >= fecha_inicio);
 
 
-                                                        --8--                                
+                                                        --9--                                
 ------------------------------------------------| EMPLEADOS_MANT_VIG |-------------------------------------------------------------
 CREATE SEQUENCE seq_id_mant_vig START 1;
 CREATE TABLE EMPLEADOS_MANT_VIG(
@@ -139,7 +156,7 @@ ADD CONSTRAINT pk_empleados_mant_vig PRIMARY KEY (id_mant_vig),
 ADD CONSTRAINT check_tipo_empleado CHECK (tipo IN ('M', 'V')); -- 'M'=Mantenimiento, 'V'=Vigilante
 
 
-                                                        --9--                                
+                                                        --10--                                
 ------------------------------------------| MESES_ASIGNACIONES_EMPLEADOS |-----------------------------------------------------------
 CREATE TABLE MESES_ASIGNACIONES_EMPLEADOS(
     id_museo INTEGER NOT NULL,
@@ -156,7 +173,7 @@ ADD CONSTRAINT fk_mes_asig_emp_estructura FOREIGN KEY (id_museo, id_estructura_f
 ADD CONSTRAINT fk_mes_asig_emp_mant_vig FOREIGN KEY (id_mant_vig) REFERENCES EMPLEADOS_MANT_VIG(id_mant_vig);
 
 
-                                                        --10--                                
+                                                        --11--                                
 -----------------------------------------------------| EVENTOS |----------------------------------------------------------------------
 CREATE SEQUENCE seq_id_evento START 1;
 CREATE TABLE EVENTOS(
@@ -179,7 +196,7 @@ ADD CONSTRAINT fk_evento_sala FOREIGN KEY (id_museo, id_estructura_fis, id_sala)
 ADD CONSTRAINT check_eventos_fechas CHECK (fecha_fin >= fecha_inicio);
 
 
-                                                        --11--                                
+                                                        --12--                                
 -----------------------------------------------| RESUMENES_HISTORICOS |---------------------------------------------------------------------- 
 CREATE TABLE RESUMENES_HISTORICOS(
     id_museo INTEGER NOT NULL,
@@ -193,21 +210,7 @@ ADD CONSTRAINT fk_resumenes_museo FOREIGN KEY (id_museo) REFERENCES MUSEOS(id_mu
 ADD CONSTRAINT check_anio_valido CHECK (anio BETWEEN 1800 AND EXTRACT(YEAR FROM CURRENT_DATE)::INTEGER);
 
 
-                                                        --12--                                
----------------------------------------------------| TIPOS_TICKETS |------------------------------------------------------------------------
-CREATE TABLE TIPOS_TICKETS(
-    id_museo INTEGER NOT NULL,
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE,
-    precio NUMERIC NOT NULL,
-    tipo CHAR(1) NOT NULL   
-);
 
-ALTER TABLE TIPOS_TICKETS
-ADD CONSTRAINT pk_tipos_tickets PRIMARY KEY (id_museo, fecha_inicio),
-ADD CONSTRAINT fk_tipo_ticket_museo FOREIGN KEY (id_museo) REFERENCES MUSEOS(id_museo),
-ADD CONSTRAINT check_tipo_ticket CHECK (tipo IN ('G', 'R', 'E')),  -- G: General, R: Reducida, E: Exonerada
-ADD CONSTRAINT check_ticket_fechas CHECK (fecha_fin >= fecha_inicio);
 
 
                                                         --13--                                

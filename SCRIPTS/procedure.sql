@@ -1297,7 +1297,7 @@ BEGIN
     -- Insertar entradas
     FOR i IN 1..p_cantidad LOOP
         INSERT INTO entradas(id_museo, fecha_hora_emision, monto, tipo)
-        VALUES (p_id_museo, CURRENT_TIMESTAMP, v_precio, p_tipo);
+        VALUES (p_id_museo, DATE_TRUNC('second', CURRENT_TIMESTAMP), v_precio, p_tipo);
     END LOOP;
 END;
 $$;
