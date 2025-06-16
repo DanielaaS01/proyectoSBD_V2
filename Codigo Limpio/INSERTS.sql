@@ -355,6 +355,41 @@ INSERT INTO SALAS_EXP (id_museo, id_estructura_fis, nombre) VALUES
 
                                                         --8--                                
 ------------------------------------------------| EMPLEADOS_MANT_VIG |-------------------------------------------------------------
+-- Empleado 1 (España - Vigilante)
+INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
+VALUES ('Javier', 'Ruiz', 'ESP543210', 'V');
+
+-- Empleado 2 (España - Mantenimiento)
+INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
+VALUES ('Carmen', 'Díaz', 'ESP098765', 'M');
+
+-- Empleado 3 (Italia - Vigilante)
+INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
+VALUES ('Giulia', 'Ricci', 'ITL456789', 'V');
+
+-- Empleado 4 (Italia - Mantenimiento)
+INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
+VALUES ('Luca', 'Moretti', 'ITL987654', 'M');
+
+-- Empleado 5 (Países Bajos - Vigilante)
+INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
+VALUES ('Sanne', 'Mulder', 'NLD112233', 'V');
+
+-- Empleado 6 (Países Bajos - Mantenimiento)
+INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
+VALUES ('Dirk', 'De Vries', 'NLD445566', 'M');
+
+-- Empleado 7 (Portugal - Vigilante)
+INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
+VALUES ('Ana', 'Santos', 'PRT789012', 'V');
+
+-- Empleado 8 (Portugal - Mantenimiento)
+INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
+VALUES ('Diogo', 'Gomes', 'PRT345678', 'M');
+
+-- Empleado 9 (España - Vigilante)
+INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
+VALUES ('Laura', 'Blanco', 'ESP111222', 'V');
 
 
 
