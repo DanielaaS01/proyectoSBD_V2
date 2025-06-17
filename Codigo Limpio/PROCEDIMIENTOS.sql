@@ -1454,9 +1454,9 @@ $$;
 CREATE OR REPLACE FUNCTION agregar_tipo_ticket(
     p_id_museo INTEGER,
     p_fecha_inicio DATE,
-    p_fecha_fin DATE DEFAULT NULL,
     p_precio NUMERIC(8,2),
-    p_tipo CHAR
+    p_tipo CHAR,
+    p_fecha_fin DATE DEFAULT NULL
 )
 RETURNS VOID AS $$
 BEGIN
