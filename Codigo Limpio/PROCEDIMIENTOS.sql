@@ -649,7 +649,7 @@ AS $$
 BEGIN
     UPDATE ESTRUCTURAS_FISICAS
     SET nombre = p_nombre,
-        descripcion = p_descripcion,
+        descripcion = p_descripcion
     WHERE id_museo = p_id_museo AND id_estructura_fis = p_id_estructura_fis;
 END;
 $$;

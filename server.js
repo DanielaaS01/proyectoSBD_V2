@@ -207,6 +207,36 @@ app.get("/salas", async (req, res) => {
   }
 });
 
+// Ruta nueva: Obtener todas las salas de un museo (sin importar estructura física)
+app.get("/salas-por-museo", async (req, res) => {
+  const idMuseo = req.query.id_museo;
+  if (!idMuseo) {
+    return res.status(400).json({ error: "Falta el parámetro id_museo" });
+  }
+  try {
+    const result = await pool.query(
+      "SELECT * FROM obtener_salas_por_museo($1)",
+      [idMuseo]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando salas por museo:", err);
+    res.status(500).json({ error: "Error al obtener salas por museo" });
+  }
+});
+
+// Obtener empleados profesionales por museo
+app.get("/empleados_profesionales_por_museo", async (req, res) => {
+  const idMuseo = req.query.id_museo;
+  if (!idMuseo) return res.status(400).json({ error: "Falta el parámetro id_museo" });
+  try {
+    const result = await pool.query("SELECT * FROM obtener_empleados_prof_por_museo($1)", [idMuseo]);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 10. Ruta: Obtener empleados por tipo (mantenimiento o vigilancia)
 app.get("/empleados-mant-vig", async (req, res) => {
   const tipoRaw = req.query.tipo?.toLowerCase();
@@ -587,6 +617,89 @@ app.get("/itinerario/colecciones", async (req, res) => {
     res.status(500).json({ error: "Error al obtener itinerario de colecciones" });
   }
 });
+
+
+// Ruta: Registrar obra (con procedimiento almacenado)
+app.post("/registrar-obra", async (req, res) => {
+  const {
+    nombre,
+    dimension,
+    tipo,
+    estilos,
+    caract_mat_tec,
+    id_sala,
+    id_museo,
+    periodo,
+    artistas_existentes,
+    nuevos_artistas,
+    fecha_inicio,
+    tipo_llegada,
+    destacada,
+    orden_recomendado,
+    valor_monetario,
+    id_coleccion,
+    num_expediente,
+    id_museo_origen
+  } = req.body;
+
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    await client.query(
+      `CALL registrar_obra(
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18
+      )`,
+      [
+        nombre,
+        dimension,
+        tipo,
+        estilos,
+        caract_mat_tec,
+        id_sala,
+        id_museo,
+        periodo,
+        artistas_existentes,
+        nuevos_artistas,
+        fecha_inicio,
+        tipo_llegada,
+        destacada,
+        orden_recomendado,
+        valor_monetario,
+        id_coleccion,
+        num_expediente,
+        id_museo_origen
+      ]
+    );
+    await client.query("COMMIT");
+    res.json({ mensaje: "Obra registrada correctamente" });
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error al registrar obra:", err.message);
+    res.status(500).json({ error: err.message });
+  } finally {
+    client.release();
+  }
+});
+
+// Ruta: Obtener salas por colección
+app.get("/salas-por-coleccion", async (req, res) => {
+  const idMuseo = req.query.id_museo;
+  const idColeccion = req.query.id_coleccion;
+  if (!idMuseo || !idColeccion) {
+    return res.status(400).json({ error: "Faltan parámetros id_museo o id_coleccion" });
+  }
+  try {
+    const result = await pool.query(
+      "SELECT * FROM obtener_salas_por_coleccion($1, $2)",
+      [idMuseo, idColeccion]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error consultando salas por colección:", err);
+    res.status(500).json({ error: "Error al obtener salas por colección" });
+  }
+});
+
 
 // ...existing code...
 

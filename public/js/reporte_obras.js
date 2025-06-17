@@ -104,12 +104,10 @@ async function mostrarDetalleObra(obraId) {
       obra.tipo === "P" ? "Pintura" : obra.tipo === "E" ? "Escultura" : "-";
     document.getElementById("coleccion").textContent = obra.coleccion || "-";
     document.getElementById("periodo").textContent = obra.periodo
-      ? typeof obra.periodo === "string"
-        ? obra.periodo
-        : obra.periodo.toString()
+      ? formatearFechaISO(obra.periodo)
       : "-";
     document.getElementById("dimensiones").textContent =
-      obra.dimensiones || "-";
+  obra.dimensiones ? `${obra.dimensiones} cm` : "-";
     document.getElementById("ubicacion").textContent = obra.ubicacion || "-";
 
     // Estilos
@@ -525,3 +523,15 @@ document
     document.querySelector(".artwork-detail-container").style.opacity = "1";
   }, 100);
 });
+
+// Función para formatear fecha a AAAA-MM-DD
+function formatearFechaISO(fechaStr) {
+  const fecha = new Date(fechaStr);
+  if (!isNaN(fecha)) {
+    const anio = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+    const dia = String(fecha.getDate()).padStart(2, "0");
+    return `${anio}-${mes}-${dia}`;
+  }
+  return fechaStr; // Si no es fecha válida, regresa el valor original
+}

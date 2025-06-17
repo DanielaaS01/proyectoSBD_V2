@@ -1,204 +1,305 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+<html lang="es"><head>
     <meta charset="UTF-8">
-    <title>Registro de Obras</title>
-    <link rel="stylesheet" href="../css/registro_obras.css"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Obras de Arte</title>
+    <link rel="stylesheet" href="../css/registro_obras.css" />
 </head>
 <body>
-    <h1>Registro de Obras</h1>
-    <!-- Selector de tipo de obra -->
-    <section class="selector-tipo">
-        <label for="tipo_obra">¿Qué tipo de obra desea registrar?</label>
-        <select id="tipo_obra">
-            <option value="">Seleccione una opción</option>
-            <option value="pintura">Registro de Pinturas</option>
-            <option value="escultura">Registro de Esculturas</option>
-        </select>
-    </section>
-
-    <!-- FORMULARIO PINTURA -->
-    <form id="form-pintura">
-        <input type="hidden" name="tipo_p" value="P">
-        <fieldset>
-            <legend>Datos Generales de la Pintura</legend>
-            <!-- Selección/Registro de Artista -->
-            <label for="id_artista_pintura">Artista:</label>
-            <select id="id_artista_pintura" name="id_artista" required onchange="toggleNuevoArtista('pintura')">
-                <option value="">Seleccione un artista</option>
-            </select>
-            <button type="button" id="btn-nuevo-artista-pintura" onclick="showNuevoArtista('pintura')">+ Nuevo Artista</button>
-            <div id="form-nuevo-artista-pintura" style="display:none; margin-top:1rem;">
-                <input type="text" id="nuevo_nombre_p" name="nuevo_nombre_p" placeholder="Nombre">
-                <input type="text" id="nuevo_apellido_p" name="nuevo_apellido_p" placeholder="Apellido">
-                <input type="text" id="nuevo_artistico_p" name="nuevo_artistico_p" placeholder="Nombre artístico">
-                <input type="text" id="nuevo_est_tec_p" name="nuevo_est_tec_p" placeholder="Estilo y Técnica">
-                <label for="nuevo_nac_p">Fecha de Nacimiento</label>
-                <input type="date" id="nuevo_nac_p" name="nuevo_nac_p">
-                <label for="nuevo_def_p">Fecha de Defunción (opcional)</label>
-                <input type="date" id="nuevo_def_p" name="nuevo_def_p">
-                <p id="mensaje-nuevo-artista-pintura"></p>
-            </div>
-
-            <!-- Resto de campos de pintura -->
-            <label for="nombre_pintura">Nombre de la pintura:</label>
-            <input type="text" id="nombre_pintura" name="nombre" required>
-            <label for="dimension_pintura">Dimensiones (Al x An):</label>
-            <input type="text" id="dimension_pintura" name="dimension" placeholder="e.g. 80x120 cm" required>
-            <label for="estilos_pintura">Estilos:</label>
-            <input type="text" id="estilos_pintura" name="estilos" required>
-            <label for="tecnica_pintura">Técnica / Material:</label>
-            <input type="text" id="tecnica_pintura" name="caract_mat_tec" required>
-            <label for="periodo_pintura">Fecha (año de creación):</label>
-            <input type="date" id="periodo_pintura" name="periodo" required>
-        </fieldset>
-
-        <!-- Ubicación en el Museo -->
-        <fieldset>
-            <legend>Ubicación en el Museo</legend>
-            <label for="id_museo_pintura">Museo:</label>
-            <select id="id_museo_pintura" name="id_museo" required>
-                <option value="">Seleccione un museo</option>
-            </select>
-            <label for="id_estructura_fis_pintura">Edificio / Piso:</label>
-            <select id="id_estructura_fis_pintura" name="id_estructura_fis" required disabled>
-                <option value="">Seleccione el museo primero</option>
-            </select>
-            <label for="id_sala_pintura">Sala:</label>
-            <select id="id_sala_pintura" name="id_sala" required disabled>
-                <option value="">Seleccione el edificio/piso primero</option>
-            </select>
-            <!-- Selección de Colección -->
-            <label for="id_coleccion_pintura">Colección:</label>
-            <select id="id_coleccion_pintura" name="id_coleccion" required disabled>
-                <option value="">Seleccione el museo primero</option>
-            </select>
-
-            <!-- Mostrar orden de recorrido de la colección -->
-            <label>Orden de Recorrido:</label>
-            <div id="orden_coleccion_pintura" class="info-panel">
-                Seleccione una colección para ver el orden.
-            </div>
-            <!-- Selección de empleado responsable -->
-            <label for="num_expediente_pintura">Empleado Responsable:</label>
-            <select id="num_expediente_pintura" name="num_expediente" required>
-                <option value="">Seleccione un empleado</option>
-            </select>
-
-            <!-- Definir la posición en el recorrido -->
-            <label for="nuevo_orden_pintura">Posición en el recorrido:</label>
-            <input type="number" id="nuevo_orden_pintura" name="nuevo_orden" min="1" required disabled>
+    <div class="container">
+        <header class="header">
+            <h1 class="page-title">Registro de Obras de Arte</h1>
+            <p class="page-subtitle">Complete el formulario para registrar una nueva obra en el sistema</p>
+        </header>
         
-        </fieldset>
-
-        <button type="submit">Registrar Pintura</button>
-        <p id="mensaje-pintura"></p>
-    </form>
-
-    <!-- FORMULARIO ESCULTURA -->
-    <form id="form-escultura">
-        <input type="hidden" name="tipo_e" value="E">
-        <fieldset>
-            <legend>Datos Generales de la Escultura</legend>
-            <!-- Selección/Registro de Artista -->
-            <label for="id_artista_escultura">Artista:</label>
-            <select id="id_artista_escultura" name="id_artista" required onchange="toggleNuevoArtista('escultura')">
-                <option value="">Seleccione un artista</option>
-            </select>
-            <button type="button" id="btn-nuevo-artista-escultura" onclick="showNuevoArtista('escultura')">+ Nuevo Artista</button>
-            <div id="form-nuevo-artista-escultura" style="display:none; margin-top:1rem;">
-                <input type="text" id="nuevo_nombre_e" name="nuevo_nombre_e" placeholder="Nombre">
-                <input type="text" id="nuevo_apellido_e" name="nuevo_apellido_e" placeholder="Apellido">
-                <input type="text" id="nuevo_artistico_e" name="nuevo_artistico_e" placeholder="Nombre artístico">
-                <input type="text" id="nuevo_est_tec_e" name="nuevo_est_tec_e" placeholder="Estilo y Técnica">
-                <label for="nuevo_nac_e">Fecha de Nacimiento</label>
-                <input type="date" id="nuevo_nac_e" name="nuevo_nac_e">
-                <label for="nuevo_def_e">Fecha de Defunción (opcional)</label>
-                <input type="date" id="nuevo_def_e" name="nuevo_def_e">
-                <p id="mensaje-nuevo-artista-escultura"></p>
+        <div class="form-container">
+            <div class="form-header">
+                <h2>Nueva Obra de Arte</h2>
+                <p>Ingrese todos los detalles de la obra. Los campos marcados con * son obligatorios.</p>
             </div>
-
-            <!-- Resto de campos de escultura -->
-            <label for="nombre_escultura">Nombre de la escultura:</label>
-            <input type="text" id="nombre_escultura" name="nombre" required>
-            <label for="dimension_escultura">Dimensiones (Al x An x Prof):</label>
-            <input type="text" id="dimension_escultura" name="dimension" placeholder="e.g. 150x60x60 cm" required>
-            <label for="estilos_escultura">Estilos:</label>
-            <input type="text" id="estilos_escultura" name="estilos" required>
-            <label for="tecnica_escultura">Material / Técnica:</label>
-            <input type="text" id="tecnica_escultura" name="caract_mat_tec" required>
-            <label for="periodo_escultura">Fecha (año de creación):</label>
-            <input type="date" id="periodo_escultura" name="periodo" required>
-        </fieldset>
-
-        <!-- Ubicación en el Museo -->
-        <fieldset>
-            <legend>Ubicación en el Museo</legend>
-            <label for="id_museo_escultura">Museo:</label>
-            <select id="id_museo_escultura" name="id_museo" required>
-                <option value="">Seleccione un museo</option>
-            </select>
-            <label for="id_estructura_fis_escultura">Edificio / Piso:</label>
-            <select id="id_estructura_fis_escultura" name="id_estructura_fis" required disabled>
-                <option value="">Seleccione el museo primero</option>
-            </select>
-            <label for="id_sala_escultura">Sala:</label>
-            <select id="id_sala_escultura" name="id_sala" required disabled>
-                <option value="">Seleccione el edificio/piso primero</option>
-            </select>
-            <!-- Selección de Colección -->
-            <label for="id_coleccion_escultura">Colección:</label>
-            <select id="id_coleccion_escultura" name="id_coleccion" required disabled>
-                <option value="">Seleccione el museo primero</option>
-            </select>
-
-            <!-- Mostrar orden de recorrido de la colección -->
-            <label>Orden de Recorrido:</label>
-            <div id="orden_coleccion_escultura" class="info-panel">
-                Seleccione una colección para ver el orden.
+            
+            <form id="artworkForm">
+                <div class="form-content">
+                    <section class="form-section">
+                        <h3 class="section-title">Información Básica</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="museum" class="required">Museo</label>
+                                <select id="museum" name="museum" required="">
+                                   <!-- Los museos se CARGARAN aquí dinámicamente con la informacion de la base de datos -->
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="artworkName" class="required">Nombre de la Obra</label>
+                                <input type="text" id="artworkName" name="artworkName" required="">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="period">Período</label>
+                                <input type="date" id="period" name="period" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="artworkType" class="required">Tipo de Obra</label>
+                                <select id="artworkType" name="artworkType" required="">
+                                    <option value="">Seleccione un tipo</option>
+                                    <option value="P">Pintura</option>
+                                    <option value="E">Escultura</option>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="form-section" id="dimensionsSection">
+                        <h3 class="section-title">Dimensiones</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group third-width">
+                                <label for="width" class="required">Ancho</label>
+                                <div class="input-group">
+                                    <input type="number" id="width" name="width" step="0.01" min="0" required="">
+                                    <span class="suffix">cm</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group third-width">
+                                <label for="height" class="required">Alto</label>
+                                <div class="input-group">
+                                    <input type="number" id="height" name="height" step="0.01" min="0" required="">
+                                    <span class="suffix">cm</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group third-width" id="depthGroup" style="display: none;">
+                                <label for="depth">Profundidad</label>
+                                <div class="input-group">
+                                    <input type="number" id="depth" name="depth" step="0.01" min="0">
+                                    <span class="suffix">cm</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="form-section">
+                        <h3 class="section-title">Características</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="styles">Estilos</label>
+                                <textarea id="styles" name="styles" maxlength="200"></textarea>
+                                <p class="form-note">Máximo 200 caracteres</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="characteristics">Características, Materiales y Técnicas</label>
+                                <textarea id="characteristics" name="characteristics" maxlength="300"></textarea>
+                                <p class="form-note">Máximo 300 caracteres</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="monetaryValue">Valor Monetario</label>
+                                <div class="input-group">
+                                    <input type="number" id="monetaryValue" name="monetaryValue" step="0.01" min="0">
+                                    <span class="suffix">$</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="form-section">
+                        <h3 class="section-title">Artistas</h3>
+                        
+                        <div class="artists-container">
+                            <div class="artists-header">
+                                <h4 class="artists-title">Artistas asociados a esta obra</h4>
+                            </div>
+                            
+                            <div id="artistsTableContainer">
+                                <table class="artists-table" id="artistsTable" style="display: none;">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Tipo</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="artistsTableBody">
+                                        <!-- Los artistas se añadirán aquí dinámicamente -->
+                                    </tbody>
+                                </table>
+                                
+                                <div id="noArtistsMessage" class="no-artists-message" style="display: block;">
+                                    No hay artistas asociados a esta obra
+                                </div>
+                            </div>
+                            
+                            <div class="artist-controls">
+                                <div class="artist-search">
+                                    <select id="artistSelect">
+                                        <option value="">Seleccione un artista existente</option>
+                                         <!-- Los artistas se CARGARAN aquí dinámicamente con la informacion de la base de datos -->
+                                    </select>
+                                    <button type="button" id="addExistingArtistBtn" class="btn btn-secondary artist-search-btn">Añadir</button>
+                                </div>
+                                
+                                <button type="button" id="newArtistBtn" class="add-new-artist">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                                    </svg>
+                                    Registrar Nuevo Artista
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="form-section">
+                        <h3 class="section-title">Adquisición</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="acquisitionType" class="required">Forma de Llegada</label>
+                                <select id="acquisitionType" name="acquisitionType" required="">
+                                    <option value="">Seleccione una opción</option>
+                                    <option value="compra">Compra</option>
+                                    <option value="donacion">Donación</option>
+                                    <option value="adquisicion">Adquisición</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group" id="donorMuseumGroup" style="display: none;">
+                                <label for="donorMuseum" class="required">Museo Donante</label>
+                                <select id="donorMuseum" name="donorMuseum">
+                                     <!-- Los museos se CARGARAN aquí dinámicamente con la informacion de la base de datos -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="arrivalDate" class="required">Fecha de Llegada</label>
+                                <input type="date" id="arrivalDate" name="arrivalDate" required="">
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="form-section">
+                        <h3 class="section-title">Ubicación y Clasificación</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="collection" class="required">Colección</label>
+                                <select id="collection" name="collection" required="" disabled="">
+                                    <option value="">Seleccione primero un museo</option>
+                                </select>
+                                <div id="collectionLoading" class="loading-state" style="display: none;">Cargando colecciones...</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="responsibleEmployee" class="required">Empleado Responsable</label>
+                                <select id="responsibleEmployee" name="responsibleEmployee" required="">
+                                     <!-- Los empleados se CARGARAN aquí dinámicamente con la informacion de la base de datos -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="room" class="required">Sala</label>
+                                <select id="room" name="room" required="" disabled="">
+                                    <option value="">Seleccione primero una colección</option>
+                                </select>
+                                <div id="roomLoading" class="loading-state" style="display: none;">Cargando salas...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="isFeatured" name="isFeatured">
+                                    <label for="isFeatured">¿Es una obra destacada?</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group" id="featuredOrderGroup" style="display: none;">
+                                <label for="featuredOrder" class="required">Orden de Destacado</label>
+                                <input type="number" id="featuredOrder" name="featuredOrder" min="1">
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                
+                <div class="form-footer">
+                    <div class="form-status"></div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn">Guardar Obra</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para registrar nuevo artista -->
+    <div id="artistModal" class="modal">
+        <div class="modal-content">
+            <button type="button" class="close-modal">×</button>
+            
+            <div class="modal-header">
+                <h3 class="modal-title">Registrar Nuevo Artista</h3>
+                <p class="modal-subtitle">Complete la información del artista para añadirlo a la obra</p>
             </div>
-
-            <!-- Selección de empleado responsable -->
-            <label for="num_expediente_escultura">Empleado Responsable:</label>
-            <select id="num_expediente_escultura" name="num_expediente" required>
-                <option value="">Seleccione un empleado</option>
-            </select>
-
-            <!-- Definir la posición en el recorrido -->
-            <label for="nuevo_orden_escultura">Posición en el recorrido:</label>
-            <input type="number" id="nuevo_orden_escultura" name="nuevo_orden" min="1" required disabled>
-        </fieldset>
-
-        <button type="submit">Registrar Escultura</button>
-        <p id="mensaje-escultura"></p>
-    </form>
-
-    <script>
-        function toggleNuevoArtista(tipo) {
-            const sel = document.getElementById(`id_artista_${tipo}`);
-            const formDiv = document.getElementById(`form-nuevo-artista-${tipo}`);
-            const btn = document.getElementById(`btn-nuevo-artista-${tipo}`);
-            if (sel.value) {
-                // Oculta formulario nuevo artista
-                formDiv.style.display = 'none';
-                // Deshabilita botón
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }
-        }
-        function showNuevoArtista(tipo) {
-            // Limpia selección existente
-            const sel = document.getElementById(`id_artista_${tipo}`);
-            sel.value = '';
-            // Muestra formulario de nuevo artista
-            document.getElementById(`form-nuevo-artista-${tipo}`).style.display = 'block';
-            // Deshabilita selector de artistas
-            sel.disabled = true;
-            // Asegura que el botón quede habilitado (en caso de toggle previo)
-            document.getElementById(`btn-nuevo-artista-${tipo}`).disabled = false;
-        }
+            
+            <form id="artistForm">
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="artistFirstName" class="required">Nombre</label>
+                        <input type="text" id="artistFirstName" name="artistFirstName" required="">
+                    </div>
+                    
+                    <div class="form-group half-width">
+                        <label for="artistLastName" class="required">Apellido</label>
+                        <input type="text" id="artistLastName" name="artistLastName" required="">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="artisticName">Nombre Artístico</label>
+                        <input type="text" id="artisticName" name="artisticName">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="birthDate">Fecha de Nacimiento</label>
+                        <input type="date" id="birthDate" name="birthDate">
+                    </div>
+                    
+                    <div class="form-group half-width">
+                        <label for="deathDate">Fecha de Defunción</label>
+                        <input type="date" id="deathDate" name="deathDate">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="artistCharacteristics">Características del Artista</label>
+                        <textarea id="artistCharacteristics" name="artistCharacteristics"></textarea>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" id="cancelArtistBtn" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn">Añadir Artista</button>
+                </div>
+            </form>
+        </div>
+    </div>
+        <script src="../js/registro_obras.js"></script>
     </script>
-    <script src="../js/registro_obras.js"></script>
-</body>
-</html>
+</body></html>

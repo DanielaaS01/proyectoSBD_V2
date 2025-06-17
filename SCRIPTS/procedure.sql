@@ -1359,24 +1359,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Obtener colecciones por museo
-CREATE OR REPLACE FUNCTION obtener_colecciones_por_museo(
-  p_museo_id INTEGER
-)
-RETURNS TABLE(
-  id_coleccion      INTEGER,
-  nombre            TEXT,
-  orden_recorrido   TEXT
-)
-LANGUAGE sql
-AS $$
-  SELECT
-    c.id_coleccion,
-    c.nombre_coleccion,
-    c.orden_recorrido
-  FROM colecciones c
-  WHERE c.id_museo = p_museo_id
-$$;
+
 
 -- Obtener empleados profesionales
 CREATE OR REPLACE FUNCTION obtener_empleados_profesionales()
@@ -1394,7 +1377,7 @@ $$;
 
 
 --OBTENER MOVILIDAD DE CADA OBRA--
-SELECT * FROM obtener_movilidad_obra(1);
+
 CREATE OR REPLACE FUNCTION obtener_movilidad_obra(p_id_obra INTEGER)
 RETURNS TABLE (
     nombre_museo VARCHAR,
@@ -1529,3 +1512,342 @@ BEGIN
     ORDER BY c.orden_recorrido, cs.orden_recorrido;
 END;
 $$ LANGUAGE plpgsql;
+
+
+-- formulario registrar obras
+--obtener salas por coleccion
+CREATE OR REPLACE FUNCTION obtener_salas_por_coleccion(
+    p_id_museo INTEGER,
+    p_id_coleccion INTEGER
+)
+RETURNS TABLE(id_sala INTEGER, nombre VARCHAR) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT s.id_sala, s.nombre
+    FROM colecciones_salas cs
+    JOIN salas_exp s ON
+        cs.id_museo = s.id_museo
+        AND cs.id_estructura_fis = s.id_estructura_fis
+        AND cs.id_sala = s.id_sala
+    WHERE cs.id_museo = p_id_museo
+      AND cs.id_coleccion = p_id_coleccion;
+END;
+$$ LANGUAGE plpgsql;
+
+
+--empleados profesionales por museo
+CREATE OR REPLACE FUNCTION obtener_empleados_prof_por_museo(p_id_museo INTEGER)
+RETURNS TABLE(num_expediente INTEGER, nombre_completo TEXT) AS $$
+BEGIN
+  RETURN QUERY
+    SELECT emp.num_expediente, emp.primer_nombre || ' ' || emp.primer_apellido AS nombre_completo
+    FROM empleados_profesionales emp
+    JOIN historicos_empleados his ON emp.num_expediente = his.num_expediente
+    WHERE his.id_museo = p_id_museo AND his.fecha_fin IS NULL;
+END;
+$$ LANGUAGE plpgsql;
+--tambien usa funcion de obtener museos.
+
+-- Obtener colecciones por museo
+CREATE OR REPLACE FUNCTION obtener_colecciones_por_museo(p_museo_id INTEGER)
+RETURNS TABLE(
+  id_coleccion      INTEGER,
+  id_estructura_org INTEGER,
+  nombre            TEXT,
+  orden_recorrido   TEXT
+)
+LANGUAGE sql
+AS $$
+  SELECT
+    c.id_coleccion,
+    c.id_estructura_org,
+    c.nombre_coleccion AS nombre,
+    c.orden_recorrido
+  FROM colecciones c
+  WHERE c.id_museo = p_museo_id
+$$;
+
+-- Tambien usa la de obtener artistas pero en general
+
+
+
+-- 1. Validar que la sala pertenezca a la colección
+CREATE OR REPLACE FUNCTION validar_sala_en_coleccion(
+    p_id_museo INTEGER,
+    p_id_coleccion INTEGER,
+    p_id_sala INTEGER
+) RETURNS VOID AS $$
+DECLARE
+    v_existe INTEGER;
+BEGIN
+    SELECT 1 INTO v_existe
+      FROM COLECCIONES_SALAS
+     WHERE id_museo = p_id_museo
+       AND id_coleccion = p_id_coleccion
+       AND id_sala = p_id_sala
+     LIMIT 1;
+    IF v_existe IS NULL THEN
+        RAISE EXCEPTION 'La sala % no pertenece a la colección % en el museo %', p_id_sala, p_id_coleccion, p_id_museo;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 2. Validar orden de recorrido si es destacada
+CREATE OR REPLACE FUNCTION validar_orden_destacado(
+    p_destacada BOOLEAN,
+    p_orden_recomendado INTEGER
+) RETURNS VOID AS $$
+BEGIN
+    IF p_destacada AND (p_orden_recomendado IS NULL OR p_orden_recomendado < 1) THEN
+        RAISE EXCEPTION 'Si la obra es destacada, el orden de recorrido debe ser mayor o igual a 1';
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 3. Obtener id_estructura_fis
+CREATE OR REPLACE FUNCTION obtener_id_estructura_fis(
+    p_id_museo INTEGER,
+    p_id_sala INTEGER
+) RETURNS INTEGER AS $$
+DECLARE
+    v_id_estructura_fis INTEGER;
+BEGIN
+    SELECT id_estructura_fis INTO v_id_estructura_fis
+      FROM SALAS_EXP
+     WHERE id_museo = p_id_museo AND id_sala = p_id_sala
+     LIMIT 1;
+    IF v_id_estructura_fis IS NULL THEN
+        RAISE EXCEPTION 'No se encontró la estructura física para la sala %', p_id_sala;
+    END IF;
+    RETURN v_id_estructura_fis;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 4. Obtener id_estructura_org
+CREATE OR REPLACE FUNCTION obtener_id_estructura_org(
+    p_id_museo INTEGER,
+    p_id_coleccion INTEGER
+) RETURNS INTEGER AS $$
+DECLARE
+    v_id_estructura_org INTEGER;
+BEGIN
+    SELECT id_estructura_org INTO v_id_estructura_org
+      FROM COLECCIONES
+     WHERE id_museo = p_id_museo AND id_coleccion = p_id_coleccion
+     LIMIT 1;
+    IF v_id_estructura_org IS NULL THEN
+        RAISE EXCEPTION 'No se encontró la estructura organizacional para la colección %', p_id_coleccion;
+    END IF;
+    RETURN v_id_estructura_org;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- 5. Ajustar orden de destacados si hay conflicto
+CREATE OR REPLACE PROCEDURE ajustar_orden_destacados(
+    p_id_museo INTEGER,
+    p_orden_recomendado INTEGER
+)
+LANGUAGE plpgsql AS $$
+DECLARE
+    v_cantidad_destacadas INTEGER;
+BEGIN
+    -- Contar cuántas obras destacadas hay actualmente en el museo
+    SELECT COUNT(*) INTO v_cantidad_destacadas
+      FROM HISTORICOS_MOVIMIENTOS
+     WHERE id_museo = p_id_museo
+       AND destacada = TRUE
+       AND fecha_fin IS NULL;
+
+    -- Validar que el orden sea secuencial (entre 1 y cantidad+1)
+    IF p_orden_recomendado < 1 OR p_orden_recomendado > v_cantidad_destacadas + 1 THEN
+        RAISE EXCEPTION 'El orden de recorrido debe estar entre 1 y %', v_cantidad_destacadas + 1;
+    END IF;
+
+    -- Si el orden ya existe, desplazar todos los órdenes mayores o iguales en +1
+    UPDATE HISTORICOS_MOVIMIENTOS
+       SET orden_recomendado = orden_recomendado + 1
+     WHERE id_museo = p_id_museo
+       AND destacada = TRUE
+       AND orden_recomendado >= p_orden_recomendado
+       AND fecha_fin IS NULL;
+END;
+$$;
+
+-- 6. Insertar obra y devolver id
+CREATE OR REPLACE FUNCTION insertar_obra(
+    p_nombre VARCHAR,
+    p_dimension VARCHAR,
+    p_tipo CHAR(1),
+    p_estilos VARCHAR,
+    p_caract_mat_tec VARCHAR,
+    p_id_sala INTEGER,
+    p_id_estructura_fis INTEGER,
+    p_id_museo INTEGER,
+    p_periodo DATE
+) RETURNS INTEGER AS $$
+DECLARE
+    v_id_obra INTEGER;
+BEGIN
+    INSERT INTO OBRAS (
+        nombre, dimension, tipo, estilos, caract_mat_tec,
+        id_sala, id_estructura_fis, id_museo, periodo
+    ) VALUES (
+        UPPER(p_nombre), UPPER(p_dimension), UPPER(p_tipo), UPPER(p_estilos), UPPER(p_caract_mat_tec),
+        p_id_sala, p_id_estructura_fis, p_id_museo, p_periodo
+    )
+    RETURNING id_obra INTO v_id_obra;
+    RETURN v_id_obra;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 7. Insertar artista nuevo y relacionar con obra
+CREATE OR REPLACE PROCEDURE insertar_artista_y_relacionar(
+    p_artista_str VARCHAR,
+    p_id_obra INTEGER
+)
+LANGUAGE plpgsql AS $$
+DECLARE
+    v_caract_est_tec VARCHAR;
+    v_nombre VARCHAR;
+    v_apellido VARCHAR;
+    v_nombre_artistico VARCHAR;
+    v_fecha_nac DATE;
+    v_fecha_def DATE;
+    v_id_artista INTEGER;
+BEGIN
+    v_caract_est_tec   := UPPER(split_part(p_artista_str, '|', 1));
+    v_nombre           := UPPER(split_part(p_artista_str, '|', 2));
+    v_apellido         := UPPER(split_part(p_artista_str, '|', 3));
+    v_nombre_artistico := UPPER(split_part(p_artista_str, '|', 4));
+    v_fecha_nac        := NULLIF(split_part(p_artista_str, '|', 5), '')::DATE;
+    v_fecha_def        := NULLIF(split_part(p_artista_str, '|', 6), '')::DATE;
+
+    INSERT INTO ARTISTAS (
+        caract_est_tec, nombre, apellido, nombre_artistico, fecha_nac, fecha_def
+    ) VALUES (
+        v_caract_est_tec, v_nombre, v_apellido, v_nombre_artistico, v_fecha_nac, v_fecha_def
+    )
+    RETURNING id_artista INTO v_id_artista;
+
+    INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista)
+    VALUES (p_id_obra, v_id_artista);
+END;
+$$;
+
+-- 8. Relacionar artistas existentes con obra
+CREATE OR REPLACE PROCEDURE relacionar_artistas_existentes(
+    p_artistas_existentes INTEGER[],
+    p_id_obra INTEGER
+)
+LANGUAGE plpgsql AS $$
+DECLARE
+    v_id_artista INTEGER;
+BEGIN
+    IF p_artistas_existentes IS NOT NULL THEN
+        FOREACH v_id_artista IN ARRAY p_artistas_existentes
+        LOOP
+            INSERT INTO OBRAS_ARTISTAS (id_obra, id_artista)
+            VALUES (p_id_obra, v_id_artista);
+        END LOOP;
+    END IF;
+END;
+$$;
+
+-- 9. Insertar en historicos_movimientos
+CREATE OR REPLACE PROCEDURE insertar_historico_movimiento(
+    p_id_museo INTEGER,
+    p_id_obra INTEGER,
+    p_fecha_inicio DATE,
+    p_tipo_llegada CHAR(1),
+    p_destacada BOOLEAN,
+    p_orden_recomendado INTEGER,
+    p_valor_monetario NUMERIC,
+    p_id_estructura_fis INTEGER,
+    p_id_sala INTEGER,
+    p_id_estructura_org INTEGER,
+    p_id_coleccion INTEGER,
+    p_num_expediente INTEGER,
+    p_id_museo_origen INTEGER
+)
+LANGUAGE plpgsql AS $$
+BEGIN
+    INSERT INTO HISTORICOS_MOVIMIENTOS (
+        id_museo, id_obra, fecha_inicio, tipo_llegada, destacada,
+        orden_recomendado, valor_monetario, id_estructura_fis, id_sala,
+        id_estructura_org, id_coleccion, num_expediente, id_museo_origen, fecha_fin
+    ) VALUES (
+        p_id_museo, p_id_obra, p_fecha_inicio, UPPER(p_tipo_llegada), p_destacada,
+        p_orden_recomendado, p_valor_monetario, p_id_estructura_fis, p_id_sala,
+        p_id_estructura_org, p_id_coleccion, p_num_expediente, p_id_museo_origen, NULL
+    );
+END;
+$$;
+
+-- PROCEDIMIENTO PRINCIPAL MODULAR
+CREATE OR REPLACE PROCEDURE registrar_obra(
+    p_nombre VARCHAR,
+    p_dimension VARCHAR,
+    p_tipo CHAR(1),
+    p_estilos VARCHAR,
+    p_caract_mat_tec VARCHAR,
+    p_id_sala INTEGER,
+    p_id_museo INTEGER,
+    p_periodo DATE,
+    p_artistas_existentes INTEGER[],
+    p_nuevos_artistas VARCHAR[],
+    p_fecha_inicio DATE,
+    p_tipo_llegada CHAR(1),
+    p_destacada BOOLEAN,
+    p_orden_recomendado INTEGER,
+    p_valor_monetario NUMERIC,
+    p_id_coleccion INTEGER,
+    p_num_expediente INTEGER,
+    p_id_museo_origen INTEGER DEFAULT NULL
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_id_estructura_fis INTEGER;
+    v_id_estructura_org INTEGER;
+    v_id_obra INTEGER;
+    v_artista_str VARCHAR;
+BEGIN
+    -- Validaciones
+    PERFORM validar_sala_en_coleccion(p_id_museo, p_id_coleccion, p_id_sala);
+    PERFORM validar_orden_destacado(p_destacada, p_orden_recomendado);
+
+    -- Obtener claves foráneas
+    v_id_estructura_fis := obtener_id_estructura_fis(p_id_museo, p_id_sala);
+    v_id_estructura_org := obtener_id_estructura_org(p_id_museo, p_id_coleccion);
+
+    -- Insertar obra
+    v_id_obra := insertar_obra(
+        p_nombre, p_dimension, p_tipo, p_estilos, p_caract_mat_tec,
+        p_id_sala, v_id_estructura_fis, p_id_museo, p_periodo
+    );
+
+    -- Insertar artistas nuevos y relacionar
+    IF p_nuevos_artistas IS NOT NULL THEN
+        FOREACH v_artista_str IN ARRAY p_nuevos_artistas
+        LOOP
+            CALL insertar_artista_y_relacionar(v_artista_str, v_id_obra);
+        END LOOP;
+    END IF;
+
+    -- Relacionar artistas existentes
+    CALL relacionar_artistas_existentes(p_artistas_existentes, v_id_obra);
+
+    -- Ajustar orden de destacados si es necesario
+    IF p_destacada THEN
+        CALL ajustar_orden_destacados(p_id_museo, p_orden_recomendado);
+    END IF;
+
+    -- Insertar en historicos_movimientos
+    CALL insertar_historico_movimiento(
+        p_id_museo, v_id_obra, p_fecha_inicio, p_tipo_llegada, p_destacada,
+        p_orden_recomendado, p_valor_monetario, v_id_estructura_fis, p_id_sala,
+        v_id_estructura_org, p_id_coleccion, p_num_expediente, p_id_museo_origen
+    );
+END;
+$$;
