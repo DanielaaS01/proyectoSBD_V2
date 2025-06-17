@@ -348,9 +348,9 @@ RETURNS TRIGGER AS $$
 DECLARE
     fecha_nac DATE;
 BEGIN
-    SELECT fecha_nac INTO fecha_nac
+    SELECT EMPLEADOS_PROFESIONALES.fecha_nac INTO fecha_nac
     FROM EMPLEADOS_PROFESIONALES
-    WHERE num_expediente = NEW.num_expediente;
+    WHERE EMPLEADOS_PROFESIONALES.num_expediente = NEW.num_expediente;
 
     IF fecha_nac IS NOT NULL AND NEW.fecha_inicio < fecha_nac THEN
         RAISE EXCEPTION 'La fecha de inicio del cargo no puede ser anterior a la fecha de nacimiento del empleado.';
