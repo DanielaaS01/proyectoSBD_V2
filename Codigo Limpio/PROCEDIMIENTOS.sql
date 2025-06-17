@@ -554,7 +554,29 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
---pendiente: registrar fin de actividad de mantenimiento
+-- Registrar fin de actividad de mantenimiento
+CREATE OR REPLACE PROCEDURE finalizar_act_mantenimiento(
+    p_id_museo INT,
+    p_id_obra INT,
+    p_id_cat_museo INT,
+    p_id_mant_asig INT,
+    p_num_expediente INT,
+    p_fecha_inicio DATE,
+    p_fecha_fin DATE
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE REGISTROS_ACT_REALIZADAS
+    SET fecha_fin = p_fecha_fin
+    WHERE id_museo = p_id_museo
+      AND id_obra = p_id_obra
+      AND id_cat_museo = p_id_cat_museo
+      AND id_mant_asig = p_id_mant_asig
+      AND num_expediente = p_num_expediente
+      AND fecha_inicio = p_fecha_inicio;
+END;
+$$;
 
 
 
@@ -837,7 +859,6 @@ BEGIN
 END;
 $$;
 
--- pendiente: Consultar estructura organizacional por museo
 
 -----------------------------------------------------------------------
 -- REQUERIMIENTO 2 - CALCULO DE RANKING --
@@ -977,15 +998,173 @@ $$ LANGUAGE plpgsql;
 -- REQUERIMIENTO 3 - ADMINISTRACION DE OBRAS Y COLECCIONES --
 -----------------------------------------------------------------------
 
---pendientes: modificar atributos de colecciones
+--modificar atributos de colecciones
+CREATE OR REPLACE PROCEDURE modificar_coleccion(
+    p_id_museo INTEGER,
+    p_id_estructura_org INTEGER,
+    p_id_coleccion INTEGER,
+    p_nombre_coleccion VARCHAR(400) DEFAULT NULL,
+    p_descripcion_caracteristicas VARCHAR(400) DEFAULT NULL,
+    p_palabra_clave VARCHAR(100) DEFAULT NULL,
+    p_orden_recorrido INTEGER DEFAULT NULL
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE colecciones
+    SET
+        nombre_coleccion = COALESCE(p_nombre_coleccion, nombre_coleccion),
+        descripcion_caracteristicas = COALESCE(p_descripcion_caracteristicas, descripcion_caracteristicas),
+        palabra_clave = COALESCE(p_palabra_clave, palabra_clave),
+        orden_recorrido = COALESCE(p_orden_recorrido, orden_recorrido)
+    WHERE
+        id_museo = p_id_museo
+        AND id_estructura_org = p_id_estructura_org
+        AND id_coleccion = p_id_coleccion;
+END;
+$$;
 
---pendiente: agregar coleccion 
 
---pendiente: asignar salas a colecciones
+--Agregar coleccion 
+CREATE OR REPLACE FUNCTION insertar_coleccion(
+  p_id_museo                    INTEGER,
+  p_id_estructura_org           INTEGER,
+  p_nombre_coleccion            VARCHAR,
+  p_descripcion_caracteristicas VARCHAR,
+  p_palabra_clave               VARCHAR,
+  p_orden_recorrido             INTEGER
+)
+RETURNS TABLE(
+  id_museo                    INTEGER,
+  id_estructura_org           INTEGER,
+  id_coleccion                INTEGER,
+  nombre_coleccion            VARCHAR,
+  descripcion_caracteristicas VARCHAR,
+  palabra_clave               VARCHAR,
+  orden_recorrido             INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  RETURN QUERY
+    INSERT INTO colecciones AS c(
+      id_museo,
+      id_estructura_org,
+      nombre_coleccion,
+      descripcion_caracteristicas,
+      palabra_clave,
+      orden_recorrido
+    ) VALUES (
+      p_id_museo,
+      p_id_estructura_org,
+      p_nombre_coleccion,
+      p_descripcion_caracteristicas,
+      p_palabra_clave,
+      p_orden_recorrido
+    )
+    RETURNING
+      c.id_museo,
+      c.id_estructura_org,
+      c.id_coleccion,
+      c.nombre_coleccion,
+      c.descripcion_caracteristicas,
+      c.palabra_clave,
+      c.orden_recorrido;
+END;
+$$;
 
 
+--Asignar salas a colecciones
+CREATE OR REPLACE PROCEDURE asignar_sala_a_coleccion(
+    p_id_museo INTEGER,
+    p_id_estructura_org INTEGER,
+    p_id_coleccion INTEGER,
+    p_id_estructura_fis INTEGER,
+    p_id_sala INTEGER,
+    p_orden_recorrido INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_cantidad_salas INTEGER;
+BEGIN
+    -- Validar existencia de la colección
+    IF NOT EXISTS (
+        SELECT 1 FROM colecciones
+        WHERE id_museo = p_id_museo
+          AND id_estructura_org = p_id_estructura_org
+          AND id_coleccion = p_id_coleccion
+    ) THEN
+        RAISE EXCEPTION 'La colección no existe.';
+    END IF;
 
---Buscar obras por criterios (artista, colección, periodo, sala)
+    -- Validar existencia de la sala
+    IF NOT EXISTS (
+        SELECT 1 FROM salas_exp
+        WHERE id_museo = p_id_museo
+          AND id_estructura_fis = p_id_estructura_fis
+          AND id_sala = p_id_sala
+    ) THEN
+        RAISE EXCEPTION 'La sala no existe.';
+    END IF;
+
+    -- Contar cuántas salas tiene la colección actualmente
+    SELECT COUNT(*) INTO v_cantidad_salas
+    FROM colecciones_salas
+    WHERE id_museo = p_id_museo
+      AND id_estructura_org = p_id_estructura_org
+      AND id_coleccion = p_id_coleccion;
+
+    -- Validar el orden de recorrido
+    IF p_orden_recorrido < 1 OR p_orden_recorrido > v_cantidad_salas + 1 THEN
+        RAISE EXCEPTION 'El orden de recorrido debe estar entre 1 y %', v_cantidad_salas + 1;
+    END IF;
+
+    -- Si el orden ya existe, desplazar los órdenes mayores o iguales en +1
+    UPDATE colecciones_salas
+    SET orden_recorrido = orden_recorrido + 1
+    WHERE id_museo = p_id_museo
+      AND id_estructura_org = p_id_estructura_org
+      AND id_coleccion = p_id_coleccion
+      AND orden_recorrido >= p_orden_recorrido;
+
+    -- Insertar la sala en la colección
+    INSERT INTO colecciones_salas (
+        id_museo, id_estructura_org, id_coleccion,
+        id_estructura_fis, id_sala, orden_recorrido
+    ) VALUES (
+        p_id_museo, p_id_estructura_org, p_id_coleccion,
+        p_id_estructura_fis, p_id_sala, p_orden_recorrido
+    );
+END;
+$$;
+
+
+-- obtener orden de recorrido de salas de una colección
+CREATE OR REPLACE FUNCTION obtener_orden_de_salas_por_coleccion(
+    p_id_museo INTEGER,
+    p_id_coleccion INTEGER
+)
+RETURNS TABLE(id_sala INTEGER, nombre VARCHAR, orden_recorrido INTEGER) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        cs.id_sala, 
+        s.nombre, 
+        cs.orden_recorrido
+    FROM colecciones_salas cs
+    JOIN salas_exp s ON
+        cs.id_museo = s.id_museo
+        AND cs.id_estructura_fis = s.id_estructura_fis
+        AND cs.id_sala = s.id_sala
+    WHERE cs.id_museo = p_id_museo
+      AND cs.id_coleccion = p_id_coleccion
+    ORDER BY cs.orden_recorrido ASC;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Buscar obras por criterios (artista, colección, periodo, sala)
 CREATE OR REPLACE FUNCTION buscar_obras(
     p_nombre_artista TEXT DEFAULT NULL,
     p_id_coleccion   INT  DEFAULT NULL,
