@@ -947,7 +947,7 @@ VALUES (2, 2, 2, '2021-05-20', NULL, 'R');
 
 -- Empleado 3 (Sofia Rossi Bianchi) para Museo 3 (La Galleria Nazionale) - Curadora
 INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo)
-VALUES (3, 3, 3, '2022-03-01', NULL, 'C');
+VALUES (3, 3, 3, '2022-03-01', '2023-08-12', 'C');
 
 -- Empleado 4 (Marco Conti Ferrari) para Museo 4 (Pinacoteca di Brera) - Curador
 INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo)
@@ -959,7 +959,7 @@ VALUES (5, 5, 5, '2023-02-01', NULL, 'C');
 
 -- Empleado 6 (Pieter Bakker Visser) para Museo 6 (Kunstmuseum Den Haag) - Curador
 INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo)
-VALUES (6, 6, 6, '2023-06-01', NULL, 'C');
+VALUES (6, 6, 6, '2023-06-01', '2024-12-31', 'C');
 
 -- Empleado 7 (Beatriz Silva Costa) para Museo 7 (MNAA) - Curador
 INSERT INTO HISTORICOS_EMPLEADOS (id_museo, id_estructura_org, num_expediente, fecha_inicio, fecha_fin, cargo)
