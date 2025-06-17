@@ -891,7 +891,8 @@ $$ LANGUAGE plpgsql;
 
 
 -------RESUMEN HISTORICO DEL MUSEO
---insertar resumen hsitorico
+--insertar resumen historico
+
 CREATE OR REPLACE PROCEDURE registrar_resumen_historico_museo(
   p_id_museo INTEGER,
   p_anio INTEGER,
@@ -1176,7 +1177,6 @@ CREATE OR REPLACE PROCEDURE registrar_evento(
     p_fecha_fin DATE,
     p_precio_persona NUMERIC(5,2),
     p_institucion_educativa VARCHAR,
-    p_cantidad_persona INTEGER,
     p_id_estructura_fis INTEGER,
     p_id_sala INTEGER
 )
@@ -1208,55 +1208,40 @@ BEGIN
     -- Insertar el evento
     INSERT INTO eventos(
         id_museo, titulo, fecha_inicio, fecha_fin, precio_persona,
-        institucion_educativa, cantidad_persona, id_estructura_fis, id_sala
+        institucion_educativa, id_estructura_fis, id_sala
     ) VALUES (
         p_id_museo, p_titulo, p_fecha_inicio, p_fecha_fin, p_precio_persona,
-        p_institucion_educativa, p_cantidad_persona, p_id_estructura_fis, p_id_sala
+        p_institucion_educativa, NULL,p_id_estructura_fis, p_id_sala
     );
 END;
 $$;
 
----CERRAR UN EVENTO
--- Esta función cierra un evento abierto en el museo especificado.
-CREATE OR REPLACE PROCEDURE cerrar_evento(
-    p_id_museo INTEGER,
+
+
+CREATE OR REPLACE PROCEDURE actualizar_cantidad_personas_evento(
     p_id_evento INTEGER,
-    p_fecha_fin DATE
+    p_nueva_cantidad INTEGER
 )
 LANGUAGE plpgsql
 AS $$
-DECLARE
-    v_fecha_inicio DATE;
 BEGIN
-    -- Obtener la fecha de inicio del evento abierto
-    SELECT fecha_inicio INTO v_fecha_inicio
-    FROM eventos
-    WHERE id_museo = p_id_museo
-      AND id_evento = p_id_evento
-      AND fecha_fin IS NULL;
-
-    IF NOT FOUND THEN
-        RAISE NOTICE 'No se encontró un evento abierto con esos datos.';
-        RETURN;
+    -- Validar que el evento exista
+    IF NOT EXISTS (SELECT 1 FROM eventos WHERE id_evento = p_id_evento) THEN
+        RAISE EXCEPTION 'El evento especificado no existe.';
     END IF;
 
-    -- Validar que la fecha de cierre sea posterior o igual a la de inicio
-    IF p_fecha_fin < v_fecha_inicio THEN
-        RAISE EXCEPTION 'La fecha de fin no puede ser menor que la fecha de inicio del evento.';
+    -- Validar que la cantidad sea no negativa
+    IF p_nueva_cantidad < 0 THEN
+        RAISE EXCEPTION 'La cantidad de personas no puede ser negativa.';
     END IF;
 
-    -- Actualizar el evento
+    -- Actualizar la cantidad de personas
     UPDATE eventos
-    SET fecha_fin = p_fecha_fin
-    WHERE id_museo = p_id_museo
-      AND id_evento = p_id_evento
-      AND fecha_fin IS NULL;
-
-    RAISE NOTICE 'Evento cerrado correctamente.';
+    SET cantidad_personas = p_nueva_cantidad
+    WHERE id_evento = p_id_evento;
 END;
 $$;
-
-
+-- ...existing code...
 
 -- Generar múltiples entradas para un museo y tipo
 CREATE OR REPLACE PROCEDURE generar_entradas(
@@ -1322,20 +1307,30 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
 ---CONSULTA PARA OBTENER LOS INGRESOS DE TODOS LOS MUSEOS A LA VEZ
-/*
-  SELECT 
-      m.nombre AS museo,
-      COALESCE(SUM(e.monto), 0) AS total_ingresos
-  FROM 
-      museos m
-  LEFT JOIN 
-      entradas e ON m.id_museo = e.id_museo
-  GROUP BY 
-      m.nombre
-  ORDER BY 
-      total_ingresos DESC;
-*/
+
+CREATE OR REPLACE FUNCTION ingresos_museos()
+RETURNS TABLE (
+    museo VARCHAR,
+    total_ingresos NUMERIC
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        m.nombre AS museo,
+        COALESCE(SUM(e.monto), 0) AS total_ingresos
+    FROM 
+        museos m
+    LEFT JOIN 
+        entradas e ON m.id_museo = e.id_museo
+    GROUP BY 
+        m.nombre
+    ORDER BY 
+        total_ingresos DESC;
+END;
+$$ LANGUAGE plpgsql;
+
 
 
 CREATE OR REPLACE FUNCTION ranking_museos()
