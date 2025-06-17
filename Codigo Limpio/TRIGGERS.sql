@@ -108,3 +108,26 @@ CREATE TRIGGER trg_validar_tipo_ticket
 BEFORE INSERT OR UPDATE ON ENTRADAS
 FOR EACH ROW
 EXECUTE FUNCTION validar_tipo_ticket_valido();
+
+-- Triger para validar que no puedas crear un nuevo tipo ticket sin haber cerrado el otro 
+CREATE OR REPLACE FUNCTION validar_tipo_ticket_unico()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.fecha_fin IS NULL THEN
+        IF EXISTS (
+            SELECT 1 FROM tipos_tickets
+            WHERE id_museo = NEW.id_museo
+              AND tipo = NEW.tipo
+              AND fecha_fin IS NULL
+        ) THEN
+            RAISE EXCEPTION 'Ya existe un tipo ticket vigente (sin fecha fin) para ese museo y tipo.';
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_validar_tipo_ticket_unico
+BEFORE INSERT ON tipos_tickets
+FOR EACH ROW
+EXECUTE FUNCTION validar_tipo_ticket_unico();

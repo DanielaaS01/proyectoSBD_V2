@@ -1271,7 +1271,37 @@ END;
 $$;
 
 
--- pendiente: historico de precio de entradas (tipo ticket)
+-- Agregar un nuevo tipo de ticket
+CREATE OR REPLACE FUNCTION agregar_tipo_ticket(
+    p_id_museo INTEGER,
+    p_fecha_inicio DATE,
+    p_fecha_fin DATE DEFAULT NULL,
+    p_precio NUMERIC(8,2),
+    p_tipo CHAR
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO tipos_tickets(id_museo, fecha_inicio, fecha_fin, precio, tipo)
+    VALUES (p_id_museo, p_fecha_inicio, p_fecha_fin, p_precio, UPPER(p_tipo));
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Actualizar el precio de un tipo de ticket
+CREATE OR REPLACE FUNCTION actualizar_fecha_fin_tipo_ticket(
+    p_id_museo INTEGER,
+    p_tipo CHAR,
+    p_nueva_fecha_fin DATE
+)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE tipos_tickets
+    SET fecha_fin = p_nueva_fecha_fin
+    WHERE id_museo = p_id_museo
+      AND tipo = UPPER(p_tipo)
+      AND fecha_fin IS NULL;
+END;
+$$ LANGUAGE plpgsql;
 
 
 -----------------------------------------------------------------------
