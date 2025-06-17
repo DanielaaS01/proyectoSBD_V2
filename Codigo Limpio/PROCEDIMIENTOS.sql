@@ -832,3 +832,189 @@ BEGIN
     ORDER BY score DESC, nombre;
 END;
 $$ LANGUAGE plpgsql;
+
+-----------------------------------------------------------------------
+-- REQUERIMIENTO 3 - ADMINISTRACION DE OBRAS Y COLECCIONES --
+-----------------------------------------------------------------------
+
+--Buscar obras por criterios (artista, colección, periodo, sala)
+CREATE OR REPLACE FUNCTION buscar_obras(
+    p_nombre_artista TEXT DEFAULT NULL,
+    p_id_coleccion   INT  DEFAULT NULL,
+    p_periodo        DATE DEFAULT NULL,
+    p_id_sala        INT  DEFAULT NULL
+)
+RETURNS TABLE (
+    id_obra       INT,
+    nombre_obra   TEXT,
+    nombre_artista TEXT,
+    tipo          CHAR(1),
+    periodo       DATE,
+    id_sala       INT
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+    o.id_obra,
+    o.nombre::TEXT,
+    CONCAT(a.nombre, ' ', a.apellido)::TEXT,
+    o.tipo,
+    o.periodo,
+    o.id_sala
+  FROM OBRAS o
+  JOIN OBRAS_ARTISTAS oa ON o.id_obra = oa.id_obra
+  JOIN ARTISTAS a        ON a.id_artista = oa.id_artista
+  WHERE
+    (p_nombre_artista IS NULL
+     OR (
+         a.nombre                 ILIKE '%' || p_nombre_artista || '%' 
+      OR a.apellido               ILIKE '%' || p_nombre_artista || '%'
+      OR a.nombre_artistico       ILIKE '%' || p_nombre_artista || '%'
+      OR (a.nombre || ' ' || a.apellido) ILIKE '%' || p_nombre_artista || '%'
+     )
+    )
+    AND (p_id_coleccion IS NULL OR EXISTS (
+          SELECT 1 
+            FROM HISTORICOS_MOVIMIENTOS h 
+           WHERE h.id_obra      = o.id_obra 
+             AND h.id_coleccion = p_id_coleccion
+        ))
+    AND (p_periodo IS NULL OR o.periodo = p_periodo)
+    AND (p_id_sala  IS NULL OR o.id_sala = p_id_sala);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+--Generar itinerario recomendado de visita
+CREATE OR REPLACE FUNCTION obtener_itinerario_visita(
+    p_id_museo INT
+)
+RETURNS TABLE (
+    nombre_coleccion TEXT,
+    nombre_sala TEXT,
+    orden INT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.nombre_coleccion::TEXT,
+        s.nombre::TEXT,
+        cs.orden_recorrido
+    FROM COLECCIONES c
+    JOIN COLECCIONES_SALAS cs ON 
+        c.id_museo = cs.id_museo AND 
+        c.id_estructura_org = cs.id_estructura_org AND 
+        c.id_coleccion = cs.id_coleccion
+    JOIN SALAS_EXP s ON 
+        s.id_museo = cs.id_museo AND 
+        s.id_estructura_fis = cs.id_estructura_fis AND 
+        s.id_sala = cs.id_sala
+    WHERE c.id_museo = p_id_museo
+    ORDER BY cs.orden_recorrido;
+END;
+$$ LANGUAGE plpgsql;
+
+
+--Registrar movimiento de una obra (Compra, donación, adquisicion)
+CREATE OR REPLACE FUNCTION registrar_movimiento_obra(
+    p_id_museo INT,
+    p_id_obra INT,
+    p_tipo_llegada CHAR,
+    p_destacada BOOLEAN,
+    p_orden_recomendado INT,
+    p_valor NUMERIC,
+    p_id_estructura_fis INT,
+    p_id_sala INT,
+    p_id_estructura_org INT,
+    p_id_coleccion INT,
+    p_num_expediente INT,
+    p_id_museo_origen INT DEFAULT NULL,
+    p_fecha_inicio DATE DEFAULT CURRENT_DATE
+) RETURNS VOID AS $$
+BEGIN
+    INSERT INTO HISTORICOS_MOVIMIENTOS (
+        id_museo, id_obra, fecha_inicio, tipo_llegada, destacada,
+        orden_recomendado, valor_monetario, id_estructura_fis, id_sala,
+        id_estructura_org, id_coleccion, num_expediente, id_museo_origen
+    )
+    VALUES (
+        p_id_museo, p_id_obra, p_fecha_inicio, p_tipo_llegada, p_destacada,
+        p_orden_recomendado, p_valor, p_id_estructura_fis, p_id_sala,
+        p_id_estructura_org, p_id_coleccion, p_num_expediente, p_id_museo_origen
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+
+--Asignar un mantenimiento a una obra
+CREATE OR REPLACE FUNCTION asignar_mantenimiento_obra(
+    p_id_museo INT,
+    p_id_obra INT,
+    p_id_cat_museo INT,
+    p_actividad VARCHAR,
+    p_frecuencia CHAR,
+    p_tipo_responsable CHAR
+) RETURNS VOID AS $$
+BEGIN
+    INSERT INTO MANTENIMIENTOS_ASIGNADOS (
+        id_museo, id_obra, id_cat_museo, actividad,
+        frecuencia, tipo_responsable
+    )
+    VALUES (
+        p_id_museo, p_id_obra, p_id_cat_museo, p_actividad,
+        p_frecuencia, p_tipo_responsable
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+
+--Registrar actividad de mantenimiento realizada
+CREATE OR REPLACE FUNCTION registrar_mantenimiento_realizado(
+    p_id_museo INT,
+    p_id_obra INT,
+    p_id_cat_museo INT,
+    p_id_mant_asig INT,
+    p_num_expediente INT,
+    p_fecha_inicio DATE,
+    p_fecha_fin DATE,
+    p_observaciones VARCHAR
+) RETURNS VOID AS $$
+BEGIN
+    INSERT INTO REGISTROS_ACT_REALIZADAS (
+        id_museo, id_obra, id_cat_museo, id_mant_asig,
+        num_expediente, fecha_inicio, fecha_fin, observaciones
+    )
+    VALUES (
+        p_id_museo, p_id_obra, p_id_cat_museo, p_id_mant_asig,
+        p_num_expediente, p_fecha_inicio, p_fecha_fin, p_observaciones
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+--Consultar obras no disponibles actualmente (por mantenimiento o restauración)
+CREATE OR REPLACE FUNCTION consultar_obras_no_disponibles(
+    p_fecha DATE DEFAULT CURRENT_DATE
+)
+RETURNS TABLE (
+    id_obra INT,
+    nombre_obra VARCHAR,
+    motivo TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT o.id_obra, o.nombre, 'En mantenimiento/restauración' AS motivo
+    FROM OBRAS o
+    JOIN HISTORICOS_MOVIMIENTOS h ON o.id_obra = h.id_obra
+    JOIN REGISTROS_ACT_REALIZADAS r ON 
+        h.id_museo = r.id_museo AND 
+        h.id_obra = r.id_obra AND 
+        h.id_cat_museo = r.id_cat_museo
+    WHERE 
+        r.fecha_fin IS NULL OR p_fecha BETWEEN r.fecha_inicio AND r.fecha_fin;
+END;
+$$ LANGUAGE plpgsql;
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
