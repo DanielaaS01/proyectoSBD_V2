@@ -1278,11 +1278,49 @@ $$;
 -- REQUERIMIENTO 4 - ADMINISTRACION DE INGRESOS --
 -----------------------------------------------------------------------
 
--- sam esta modificando esto
+CREATE OR REPLACE FUNCTION calcular_ingresos_museo_anio(
+    p_id_museo INTEGER,
+    p_anio INTEGER
+)
+RETURNS NUMERIC(12,2) AS $$
+DECLARE
+    v_total_entradas NUMERIC(12,2);
+    v_total_eventos NUMERIC(12,2);
+BEGIN
+    -- Suma de ingresos por entradas en el año
+    SELECT SUM(monto) INTO v_total_entradas
+    FROM entradas
+    WHERE id_museo = p_id_museo
+      AND EXTRACT(YEAR FROM fecha_hora_emision) = p_anio;
+
+    -- Suma de ingresos por eventos en el año
+    SELECT SUM(precio_persona * cantidad_persona) INTO v_total_eventos
+    FROM eventos
+    WHERE id_museo = p_id_museo
+      AND EXTRACT(YEAR FROM fecha_inicio) = p_anio
+      AND cantidad_persona IS NOT NULL;
+
+    RETURN COALESCE(v_total_entradas, 0) + COALESCE(v_total_eventos, 0);
+END;
+$$ LANGUAGE plpgsql;
 
 
-
-
+CREATE OR REPLACE FUNCTION ingresos_museos_anio(p_anio INTEGER)
+RETURNS TABLE (
+    museo VARCHAR,
+    total_ingresos NUMERIC
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        m.nombre AS museo,
+        calcular_ingresos_museo_anio(m.id_museo, p_anio) AS total_ingresos
+    FROM 
+        museos m
+    ORDER BY 
+        total_ingresos DESC;
+END;
+$$ LANGUAGE plpgsql;
 
 
 -------------------------------------------------------------------------------------------------------------------
