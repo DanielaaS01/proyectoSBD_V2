@@ -159,14 +159,66 @@ INSERT INTO HORARIOS(id_museo, dia, hora_inicio, hora_fin) VALUES
 (8,7,'10:00','18:00');
 
 
-
-
                                                         --4--                                
------------------------------------------------------| ENTRADAS |------------------------------------------------------------- 
+---------------------------------------------------| TIPOS_TICKETS |------------------------------------------------------------------------
 
+
+INSERT INTO TIPOS_TICKETS (id_museo, fecha_inicio, fecha_fin, precio, tipo) VALUES
+(1, '2024-01-10', NULL, 18, 'G'),
+(2, '2024-02-15', NULL, 14, 'G'),
+(2, '2024-03-20', NULL, 10, 'R'),
+(3, '2024-04-05', NULL, 15, 'G'),
+(3, '2024-05-12', NULL, 2, 'R'),
+(4, '2024-06-18', NULL, 15, 'G'),
+(4, '2024-07-22', NULL, 10, 'R'),
+(5, '2024-08-30', NULL, 25, 'G'),
+(5, '2024-09-14', NULL, 12.5, 'R'),
+(6, '2024-10-03', NULL, 20, 'G'),
+(6, '2024-11-20', NULL, 9, 'R'),
+(7, '2024-12-01', NULL, 6, 'G'),
+(7, '2024-12-15', NULL, 3, 'R'),
+(8, '2024-07-10', NULL, 10, 'G'),
+(8, '2024-08-25', NULL, 5, 'R');
 
 
                                                         --5--                                
+-----------------------------------------------------| ENTRADAS |------------------------------------------------------------- 
+
+INSERT INTO ENTRADAS(id_museo, fecha_hora_emision, monto, tipo) VALUES
+-- Museo 1: lunes (1), 10:30
+(1, '2025-01-13 10:30:00', 18, 'G'),
+
+-- Museo 2: miércoles (3), 15:00
+(2, '2025-02-19 15:00:00', 14, 'G'),
+(2, '2025-03-05 11:00:00', 10, 'R'),
+
+-- Museo 3: viernes (5), 18:00
+(3, '2025-04-11 18:00:00', 15, 'G'),
+(3, '2025-05-02 10:00:00', 2, 'R'),
+
+-- Museo 4: sábado (6), 09:00
+(4, '2025-01-25 09:00:00', 15, 'G'),
+(4, '2025-02-15 17:00:00', 10, 'R'),
+
+-- Museo 5: martes (2), 16:30
+(5, '2025-03-18 16:30:00', 25, 'G'),
+(5, '2025-04-08 11:00:00', 12.5, 'R'),
+
+-- Museo 6: jueves (4), 11:00
+(6, '2025-05-15 11:00:00', 20, 'G'),
+(6, '2025-02-13 16:00:00', 9, 'R'),
+
+-- Museo 7: domingo (7), 12:00
+(7, '2025-03-30 12:00:00', 6, 'G'),
+(7, '2025-05-04 17:30:00', 3, 'R'),
+
+-- Museo 8: viernes (5), 15:00
+(8, '2025-01-31 15:00:00', 10, 'G'),
+(8, '2025-04-18 11:30:00', 5, 'R');
+
+
+
+                                                        --6--                                
 -----------------------------------------------| ESTRUCTURAS_FISICAS |--------------------------------------------------------
 -- MUSEO 1: Reina Sofía
 INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, descripcion, direccion) VALUES 
@@ -293,7 +345,7 @@ INSERT INTO ESTRUCTURAS_FISICAS (id_museo, nombre, tipo, id_museo_padre, id_padr
 
 
 
-                                                        --6--                                
+                                                        --7--                                
 ----------------------------------------------------| SALAS_EXP |-------------------------------------------------------------
 INSERT INTO SALAS_EXP (id_museo, id_estructura_fis, nombre) VALUES
 -- Museo 1: Reina Sofía
@@ -346,14 +398,22 @@ INSERT INTO SALAS_EXP (id_museo, id_estructura_fis, nombre) VALUES
 
 
 
-
-                                                        --7--                                
+                                                        --8--                                
 ------------------------------------------------| HISTORICOS_CIERRES |-------------------------------------------------------------
 
+INSERT INTO HISTORICOS_CIERRES (id_museo, id_estructura_fis, id_sala, fecha_inicio, fecha_fin) VALUES
+(1, 37, 1, '2024-02-01', '2024-02-10'),   -- Reina Sofía, SALA 206
+(1, 38, 4, '2024-03-15', '2024-03-20'),   -- Reina Sofía, SALA 401
+(2, 39, 8, '2024-04-05', '2024-04-12'),   -- Thyssen, SALA 29
+(2, 10, 6, '2024-05-01', '2024-05-03'),   -- Thyssen, SALA 12
+(3, 40, 14, '2024-06-10', '2024-06-18'),  -- Galleria Nazionale, SALA 8
+(4, 41, 20, '2024-07-22', '2024-07-25'),  -- Pinacoteca di Brera, SALA 37
+(6, 26, 23, '2024-08-10', '2024-08-15'),  -- Kunstmuseum, SALA ARTE SIMBÓLICO
+(7, 32, 26, '2024-09-05', '2024-09-10'),  -- MNAA, SALA 1
+(8, 36, 30, '2024-10-01', '2024-10-07');  -- Soares dos Reis, SALA 3
 
 
-
-                                                        --8--                                
+                                                        --9--                                
 ------------------------------------------------| EMPLEADOS_MANT_VIG |-------------------------------------------------------------
 -- Empleado 1 (España - Vigilante)
 INSERT INTO EMPLEADOS_MANT_VIG (nombre, apellido, doc_identidad, tipo)
@@ -394,26 +454,70 @@ VALUES ('Laura', 'Blanco', 'ESP111222', 'V');
 
 
 
-                                                        --9--                                
+                                                        --10--                                
 ------------------------------------------| MESES_ASIGNACIONES_EMPLEADOS |-----------------------------------------------------------
 
-
-
-
-                                                        --10--                                
------------------------------------------------------| EVENTOS |----------------------------------------------------------------------
-
-
+INSERT INTO MESES_ASIGNACIONES_EMPLEADOS (id_museo, id_estructura_fis, id_mant_vig, id_mes_anio, turno) VALUES
+(1, 37, 1, '2024-01-01', 'M'), -- Javier Ruiz, Reina Sofía, Piso 1, Mañana
+(1, 38, 2, '2024-01-01', 'V'), -- Carmen Díaz, Reina Sofía, Edificio Nouvel, Vespertino
+(2, 10, 3, '2024-02-01', 'N'), -- Giulia Ricci, Thyssen, Palacio Villahermosa, Noche
+(2, 39, 4, '2024-02-01', 'M'), -- Luca Moretti, Thyssen, Ampliación Carmen Thyssen, Mañana
+(3, 14, 5, '2024-03-01', 'V'), -- Sanne Mulder, Galleria Nazionale, Planta Baja, Vespertino
+(4, 16, 6, '2024-03-01', 'N'), -- Dirk De Vries, Pinacoteca di Brera, Palazzo Brera, Noche
+(6, 26, 7, '2024-04-01', 'M'), -- Ana Santos, Kunstmuseum, Kunstmuseum Den Haag, Mañana
+(7, 32, 8, '2024-04-01', 'V'), -- Diogo Gomes, MNAA, Palácio de Alvor-Pombal, Vespertino
+(8, 36, 9, '2024-05-01', 'N'); -- Laura Blanco, Soares dos Reis, Palácio dos Carrancas, Noche
 
 
                                                         --11--                                
------------------------------------------------| RESUMENES_HISTORICOS |---------------------------------------------------------------------- 
+-----------------------------------------------------| EVENTOS |----------------------------------------------------------------------
 
 
+INSERT INTO EVENTOS (id_museo, titulo, fecha_inicio, fecha_fin, precio_persona, institucion_educativa, cantidad_persona, id_estructura_fis, id_sala)
+VALUES
+-- 1. Reina Sofía: Taller de arte contemporáneo
+(1, 'TALLER DE ARTE CONTEMPORÁNEO', '2025-03-10', '2025-03-12', 15, 'IES JUAN DE MAIRENA', 30, 37, 1),
+
+-- 2. Reina Sofía: Conferencia sobre Picasso
+(1, 'CONFERENCIA PICASSO Y EL SIGLO XX', '2025-04-05', '2025-04-05', 10, NULL, 80, 38, 4),
+
+-- 3. Thyssen: Visita guiada para universitarios
+(2, 'VISITA GUIADA UNIVERSITARIA', '2025-02-20', '2025-02-20', 5, 'UNIVERSIDAD AUTÓNOMA DE MADRID', 40, 10, 6),
+
+-- 4. Thyssen: Concierto de música clásica
+(2, 'CONCIERTO DE MÚSICA CLÁSICA', '2025-05-15', '2025-05-15', 20, NULL, 120, 39, 8),
+
+-- 5. Galleria Nazionale: Seminario de historia del arte
+(3, 'SEMINARIO HISTORIA DEL ARTE ITALIANO', '2025-06-01', '2025-06-03', 12, 'UNIVERSITÀ DI ROMA', 25, 14, 12),
+
+-- 6. Pinacoteca di Brera: Taller infantil de pintura
+(4, 'TALLER INFANTIL DE PINTURA', '2025-07-10', '2025-07-11', 8, 'SCUOLA PRIMARIA MILANO', 20, 16, 17),
+
+-- 7. Kunstmuseum: Exposición temporal de fotografía
+(6, 'EXPOSICIÓN TEMPORAL DE FOTOGRAFÍA', '2025-08-05', '2025-08-30', 18, NULL, 200, 43, 25),
+
+-- 8. MNAA: Jornada de puertas abiertas
+(7, 'JORNADA DE PUERTAS ABIERTAS', '2025-09-21', '2025-09-21', 0, NULL, 300, 32, 26),
+
+-- 9. Soares dos Reis: Conferencia sobre escultura portuguesa
+(8, 'CONFERENCIA ESCULTURA PORTUGUESA', '2025-10-15', '2025-10-15', 7, 'UNIVERSIDADE DO PORTO', 50, 44, 34);
 
 
                                                         --12--                                
----------------------------------------------------| TIPOS_TICKETS |------------------------------------------------------------------------
+-----------------------------------------------| RESUMENES_HISTORICOS |---------------------------------------------------------------------- 
+
+
+INSERT INTO RESUMENES_HISTORICOS (id_museo, anio, hechos) VALUES
+(1, 1992, 'FUNDACIÓN DEL MUSEO NACIONAL CENTRO DE ARTE REINA SOFÍA.'),
+(1, 2005, 'AMPLIACIÓN DEL MUSEO NACIONAL CENTRO DE ARTE REINA SOFÍA CON LA INAUGURACIÓN DEL EDIFICIO NOUVEL.'),
+(2, 1992, 'FUNDACIÓN DEL MUSEO NACIONAL THYSSEN-BORNEMISZA.'),
+(3, 1885, 'FUNDACIÓN DE LA GALLERIA NAZIONALE.'),
+(4, 1809, 'FUNDACIÓN DE LA PINACOTECA DI BRERA.'),
+(5, 1885, 'FUNDACIÓN DEL RIJKSMUSEUM.'),
+(6, 1866, 'FUNDACIÓN DEL KUNSTMUSEUM DEN HAAG.'),
+(7, 1884, 'FUNDACIÓN DEL MUSEU NACIONAL DE ARTE ANTIGA.'),
+(8, 1833, 'FUNDACIÓN DEL MUSEU NACIONAL SOARES DOS REIS.');
+
 
 
 
@@ -1094,13 +1198,79 @@ INSERT INTO HISTORICOS_MOVIMIENTOS (id_museo, id_obra, fecha_inicio, tipo_llegad
                                                         --25--                                
 ---------------------------------------------| MANTENIMIENTOS_ASIGNADOS |------------------------------------------------------------------------------
 
+-- GUERNICA
+INSERT INTO MANTENIMIENTOS_ASIGNADOS (id_museo, id_obra, id_cat_museo, actividad, frecuencia, tipo_responsable)
+VALUES (1, 1, 1, 'Limpieza superficial anual', 'A', 'C');
 
+-- LA MUJER EN AZUL
+INSERT INTO MANTENIMIENTOS_ASIGNADOS (id_museo, id_obra, id_cat_museo, actividad, frecuencia, tipo_responsable)
+VALUES (1, 2, 2, 'Revisión de craqueladuras en la pintura', 'M', 'R');
 
+-- EL ROSTRO DEL GRAN MASTURBADOR
+INSERT INTO MANTENIMIENTOS_ASIGNADOS (id_museo, id_obra, id_cat_museo, actividad, frecuencia, tipo_responsable)
+VALUES (1, 3, 3, 'Control de aparición de hongos en el lienzo', 'S', 'O');
 
+-- CABEZA DE MUJER LLORANDO
+INSERT INTO MANTENIMIENTOS_ASIGNADOS (id_museo, id_obra, id_cat_museo, actividad, frecuencia, tipo_responsable)
+VALUES (1, 4, 4, 'Limpieza de marco', 'M', 'C');
+
+-- RETRATO DE RAMÓN GÓMEZ DE LA SERNA
+INSERT INTO MANTENIMIENTOS_ASIGNADOS (id_museo, id_obra, id_cat_museo, actividad, frecuencia, tipo_responsable)
+VALUES (1, 5, 5, 'Pulido y revisión de pátina en bronce', 'D', 'O');
+
+-- TORSO DE MUJER
+INSERT INTO MANTENIMIENTOS_ASIGNADOS (id_museo, id_obra, id_cat_museo, actividad, frecuencia, tipo_responsable)
+VALUES (1, 6, 6, 'Inspección de corrosión en hierro forjado', 'S', 'R');
+
+-- SANTA CATALINA DE ALEJANDRÍA
+INSERT INTO MANTENIMIENTOS_ASIGNADOS (id_museo, id_obra, id_cat_museo, actividad, frecuencia, tipo_responsable)
+VALUES (2, 7, 7, 'Revisión de barniz protector', 'A', 'C');
+
+-- SAN JERÓNIMO PENITENTE
+INSERT INTO MANTENIMIENTOS_ASIGNADOS (id_museo, id_obra, id_cat_museo, actividad, frecuencia, tipo_responsable)
+VALUES (2, 8, 8, 'Evaluación de desprendimientos de capa pictórica', 'M', 'O');
+
+-- EL TESTAMENTO DE ISABEL LA CATÓLICA
+INSERT INTO MANTENIMIENTOS_ASIGNADOS (id_museo, id_obra, id_cat_museo, actividad, frecuencia, tipo_responsable)
+VALUES (2, 9, 9, 'Consolidación de soporte de tela', 'S', 'R');
 
                                                         --26--                                
 ---------------------------------------------| REGISTROS_ACT_REALIZADAS |-------------------------------------------------------------------------------
 
+-- GUERNICA (Museo 1, Obra 1, id_cat_museo 1, id_mant_asig 1)
+INSERT INTO REGISTROS_ACT_REALIZADAS (id_museo, id_obra, id_cat_museo, id_mant_asig, num_expediente, fecha_inicio, fecha_fin, observaciones)
+VALUES (1, 1, 1, 1, 1, '2024-01-10', '2024-01-12', 'Limpieza realizada sin incidencias.');
 
+-- LA MUJER EN AZUL (Museo 1, Obra 2, id_cat_museo 2, id_mant_asig 2)
+INSERT INTO REGISTROS_ACT_REALIZADAS (id_museo, id_obra, id_cat_museo, id_mant_asig, num_expediente, fecha_inicio, fecha_fin, observaciones)
+VALUES (1, 2, 2, 2, 1, '2024-02-15', '2024-02-16', 'Se detectaron pequeñas craqueladuras, se recomienda seguimiento.');
+
+-- EL ROSTRO DEL GRAN MASTURBADOR (Museo 1, Obra 3, id_cat_museo 3, id_mant_asig 3)
+INSERT INTO REGISTROS_ACT_REALIZADAS (id_museo, id_obra, id_cat_museo, id_mant_asig, num_expediente, fecha_inicio, fecha_fin, observaciones)
+VALUES (1, 3, 3, 3, 1, '2024-03-05', '2024-03-06', 'No se observaron hongos en el lienzo.');
+
+-- CABEZA DE MUJER LLORANDO (Museo 1, Obra 4, id_cat_museo 4, id_mant_asig 4)
+INSERT INTO REGISTROS_ACT_REALIZADAS (id_museo, id_obra, id_cat_museo, id_mant_asig, num_expediente, fecha_inicio, fecha_fin, observaciones)
+VALUES (1, 4, 4, 4, 1, '2024-04-01', '2024-04-01', 'Limpieza de marco completada.');
+
+-- RETRATO DE RAMÓN GÓMEZ DE LA SERNA (Museo 1, Obra 5, id_cat_museo 5, id_mant_asig 5)
+INSERT INTO REGISTROS_ACT_REALIZADAS (id_museo, id_obra, id_cat_museo, id_mant_asig, num_expediente, fecha_inicio, fecha_fin, observaciones)
+VALUES (1, 5, 5, 5, 1, '2024-05-10', '2024-05-10', 'Pátina en buen estado, sin alteraciones.');
+
+-- TORSO DE MUJER (Museo 1, Obra 6, id_cat_museo 6, id_mant_asig 6)
+INSERT INTO REGISTROS_ACT_REALIZADAS (id_museo, id_obra, id_cat_museo, id_mant_asig, num_expediente, fecha_inicio, fecha_fin, observaciones)
+VALUES (1, 6, 6, 6, 1, '2024-06-12', '2024-06-13', 'No se detectó corrosión en el hierro.');
+
+-- SANTA CATALINA DE ALEJANDRÍA (Museo 2, Obra 7, id_cat_museo 7, id_mant_asig 7)
+INSERT INTO REGISTROS_ACT_REALIZADAS (id_museo, id_obra, id_cat_museo, id_mant_asig, num_expediente, fecha_inicio, fecha_fin, observaciones)
+VALUES (2, 7, 7, 7, 2, '2024-07-01', '2024-07-02', 'Barniz protector en condiciones óptimas.');
+
+-- SAN JERÓNIMO PENITENTE (Museo 2, Obra 8, id_cat_museo 8, id_mant_asig 8)
+INSERT INTO REGISTROS_ACT_REALIZADAS (id_museo, id_obra, id_cat_museo, id_mant_asig, num_expediente, fecha_inicio, fecha_fin, observaciones)
+VALUES (2, 8, 8, 8, 2, '2024-08-10', '2024-08-11', 'Desprendimientos mínimos, restauración no necesaria.');
+
+-- EL TESTAMENTO DE ISABEL LA CATÓLICA (Museo 2, Obra 9, id_cat_museo 9, id_mant_asig 9)
+INSERT INTO REGISTROS_ACT_REALIZADAS (id_museo, id_obra, id_cat_museo, id_mant_asig, num_expediente, fecha_inicio, fecha_fin, observaciones)
+VALUES (2, 9, 9, 9, 2, '2024-09-05', '2024-09-06', 'Soporte de tela consolidado correctamente.');
 
 

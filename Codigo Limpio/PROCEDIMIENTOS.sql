@@ -759,52 +759,48 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- PROCEDIMIENTO: RANKING MUNDIAL DE MUSEOS
-CREATE OR REPLACE PROCEDURE ranking_mundial_museos(p_anio INTEGER)
-LANGUAGE plpgsql
-AS $$
+-- RANKING MUNDIAL DE MUSEOS EN TABLA
+CREATE OR REPLACE FUNCTION ranking_mundial_museos(p_anio INTEGER)
+RETURNS TABLE (
+    nombre_museo VARCHAR,
+    visitas INTEGER,
+    rotacion NUMERIC,
+    score NUMERIC
+) AS $$
 DECLARE
-    rec RECORD;
     v_max_visitas INTEGER;
     v_max_rotacion NUMERIC;
 BEGIN
-    -- Calcular máximos globales
     SELECT MAX(visitas_anuales_museo(id_museo, p_anio)) INTO v_max_visitas FROM MUSEOS;
     SELECT MAX(rotacion_anual_museo(id_museo, p_anio)) INTO v_max_rotacion FROM MUSEOS;
 
-    -- Mostrar ranking
-    RAISE NOTICE 'Ranking mundial de museos para el año %:', p_anio;
-    FOR rec IN
-        SELECT
-            m.id_museo,
-            m.nombre,
-            visitas_anuales_museo(m.id_museo, p_anio) AS visitas,
-            rotacion_anual_museo(m.id_museo, p_anio) AS rotacion,
-            CASE WHEN v_max_visitas > 0 THEN visitas_anuales_museo(m.id_museo, p_anio)::NUMERIC / v_max_visitas ELSE 0 END AS visitas_norm,
-            CASE WHEN v_max_rotacion > 0 THEN rotacion_anual_museo(m.id_museo, p_anio) / v_max_rotacion ELSE 0 END AS rotacion_norm,
-            CASE 
-                WHEN v_max_visitas = 0 THEN 0
-                ELSE (visitas_anuales_museo(m.id_museo, p_anio)::NUMERIC / v_max_visitas) / (1 + CASE WHEN v_max_rotacion > 0 THEN rotacion_anual_museo(m.id_museo, p_anio) / v_max_rotacion ELSE 0 END)
-            END AS ranking_score
-        FROM MUSEOS m
-        ORDER BY ranking_score DESC
-    LOOP
-        RAISE NOTICE '% | Visitas: % | Rotación: % | Score: %', rec.nombre, rec.visitas, rec.rotacion, rec.ranking_score;
-    END LOOP;
+    RETURN QUERY
+    SELECT
+        m.nombre,
+        visitas_anuales_museo(m.id_museo, p_anio) AS visitas,
+        rotacion_anual_museo(m.id_museo, p_anio) AS rotacion,
+        CASE 
+            WHEN v_max_visitas = 0 THEN 0
+            ELSE (visitas_anuales_museo(m.id_museo, p_anio)::NUMERIC / v_max_visitas) / 
+                 (1 + CASE WHEN v_max_rotacion > 0 THEN rotacion_anual_museo(m.id_museo, p_anio) / v_max_rotacion ELSE 0 END)
+        END AS score
+    FROM MUSEOS m
+    ORDER BY score DESC, nombre;
 END;
-$$;
+$$ LANGUAGE plpgsql;
 
-
--- PROCEDIMIENTO: RANKING POR PAÍS DE MUSEOS
-CREATE OR REPLACE PROCEDURE ranking_pais_museos(p_anio INTEGER, p_id_pais INTEGER)
-LANGUAGE plpgsql
-AS $$
+-- RANKING POR PAÍS DE MUSEOS EN TABLA
+CREATE OR REPLACE FUNCTION ranking_pais_museos(p_anio INTEGER, p_id_pais INTEGER)
+RETURNS TABLE (
+    nombre_museo VARCHAR,
+    visitas INTEGER,
+    rotacion NUMERIC,
+    score NUMERIC
+) AS $$
 DECLARE
-    rec RECORD;
     v_max_visitas INTEGER;
     v_max_rotacion NUMERIC;
 BEGIN
-    -- Calcular máximos para el país
     SELECT MAX(visitas_anuales_museo(m.id_museo, p_anio))
       INTO v_max_visitas
       FROM MUSEOS m
@@ -819,27 +815,20 @@ BEGIN
       WHERE (l.tipo = 'C' AND l.id_lugar_padre = p_id_pais)
          OR (l.tipo = 'P' AND l.id_lugar = p_id_pais);
 
-    -- Mostrar ranking
-    RAISE NOTICE 'Ranking de museos para el país % en el año %:', p_id_pais, p_anio;
-    FOR rec IN
-        SELECT
-            m.id_museo,
-            m.nombre,
-            visitas_anuales_museo(m.id_museo, p_anio) AS visitas,
-            rotacion_anual_museo(m.id_museo, p_anio) AS rotacion,
-            CASE WHEN v_max_visitas > 0 THEN visitas_anuales_museo(m.id_museo, p_anio)::NUMERIC / v_max_visitas ELSE 0 END AS visitas_norm,
-            CASE WHEN v_max_rotacion > 0 THEN rotacion_anual_museo(m.id_museo, p_anio) / v_max_rotacion ELSE 0 END AS rotacion_norm,
-            CASE 
-                WHEN v_max_visitas = 0 THEN 0
-                ELSE (visitas_anuales_museo(m.id_museo, p_anio)::NUMERIC / v_max_visitas) / (1 + CASE WHEN v_max_rotacion > 0 THEN rotacion_anual_museo(m.id_museo, p_anio) / v_max_rotacion ELSE 0 END)
-            END AS ranking_score
-        FROM MUSEOS m
-        JOIN LUGARES_GEOGRAFICOS l ON m.id_lugar = l.id_lugar
-        WHERE (l.tipo = 'C' AND l.id_lugar_padre = p_id_pais)
-           OR (l.tipo = 'P' AND l.id_lugar = p_id_pais)
-        ORDER BY ranking_score DESC
-    LOOP
-        RAISE NOTICE '% | Visitas: % | Rotación: % | Score: %', rec.nombre, rec.visitas, rec.rotacion, rec.ranking_score;
-    END LOOP;
+    RETURN QUERY
+    SELECT
+        m.nombre,
+        visitas_anuales_museo(m.id_museo, p_anio) AS visitas,
+        rotacion_anual_museo(m.id_museo, p_anio) AS rotacion,
+        CASE 
+            WHEN v_max_visitas = 0 THEN 0
+            ELSE (visitas_anuales_museo(m.id_museo, p_anio)::NUMERIC / v_max_visitas) / 
+                 (1 + CASE WHEN v_max_rotacion > 0 THEN rotacion_anual_museo(m.id_museo, p_anio) / v_max_rotacion ELSE 0 END)
+        END AS score
+    FROM MUSEOS m
+    JOIN LUGARES_GEOGRAFICOS l ON m.id_lugar = l.id_lugar
+    WHERE (l.tipo = 'C' AND l.id_lugar_padre = p_id_pais)
+       OR (l.tipo = 'P' AND l.id_lugar = p_id_pais)
+    ORDER BY score DESC, nombre;
 END;
-$$;
+$$ LANGUAGE plpgsql;
