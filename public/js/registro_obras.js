@@ -207,17 +207,35 @@ function updateArtistsTableVisibility() {
 artistForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  const firstName = document.getElementById("artistFirstName").value;
-  const lastName = document.getElementById("artistLastName").value;
-  const artisticName = document.getElementById("artisticName").value;
+  const firstName = document.getElementById("artistFirstName").value.trim();
+  const lastName = document.getElementById("artistLastName").value.trim();
+  const artisticName = document.getElementById("artisticName").value.trim();
+  const birthDate = document.getElementById("birthDate").value || "";
+  const deathDate = document.getElementById("deathDate").value || "";
+  const caractEstTec = document.getElementById("artistCharacteristics").value.trim();
+
+  if (!firstName && !lastName && !artisticName && !caractEstTec) {
+    alert("Debe ingresar al menos un dato del artista");
+    return;
+  }
 
   // Crear nombre para mostrar
   const displayName = artisticName
     ? `${firstName} ${lastName} (${artisticName})`
     : `${firstName} ${lastName}`;
 
+  // Guardar datos completos
+  const artistaData = {
+    nombre: firstName,
+    apellido: lastName,
+    nombre_artistico: artisticName,
+    fecha_nac: birthDate,
+    fecha_def: deathDate,
+    caract_est_tec: caractEstTec,
+  };
+
   // Añadir artista a la tabla
-  addArtistToTable(displayName, "Nuevo", ++artistCounter);
+  addArtistToTable(displayName, "Nuevo", ++artistCounter, artistaData);
 
   // Cerrar modal y resetear formulario
   closeModal();
@@ -234,7 +252,7 @@ addExistingArtistBtn.addEventListener("click", function () {
 });
 
 // Función para añadir artista a la tabla
-function addArtistToTable(name, type, id) {
+function addArtistToTable(name, type, id, artistaData = null) {
   // Verificar si el artista ya está en la tabla
   const existingRows = artistsTableBody.querySelectorAll("tr");
   for (let i = 0; i < existingRows.length; i++) {
@@ -246,19 +264,30 @@ function addArtistToTable(name, type, id) {
 
   const row = document.createElement("tr");
   row.dataset.id = id;
+  row.dataset.type = type;
+
+  // Si es nuevo, guarda los datos completos como atributos data-*
+  if (type === "Nuevo" && artistaData) {
+    row.dataset.nombre = artistaData.nombre || "";
+    row.dataset.apellido = artistaData.apellido || "";
+    row.dataset.nombreArtistico = artistaData.nombre_artistico || "";
+    row.dataset.fechaNac = artistaData.fecha_nac || "";
+    row.dataset.fechaDef = artistaData.fecha_def || "";
+    row.dataset.caractEstTec = artistaData.caract_est_tec || "";
+  }
 
   row.innerHTML = `
-                <td>${name}</td>
-                <td>${type}</td>
-                <td class="action-cell">
-                    <button type="button" class="artist-action-btn remove" title="Eliminar artista">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                        </svg>
-                    </button>
-                    <input type="hidden" name="artists[]" value="${id}">
-                </td>
-            `;
+    <td>${name}</td>
+    <td>${type}</td>
+    <td class="action-cell">
+        <button type="button" class="artist-action-btn remove" title="Eliminar artista">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        </button>
+        <input type="hidden" name="artists[]" value="${id}">
+    </td>
+  `;
 
   // Añadir evento para eliminar artista
   const removeBtn = row.querySelector(".artist-action-btn.remove");
@@ -338,21 +367,16 @@ document
       if (row.cells[1].textContent === "Existente") {
         artistas_existentes.push(parseInt(row.dataset.id));
       } else if (row.cells[1].textContent === "Nuevo") {
-        // Obtener datos del modal (último artista añadido)
-        const nombre = document.getElementById("artistFirstName").value;
-        const apellido = document.getElementById("artistLastName").value;
-        const nombre_artistico = document.getElementById("artisticName").value;
-        const fecha_nac = document.getElementById("birthDate").value || "";
-        const fecha_def = document.getElementById("deathDate").value || "";
-        const caract_est_tec = document.getElementById("artistCharacteristics").value;
-        // Formato: 'caract_est_tec|nombre|apellido|nombre_artistico|fecha_nac|fecha_def'
+        // Tomar los datos del data
+        const artistaData = row.dataset;
+        console.log("Artista nuevo dataset:", artistaData); // <-- Agrega esto
         const artistaStr = [
-          caract_est_tec,
-          nombre,
-          apellido,
-          nombre_artistico,
-          fecha_nac,
-          fecha_def
+          artistaData.caractEstTec,
+          artistaData.nombre,
+          artistaData.apellido,
+          artistaData.nombreArtistico,
+          artistaData.fechaNac,
+          artistaData.fechaDef
         ].join("|");
         nuevos_artistas.push(artistaStr);
       }
