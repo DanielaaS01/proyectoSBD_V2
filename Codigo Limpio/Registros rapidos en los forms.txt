@@ -88,3 +88,12 @@ http://localhost:3000/reports/reporte_obras.html
 
 -----------------------------------------------------------------------------------------------------
 
+REPORTE DE ITINERARIO
+
+http://localhost:3000/reports/itinerarios.html
+
+-----------------------------------------------------------------------------------------------------
+
+ASIGNAR EMPLEADO
+
+http://localhost:3000/pages/asignar_empleado.html
