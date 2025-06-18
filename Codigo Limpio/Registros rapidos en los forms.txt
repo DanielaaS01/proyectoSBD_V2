@@ -1,0 +1,90 @@
+REGISTROS RAPIDOS PARA OBRAS:
+-----------------------------------------------------------------------------------------------------
+
+http://localhost:3000/formularios/registro_obras.html
+
+-------Agregar pintura con artista nuevo--------------------------
+Pintura: La Noche Estrellada
+Periodo: 15-06-1889
+Dimensiones: 73.7 cm (alto) x 92.1 cm (ancho)
+Estilos: Postimpresionismo
+Características materiales y técnicas: Óleo sobre lienzo.
+valor monetario: 20000000
+
+Agregar un artista
+
+Nombre y apellido: Vincent Willem van Gogh
+Nombre artístico: Vincent 
+Fecha de nacimiento: 30 de marzo de 1853
+Fecha de defunción: 29 de julio de 1890
+Características de sus estilos y técnicas: Postimpresionismo, Pinceladas densas y visibles,Contornos marcados
+
+----------------------agregar escultura-----------------------------------------------
+Escultura: David
+Periodo: 25-01-1504
+Dimensiones: 5.17 metros (alto) x 1.99 metros (ancho) x 1.05 metros (profundidad)
+Estilos: Renacimiento.
+Características materiales y técnicas: Mármol de Carrara
+valor monetario: 70000000
+
+-----------------agregar pintura con artista existente------------------------
+Pintura: Las meninas
+Periodo: 12-01-1656
+dimensiones:318 cm (alto) x 276 cm (ancho)
+Estilos: Barroco
+Características materiales y técnicas: óleo sobre lienzo.
+valor monetario 900000000
+
+es de pablo picasso
+
+
+-----------------------------------------------------------------------------------------------------
+
+REGISTROS RAPIDOS PARA RESUMENES HISTORICOS MUSEOS:
+
+http://localhost:3000/formularios/registro_historico_museo.html
+
+museo: LA GALLERIA NAZIONALE
+Fecha: 1892
+Descripcion: Expansión y Adquisiciones de Colecciones
+
+
+-----------------------------------------------------------------------------------------------------
+
+REGISTROS RAPIDOS PARA EMPLEADOS:
+
+http://localhost:3000/formularios/registro_empleados.html
+
+EMPLEADO DE MANTENIMIENTO O VIGILANCIA
+
+JUAN
+ALESSIO
+ITL265487
+V o M
+
+EMPLEADO PROFESIONAL
+
+ESP135299
+JAIME
+JAVIER
+COLMAN
+MORILLO
+25-08-1960
+Restauración y Conservación de Bienes Culturales
+1984
+preservación física de las obras.
+
+-----------------------------------------------------------------------------------------------------
+
+REPORTE DE ARTISTA
+
+http://localhost:3000/reports/reporte_artistas.html
+
+-----------------------------------------------------------------------------------------------------
+
+REPORTE DE OBRAS
+
+http://localhost:3000/reports/reporte_obras.html
+
+-----------------------------------------------------------------------------------------------------
+
